@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corretor de Avaliação Nutricional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   TOKENS — LIGHT (default)
+═══════════════════════════════════════════════════════ */
+:root,[data-theme="light"]{
+  --bg:         #f4f7f6;
+  --bg2:        #ffffff;
+  --bg3:        #eef2f0;
+  --surface:    #ffffff;
+  --surface2:   #f8faf9;
+  --border:     #e0e8e5;
+  --border2:    #d1ddd9;
+  --text:       #1c2e2a;
+  --text2:      #3d5450;
+  --text3:      #6b8a84;
+  --muted:      #9ab4ae;
+  --accent:     #0d9488;
+  --accent2:    #0f766e;
+  --accent3:    #ccfbf1;
+  --accent-glow:rgba(13,148,136,.12);
+  --accent-text:#0f766e;
+  --header-bg:  linear-gradient(135deg,#134e4a 0%,#0d9488 60%,#14b8a6 100%);
+  --header-text:#ffffff;
+  --header-sub: rgba(255,255,255,.65);
+  --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
+  --step-shadow:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+  --tab-active-bg:#0d9488;
+  --tab-active-shadow:0 2px 10px rgba(13,148,136,.35);
+  --formula-bg: #f2f7f6;
+  --formula-text:#2d4a45;
+  --subst-bg:   #edfaf7;
+  --subst-text: #0f766e;
+  --toggle-off: #c8d8d4;
+  --warn-bg:    #fffbeb;
+  --warn-border:#fcd34d;
+  --warn-text:  #92400e;
+  --info-bg:    #edfaf7;
+  --info-border:#2dd4bf;
+  --info-title: #134e4a;
+  --info-text:  #0f766e;
+  --amber-bg:   #fffbeb;
+  --amber-border:#fcd34d;
+  --amber-title:#92400e;
+  --amber-text: #b45309;
+  --corr-ok-bg: #ecfdf5;
+  --corr-ok-bd: #34d399;
+  --corr-err-bg:#fef2f2;
+  --corr-err-bd:#f87171;
+  --note-border:#d1e8e3;
+  --curio-bg:   #f8faf9;
+  --curio-bd:   #c8d8d4;
+  --refs-bg:    #f8faf9;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WARM (amarelo/bege — conforto diurno)
+═══════════════════════════════════════════════════════ */
+[data-theme="warm"]{
+  --bg:         #faf6ee;
+  --bg2:        #fff9f0;
+  --bg3:        #f2ead8;
+  --surface:    #fff9f0;
+  --surface2:   #f7f1e5;
+  --border:     #e5d8c0;
+  --border2:    #d4c5a6;
+  --text:       #2a2016;
+  --text2:      #4a3820;
+  --text3:      #7a6040;
+  --muted:      #b09a74;
+  --accent:     #0a7c6f;
+  --accent2:    #085f55;
+  --accent3:    #d4f0e8;
+  --accent-glow:rgba(10,124,111,.12);
+  --accent-text:#085f55;
+  --header-bg:  linear-gradient(135deg,#1a3a2e 0%,#0a7c6f 60%,#12a090 100%);
+  --header-text:#fff8ee;
+  --header-sub: rgba(255,248,238,.6);
+  --card-shadow:0 1px 3px rgba(60,30,0,.06),0 4px 12px rgba(60,30,0,.04);
+  --step-shadow:0 1px 2px rgba(60,30,0,.04),0 2px 8px rgba(60,30,0,.03);
+  --tab-active-bg:#0a7c6f;
+  --tab-active-shadow:0 2px 10px rgba(10,124,111,.3);
+  --formula-bg: #f2ead6;
+  --formula-text:#3a2a10;
+  --subst-bg:   #e8f5ef;
+  --subst-text: #085f55;
+  --toggle-off: #c8b898;
+  --warn-bg:    #fef9e8;
+  --warn-border:#e8c84a;
+  --warn-text:  #7a4010;
+  --info-bg:    #e8f5ef;
+  --info-border:#20c0a8;
+  --info-title: #0f3028;
+  --info-text:  #085f55;
+  --amber-bg:   #fef6d8;
+  --amber-border:#e8c04a;
+  --amber-title:#7a3808;
+  --amber-text: #9a5010;
+  --corr-ok-bg: #e4f8ed;
+  --corr-ok-bd: #28c078;
+  --corr-err-bg:#faeaea;
+  --corr-err-bd:#e87070;
+  --note-border:#c8d8c0;
+  --curio-bg:   #f4ede0;
+  --curio-bd:   #c8b898;
+  --refs-bg:    #f4ede0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DARK — conforto ocular noturno
+═══════════════════════════════════════════════════════ */
+[data-theme="dark"]{
+  --bg:         #0f1a18;
+  --bg2:        #162220;
+  --bg3:        #1c2e2a;
+  --surface:    #1c2e2a;
+  --surface2:   #223530;
+  --border:     #2a4038;
+  --border2:    #345048;
+  --text:       #d4ece7;
+  --text2:      #9ecec5;
+  --text3:      #6aaba0;
+  --muted:      #4a7870;
+  --accent:     #14b8a6;
+  --accent2:    #0d9488;
+  --accent3:    rgba(20,184,166,.18);
+  --accent-glow:rgba(20,184,166,.18);
+  --accent-text:#5eead4;
+  --header-bg:  linear-gradient(135deg,#0a1410 0%,#0f1e1c 60%,#162e28 100%);
+  --header-text:#d4ece7;
+  --header-sub: rgba(212,236,231,.5);
+  --card-shadow:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.2);
+  --step-shadow:0 1px 2px rgba(0,0,0,.25),0 2px 8px rgba(0,0,0,.15);
+  --tab-active-bg:#14b8a6;
+  --tab-active-shadow:0 2px 10px rgba(20,184,166,.25);
+  --formula-bg: #162220;
+  --formula-text:#9ecec5;
+  --subst-bg:   rgba(20,184,166,.1);
+  --subst-text: #5eead4;
+  --toggle-off: #2a4038;
+  --warn-bg:    rgba(252,211,77,.07);
+  --warn-border:rgba(252,211,77,.3);
+  --warn-text:  #e8c860;
+  --info-bg:    rgba(20,184,166,.08);
+  --info-border:rgba(20,184,166,.3);
+  --info-title: #5eead4;
+  --info-text:  #9ecec5;
+  --amber-bg:   rgba(252,211,77,.06);
+  --amber-border:rgba(252,211,77,.25);
+  --amber-title:#e8c860;
+  --amber-text: #c8a840;
+  --corr-ok-bg: rgba(52,211,153,.1);
+  --corr-ok-bd: #34d399;
+  --corr-err-bg:rgba(248,113,113,.1);
+  --corr-err-bd:#f87171;
+  --note-border:#2a4038;
+  --curio-bg:   #162220;
+  --curio-bd:   #2a4038;
+  --refs-bg:    #162220;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{transition:background .3s,color .3s}
+body{
+  background:var(--bg);
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  min-height:100vh;
+  color:var(--text);
+  line-height:1.5;
+  transition:background .3s,color .3s;
+}
+
+/* ═══════════════════════════════════════════════════════
+   THEME SWITCHER
+═══════════════════════════════════════════════════════ */
+.theme-bar{
+  position:fixed;top:16px;right:16px;z-index:100;
+  display:flex;gap:6px;align-items:center;
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  padding:4px 8px;
+}
+.theme-btn{
+  width:26px;height:26px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  font-size:14px;background:none;
+}
+.theme-btn:hover{transform:scale(1.15)}
+.theme-btn.active{border-color:rgba(255,255,255,.7);box-shadow:0 0 8px rgba(255,255,255,.3)}
+.theme-btn[data-t="light"]{background:#f0faf8}
+.theme-btn[data-t="warm"]{background:#faf0d8}
+.theme-btn[data-t="dark"]{background:#1c2e2a}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════ */
+.header{
+  background:var(--header-bg);
+  color:var(--header-text);
+  padding:36px 24px 28px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 80%, rgba(255,255,255,.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(255,255,255,.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  pointer-events:none;
+}
+.header-inner{max-width:880px;margin:0 auto;position:relative;text-align:center}
+.header-top{display:flex;align-items:center;justify-content:center;gap:16px;flex-direction:column}
+.header-icon{
+  font-size:2rem;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;
+  width:58px;height:58px;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 20px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.2);
+  flex-shrink:0;
+}
+.header-title{
+  font-size:1.45rem;font-weight:700;letter-spacing:-.02em;
+  color:var(--header-text);
+  text-shadow:0 1px 8px rgba(0,0,0,.15);
+}
+.header-sub{
+  font-size:.67rem;color:var(--header-sub);
+  margin-top:5px;font-weight:400;
+  letter-spacing:.03em;
+  display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+}
+.header-dot{opacity:.4;font-size:.5rem}
+.profile-tabs{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap;justify-content:center}
+.profile-btn{
+  padding:7px 18px;border-radius:999px;font-size:.73rem;font-weight:500;
+  font-family:'Poppins',sans-serif;
+  border:1px solid rgba(255,255,255,.2);
+  cursor:pointer;transition:all .25s;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.75);
+  backdrop-filter:blur(6px);
+  letter-spacing:.01em;
+}
+.profile-btn:hover{background:rgba(255,255,255,.16);color:#fff;transform:translateY(-1px)}
+.profile-btn.active{
+  background:rgba(255,255,255,.95);
+  color:var(--accent2);
+  border-color:transparent;
+  font-weight:700;
+  box-shadow:0 3px 12px rgba(0,0,0,.2), 0 1px 3px rgba(0,0,0,.1);
+  transform:translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN
+═══════════════════════════════════════════════════════ */
+.main{max-width:880px;margin:0 auto;padding:16px}
+
+/* ═══════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════ */
+.tabs{
+  display:flex;gap:3px;
+  background:var(--surface);
+  border-radius:14px;padding:4px;
+  box-shadow:var(--card-shadow);
+  margin-bottom:16px;
+  border:1px solid var(--border);
+}
+.tab-btn{
+  flex:1;padding:8px 4px;
+  font-size:.8rem;font-weight:500;
+  font-family:'Poppins',sans-serif;
+  border:none;border-radius:10px;cursor:pointer;
+  transition:all .2s;
+  color:var(--text3);
+  background:transparent;
+}
+.tab-btn:hover{color:var(--text);background:var(--bg3)}
+.tab-btn.active{
+  background:var(--tab-active-bg);
+  color:#fff;
+  font-weight:600;
+  box-shadow:var(--tab-active-shadow);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════════════════════ */
+.panel{display:none}.panel.active{display:block}
+.space-y>*+*{margin-top:14px}
+
+/* ═══════════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════════ */
+.card{
+  background:var(--surface);
+  border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:var(--card-shadow);
+  padding:18px;
+  transition:background .3s,border-color .3s;
+}
+.card-title{
+  font-size:.65rem;font-weight:600;
+  color:var(--accent-text);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.card-title::before{
+  content:'';width:3px;height:14px;
+  background:var(--accent);
+  border-radius:2px;display:inline-block;
+  flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BLOCK TITLES
+═══════════════════════════════════════════════════════ */
+.block-title{
+  font-size:.8rem;font-weight:600;
+  color:var(--text2);
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.block-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent-glow);
+  color:var(--accent-text);
+  font-size:.65rem;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+  flex-shrink:0;border:1px solid var(--accent3);
+}
+.block-empty{
+  background:var(--surface);border-radius:14px;
+  border:1px dashed var(--border2);padding:12px 16px;
+}
+.block-empty p{font-size:.8rem;color:var(--muted)}
+
+/* ═══════════════════════════════════════════════════════
+   GRID — corrigido para não estourar
+═══════════════════════════════════════════════════════ */
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:720px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ═══════════════════════════════════════════════════════
+   FORM INPUTS
+═══════════════════════════════════════════════════════ */
+.f-label{
+  font-size:.7rem;font-weight:600;
+  color:var(--text3);display:block;
+  margin-bottom:5px;font-family:'Poppins',sans-serif;
+}
+.f-row{display:flex;min-width:0}
+.f-input{
+  flex:1;min-width:0;
+  border:1.5px solid var(--border);
+  border-radius:10px 0 0 10px;
+  padding:8px 12px;
+  font-size:.82rem;
+  font-family:'Poppins',sans-serif;
+  outline:none;
+  background:var(--surface2);
+  color:var(--text);
+  transition:border .2s,box-shadow .2s,background .3s;
+}
+.f-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-glow);
+  background:var(--surface);
+}
+.f-input-solo{border-radius:10px!important}
+.f-unit{
+  background:var(--bg3);
+  border:1.5px solid var(--border);border-left:none;
+  border-radius:0 10px 10px 0;
+  padding:8px 10px;
+  font-size:.72rem;color:var(--text3);
+  font-weight:500;white-space:nowrap;
+  display:flex;align-items:center;
+  font-family:'Poppins',sans-serif;
+  transition:background .3s;
+}
+.f-note{font-size:.67rem;color:var(--muted);margin-top:3px}
+select.f-input{
+  border-radius:10px!important;
+  border-right:1.5px solid var(--border);
+  cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b8a84' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+  padding-right:28px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STEP CARDS
+═══════════════════════════════════════════════════════ */
+.step-card{
+  background:var(--surface);
+  border-radius:14px;
+  border:1px solid var(--border);
+  box-shadow:var(--step-shadow);
+  margin-bottom:10px;overflow:hidden;
+  transition:background .3s,border-color .3s;
+}
+.step-header{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+}
+.step-badge{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  font-size:.65rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 2px 6px var(--accent-glow);
+}
+.step-title{font-weight:600;color:var(--text);font-size:.8rem}
+.step-body{padding:12px 16px}
+.step-body>*+*{margin-top:8px}
+.step-label{
+  font-size:.6rem;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);
+  font-weight:600;margin-bottom:4px;
+}
+.formula-box{
+  font-family:'Poppins',monospace;font-size:.8rem;
+  color:var(--formula-text);
+  background:var(--formula-bg);
+  border-radius:8px;padding:8px 12px;
+  border:1px solid var(--border);
+}
+.subst-box{
+  font-family:'Poppins',monospace;font-size:.8rem;
+  color:var(--subst-text);
+  background:var(--subst-bg);
+  border-radius:8px;padding:10px 12px;
+  white-space:pre-line;line-height:1.65;
+  border:1px solid var(--accent3);
+}
+.result-val{
+  font-family:'Poppins',sans-serif;
+  font-size:.95rem;font-weight:700;
+  color:var(--text);
+}
+.result-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.note-box{
+  font-size:.72rem;color:var(--text3);
+  font-style:italic;
+  border-left:2px solid var(--note-border);
+  padding-left:8px;line-height:1.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WARN / BADGES / CORRECTION
+═══════════════════════════════════════════════════════ */
+.warn{
+  display:flex;gap:8px;align-items:flex-start;
+  background:var(--warn-bg);border:1px solid var(--warn-border);
+  border-radius:8px;padding:8px 12px;margin-top:6px;
+}
+.warn-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
+.warn-text{font-size:.72rem;color:var(--warn-text);line-height:1.5}
+
+.badge{display:inline-block;padding:2px 9px;border-radius:6px;border:1px solid;font-size:.7rem;font-weight:600}
+.badge-green{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.badge-yellow{background:#fef9c3;color:#713f12;border-color:#fde047}
+.badge-orange{background:#ffedd5;color:#7c2d12;border-color:#fdba74}
+.badge-red{background:#fee2e2;color:#7f1d1d;border-color:#fca5a5}
+.badge-blue{background:#dbeafe;color:#1e3a8a;border-color:#93c5fd}
+.badge-cyan{background:#cffafe;color:#164e63;border-color:#67e8f9}
+.badge-purple{background:#ede9fe;color:#3b0764;border-color:#c4b5fd}
+.badge-gray{background:var(--bg3);color:var(--text3);border-color:var(--border)}
+
+[data-theme="dark"] .badge-green{background:rgba(52,211,153,.15);color:#6ee7b7;border-color:rgba(52,211,153,.3)}
+[data-theme="dark"] .badge-yellow{background:rgba(253,224,71,.1);color:#fde047;border-color:rgba(253,224,71,.3)}
+[data-theme="dark"] .badge-orange{background:rgba(251,146,60,.12);color:#fdba74;border-color:rgba(251,146,60,.3)}
+[data-theme="dark"] .badge-red{background:rgba(248,113,113,.12);color:#fca5a5;border-color:rgba(248,113,113,.3)}
+[data-theme="dark"] .badge-blue{background:rgba(147,197,253,.1);color:#93c5fd;border-color:rgba(147,197,253,.25)}
+[data-theme="dark"] .badge-cyan{background:rgba(103,232,249,.1);color:#67e8f9;border-color:rgba(103,232,249,.25)}
+[data-theme="dark"] .badge-purple{background:rgba(196,181,253,.1);color:#c4b5fd;border-color:rgba(196,181,253,.25)}
+
+.corr-section{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border2)}
+.corr-label{font-size:.7rem;color:var(--text3);font-weight:600;margin-bottom:4px}
+.corr-row{display:flex;align-items:center;gap:8px}
+.corr-input{
+  flex:1;font-family:'Poppins',sans-serif;font-size:.8rem;
+  border:1.5px solid var(--border);border-radius:8px;
+  padding:6px 12px;outline:none;
+  background:var(--surface2);color:var(--text);
+  transition:all .2s;
+}
+.corr-input:focus{box-shadow:0 0 0 3px var(--accent-glow)}
+.corr-input.ok{border-color:var(--corr-ok-bd);background:var(--corr-ok-bg)}
+.corr-input.err{border-color:var(--corr-err-bd);background:var(--corr-err-bg)}
+.corr-tag{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.corr-tag.ok{background:var(--corr-ok-bg);color:#065f46;border:1px solid var(--corr-ok-bd)}
+.corr-tag.err{background:var(--corr-err-bg);color:#7f1d1d;border:1px solid var(--corr-err-bd)}
+[data-theme="dark"] .corr-tag.ok{color:#6ee7b7}
+[data-theme="dark"] .corr-tag.err{color:#fca5a5}
+
+/* ═══════════════════════════════════════════════════════
+   TOGGLE (correção)
+═══════════════════════════════════════════════════════ */
+.toggle-wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border-radius:14px;
+  padding:13px 18px;border:1px solid var(--border);
+  box-shadow:var(--card-shadow);
+}
+.toggle-btn{
+  position:relative;width:46px;height:24px;
+  border-radius:999px;border:none;cursor:pointer;
+  transition:background .3s;flex-shrink:0;
+}
+.toggle-btn.off{background:var(--toggle-off)}
+.toggle-btn.on{background:var(--accent);box-shadow:0 0 10px var(--accent-glow)}
+.toggle-knob{
+  position:absolute;top:2px;width:20px;height:20px;
+  background:#fff;border-radius:50%;
+  box-shadow:0 1px 4px rgba(0,0,0,.25);
+  transition:left .25s cubic-bezier(.4,0,.2,1);
+}
+.toggle-btn.off .toggle-knob{left:2px}
+.toggle-btn.on .toggle-knob{left:24px}
+
+/* ═══════════════════════════════════════════════════════
+   INFO BOXES
+═══════════════════════════════════════════════════════ */
+.refs{background:var(--refs-bg);border-radius:14px;border:1px solid var(--border);padding:12px 16px}
+.refs-title{font-weight:600;color:var(--text3);font-size:.72rem;margin-bottom:4px}
+.refs p{font-size:.67rem;color:var(--muted);line-height:1.8}
+
+.curiosity-box{background:var(--curio-bg);border:1px dashed var(--curio-bd);border-radius:14px;padding:12px;margin-top:4px}
+.curiosity-title{font-size:.72rem;font-weight:600;color:var(--text3);margin-bottom:8px}
+
+.info-teal{background:var(--info-bg);border:1.5px solid var(--info-border);border-radius:14px;padding:12px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
+.info-teal-title{font-size:.82rem;font-weight:700;color:var(--info-title)}
+.info-teal-body{font-size:.72rem;color:var(--info-text);margin-top:4px;line-height:1.5}
+
+.info-amber{background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:14px;padding:12px;margin-bottom:12px}
+.info-amber-title{font-size:.72rem;font-weight:700;color:var(--amber-title)}
+.info-amber-body{font-size:.72rem;color:var(--amber-text);margin-top:4px;line-height:1.5}
+
+.class-table{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.68rem;color:var(--text3)}
+.class-table b{color:var(--text2)}
+.class-table .teal{color:var(--accent-text);font-weight:600}
+
+/* ═══════════════════════════════════════════════════════
+   CALC BUTTON
+═══════════════════════════════════════════════════════ */
+.calc-btn{
+  width:100%;background:var(--accent);color:#fff;
+  border:none;border-radius:12px;padding:13px;
+  font-size:.85rem;font-weight:600;
+  font-family:'Poppins',sans-serif;
+  cursor:pointer;
+  box-shadow:0 3px 12px var(--accent-glow),0 1px 3px rgba(0,0,0,.1);
+  transition:all .2s;letter-spacing:.01em;
+}
+.calc-btn:hover{background:var(--accent2);box-shadow:0 4px 16px var(--accent-glow),0 2px 6px rgba(0,0,0,.12);transform:translateY(-1px)}
+.calc-btn:active{transform:translateY(0)}
+
+/* ═══════════════════════════════════════════════════════
+   VIDEOS
+═══════════════════════════════════════════════════════ */
+.drop-zone{
+  border:2px dashed var(--border2);
+  border-radius:14px;padding:32px;
+  text-align:center;cursor:pointer;
+  transition:background .2s,border-color .2s;
+}
+.drop-zone:hover{background:var(--bg3);border-color:var(--accent)}
+.video-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--step-shadow);overflow:hidden;margin-bottom:14px}
+.video-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.video-title{font-size:.82rem;font-weight:600;color:var(--text)}
+.video-size{font-size:.67rem;color:var(--muted)}
+.video-remove{font-size:.7rem;color:#f87171;font-weight:600;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:'Poppins',sans-serif}
+.video-remove:hover{background:var(--corr-err-bg);color:#ef4444}
+.video-body{padding:8px}
+video{width:100%;border-radius:8px;max-height:320px;background:#000}
+.empty-state{background:var(--surface);border-radius:14px;border:1px dashed var(--border);padding:40px;text-align:center}
+.empty-state p:first-child{font-size:2.5rem;margin-bottom:8px}
+.video-note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:10px;padding:10px 14px;font-size:.72rem;color:var(--amber-text);margin-top:12px}
+
+/* ═══════════════════════════════════════════════════════
+   COLLAPSIBLE CURIOSITY
+═══════════════════════════════════════════════════════ */
+.curio-collapsible{border:1px dashed var(--curio-bd);border-radius:14px;overflow:hidden;margin-top:12px}
+.curio-toggle-btn{
+  width:100%;background:var(--curio-bg);border:none;cursor:pointer;
+  padding:10px 16px;font-family:'Poppins',sans-serif;font-size:.72rem;
+  font-weight:600;color:var(--text3);text-align:left;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .2s;
+}
+.curio-toggle-btn:hover{background:var(--bg3)}
+.curio-arrow{transition:transform .3s;display:inline-block;font-size:.8rem}
+.curio-content{display:none;padding:12px;background:var(--curio-bg)}
+.curio-content.open{display:block}
+
+/* NAF info box inline */
+.naf-info{margin-top:12px;background:var(--info-bg);border:1px solid var(--info-border);border-radius:10px;padding:10px 12px}
+</style>
+</head>
+<body>
+
+<!-- THEME SWITCHER -->
+<div class="theme-bar">
+  <button class="theme-btn active" data-t="light" onclick="setTheme('light')" title="Claro">☀️</button>
+  <button class="theme-btn" data-t="warm" onclick="setTheme('warm')" title="Conforto diurno">🌤️</button>
+  <button class="theme-btn" data-t="dark" onclick="setTheme('dark')" title="Escuro">🌙</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <span class="header-icon">⚖️</span>
+      <div>
+        <div class="header-title">Corretor de Avaliação Nutricional</div>
+        <div class="header-sub">
+          <span>Apostila Clínica 2023</span><span class="header-dot">●</span>
+          <span>DRI 2023</span><span class="header-dot">●</span>
+          <span>Frisancho 1990</span><span class="header-dot">●</span>
+          <span>Durnin &amp; Womersley 1974</span><span class="header-dot">●</span>
+          <span>Siri 1961</span>
+        </div>
+      </div>
+    </div>
+    <div class="profile-tabs">
+      <button class="profile-btn active" onclick="setProfile('adulto')">👤 Adulto (≥18a)</button>
+      <button class="profile-btn" onclick="setProfile('idoso')">🧓 Idoso (≥60a)</button>
+      <button class="profile-btn" onclick="setProfile('gestante')">🤰 Gestante</button>
+      <button class="profile-btn" onclick="setProfile('adolescente')">🧒 Adolescente</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="setTab('dados')">📋 Dados</button>
+    <button class="tab-btn" onclick="setTab('resultados')">📊 Resultados &amp; Correção</button>
+    <button class="tab-btn" onclick="setTab('videos')">🎥 Vídeos</button>
+  </div>
+
+  <!-- ── DADOS ── -->
+  <div id="panel-dados" class="panel active">
+    <div class="space-y">
+      <div class="card">
+        <div class="card-title">📌 Identificação &amp; Dados Básicos</div>
+        <div class="grid-3" id="basic-grid">
+          <div>
+            <label class="f-label">Sexo</label>
+            <select id="sex" class="f-input f-input-solo" style="width:100%" onchange="recalc()">
+              <option value="F">Feminino</option>
+              <option value="M">Masculino</option>
+            </select>
+          </div>
+          <div>
+            <label class="f-label">Idade</label>
+            <div class="f-row"><input id="age" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">anos</span></div>
+          </div>
+          <div>
+            <label class="f-label">Peso atual</label>
+            <div class="f-row"><input id="peso" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">kg</span></div>
+          </div>
+          <div>
+            <label class="f-label">Altura</label>
+            <div class="f-row"><input id="alt" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
+          </div>
+          <div>
+            <label class="f-label">Circunferência do Braço (CB)</label>
+            <div class="f-row"><input id="cb" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
+          </div>
+          <div>
+            <label class="f-label">Circunferência da Cintura (CC)</label>
+            <div class="f-row"><input id="cc" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
+          </div>
+          <div id="cp-field" style="display:none">
+            <label class="f-label">Circ. da Panturrilha (CP)</label>
+            <div class="f-row"><input id="cp" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
+            <div class="f-note">&lt; 31 cm = perda muscular (OMS, 1995)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTANTE -->
+      <div class="card" id="gest-card" style="display:none">
+        <div class="card-title">🤰 Dados da Gestação</div>
+        <div class="grid-3">
+          <div>
+            <label class="f-label">Peso pré-gestacional</label>
+            <div class="f-row"><input id="ppg" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">kg</span></div>
+          </div>
+          <div>
+            <label class="f-label">Idade gestacional</label>
+            <div class="f-row"><input id="igSem" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">semanas</span></div>
+          </div>
+          <div>
+            <label class="f-label">Dias adicionais</label>
+            <div class="f-row"><input id="igDias" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">dias</span></div>
+            <div class="f-note">1-3 dias = sem. atual; 4-6 = próxima</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOBRAS -->
+      <div class="card">
+        <div class="card-title">📐 4 Dobras Cutâneas — Durnin &amp; Womersley (16-72 anos)</div>
+        <div class="grid-4">
+          <div>
+            <label class="f-label">DCT – Tricipital</label>
+            <div class="f-row"><input id="dct" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+          <div>
+            <label class="f-label">DCB – Bicipital</label>
+            <div class="f-row"><input id="dcb" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+          <div>
+            <label class="f-label">DCSE – Subescapular</label>
+            <div class="f-row"><input id="dcse" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+          <div>
+            <label class="f-label">DCSI – Suprailíaca</label>
+            <div class="f-row"><input id="dcsi" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+        </div>
+        <p style="font-size:.7rem;color:#94a3b8;margin-top:8px">∑4 = DCT + DCB + DCSE + DCSI · Protocolo obrigatório: 4 dobras</p>
+      </div>
+
+      <!-- NAF -->
+      <div class="card">
+        <div class="card-title">🏃 Nível de Atividade Física — NAF (EER · DRI 2023)</div>
+        <div>
+          <label class="f-label">Classificação do Nível de Atividade Física</label>
+          <select id="naf" class="f-input f-input-solo" style="width:100%" onchange="recalc()">
+            <option value="sedentario">Sedentário</option>
+            <option value="pouco_ativo">Pouco ativo</option>
+            <option value="ativo">Ativo</option>
+            <option value="muito_ativo">Muito ativo</option>
+          </select>
+        </div>
+        <div class="naf-info">
+          <p style="font-size:.72rem;font-weight:700;color:var(--info-title)">📌 Método único: EER — DRI 2023</p>
+          <p style="font-size:.68rem;color:var(--info-text);margin-top:2px">O GET é calculado exclusivamente pela equação EER do DRI 2023. Fórmulas antigas (Harris-Benedict, Mifflin-St Jeor, etc.) não são aceitas neste protocolo.</p>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="setTab('resultados')">📊 Calcular &amp; Ver Resultados →</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTADOS ── -->
+  <div id="panel-resultados" class="panel">
+    <div class="space-y">
+      <!-- TOGGLE CORREÇÃO -->
+      <div class="toggle-wrap">
+        <div>
+          <p style="font-size:.875rem;font-weight:600;color:#334155">🔍 Modo Correção de Alunos</p>
+          <p style="font-size:.75rem;color:#94a3b8">Compare as respostas do aluno com o gabarito passo a passo</p>
+        </div>
+        <button class="toggle-btn off" id="corrToggle" onclick="toggleCorr()">
+          <span class="toggle-knob"></span>
+        </button>
+      </div>
+
+      <!-- 1. IMC -->
+      <div>
+        <div class="block-title"><span class="block-num">1</span> Índice de Massa Corporal (IMC)</div>
+        <div id="block-imc"></div>
+      </div>
+
+      <!-- 1b. CC -->
+      <div>
+        <div class="block-title"><span class="block-num">1b</span> Circunferência da Cintura (CC) — Risco Cardiovascular</div>
+        <div id="block-cc"></div>
+      </div>
+
+      <!-- 2. CB e derivadas -->
+      <div>
+        <div class="block-title"><span class="block-num">2</span> Circunferência do Braço (CB) e Derivadas</div>
+        <div id="block-cb"></div>
+      </div>
+
+      <!-- 3. Dobras -->
+      <div>
+        <div class="block-title"><span class="block-num">3</span> Composição Corporal — Soma das 4 Dobras e % de Gordura (Durnin &amp; Womersley, 1974 · Siri, 1961)</div>
+        <div id="block-dobras"></div>
+      </div>
+
+      <!-- 4. EER -->
+      <div>
+        <div class="block-title"><span class="block-num">4</span> Gasto Energético Total — GET / EER (DRI 2023)</div>
+        <div id="block-eer"></div>
+      </div>
+
+      <!-- 5. Panturrilha -->
+      <div id="block-cp-wrap" style="display:none">
+        <div class="block-title"><span class="block-num">5</span> Circunferência da Panturrilha (CP) — Idosos</div>
+        <div id="block-cp"></div>
+      </div>
+
+      <!-- REFS -->
+      <div class="refs">
+        <div class="refs-title">Referências:</div>
+        <p>• Frisancho AR. Anthropometric Standards for Assessment of Growth and Nutritional Status, 1990.</p>
+        <p>• Durnin JVGA, Womersley J. Br. J. Nutr. 32:77-97, 1974. | Siri WE, 1961.</p>
+        <p>• DRI 2023 — Dietary Reference Intakes for Energy. National Academies.</p>
+        <p>• Lipschitz DA, 1994. | OPAS/Projeto SABE, 2003. | Blackburn &amp; Thornton, 1979.</p>
+        <p>• Apostila Clínica de Nutrição — Anhanguera Osasco, 2023.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VÍDEOS ── -->
+  <div id="panel-videos" class="panel">
+    <div class="space-y">
+      <div class="card">
+        <div class="card-title">📚 Materiais de Apoio — Vídeos, Artigos e Recursos Educativos</div>
+        <p style="font-size:.78rem;color:var(--text2);margin-bottom:18px;line-height:1.6">Acesse a pasta compartilhada com <strong>vídeos explicativos das professoras</strong>, artigos de referência e outros materiais educativos para apoiar a aprendizagem e a correção das avaliações.</p>
+        <a href="https://drive.google.com/drive/folders/1AVOGfn06V-v-Xc53uDOCGtBzb27IcqVs?usp=drive_link"
+           target="_blank" rel="noopener"
+           style="display:flex;align-items:center;gap:14px;
+                  background:var(--info-bg);border:1.5px solid var(--info-border);
+                  border-radius:14px;padding:18px 20px;text-decoration:none;
+                  transition:all .2s;box-shadow:var(--card-shadow);"
+           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(13,148,136,.15)'"
+           onmouseout="this.style.transform='';this.style.boxShadow='var(--card-shadow)'">
+          <div style="font-size:2.2rem;flex-shrink:0">📂</div>
+          <div>
+            <div style="font-size:.88rem;font-weight:700;color:var(--info-title)">Abrir pasta no Google Drive</div>
+            <div style="font-size:.72rem;color:var(--info-text);margin-top:3px">Vídeos explicativos · Artigos · Materiais educativos · Apostilas</div>
+            <div style="font-size:.65rem;color:var(--muted);margin-top:5px;word-break:break-all">drive.google.com/drive/folders/1AVOGfn06V-v-Xc53uDOCGtBzb27IcqVs</div>
+          </div>
+          <div style="margin-left:auto;font-size:1.1rem;color:var(--accent);flex-shrink:0">↗</div>
+        </a>
+        <div class="naf-info" style="margin-top:14px">
+          <p style="font-size:.72rem;font-weight:700;color:var(--info-title)">ℹ️ Sobre os materiais</p>
+          <p style="font-size:.68rem;color:var(--info-text);margin-top:2px;line-height:1.5">A pasta é atualizada periodicamente com novos conteúdos. Recomenda-se acessar antes de cada aula prática para verificar materiais recentes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── TABELAS ──────────────────────────────────────────────────────────────────
+const CB_P50={M:[{min:18,max:18.9,p50:31.5},{min:19,max:24.9,p50:31.2},{min:25,max:34.9,p50:32.0},{min:35,max:44.9,p50:32.2},{min:45,max:54.9,p50:32.0},{min:55,max:64.9,p50:31.7},{min:65,max:74.9,p50:30.7}],F:[{min:18,max:18.9,p50:27.2},{min:19,max:24.9,p50:26.8},{min:25,max:34.9,p50:27.8},{min:35,max:44.9,p50:29.0},{min:45,max:54.9,p50:30.3},{min:55,max:64.9,p50:30.7},{min:65,max:74.9,p50:30.3}]};
+const CMB_P50={M:[{min:18,max:18.9,p50:26.4},{min:19,max:24.9,p50:27.3},{min:25,max:34.9,p50:27.9},{min:35,max:44.9,p50:28.6},{min:45,max:54.9,p50:28.1},{min:55,max:64.9,p50:27.8},{min:65,max:74.9,p50:26.8}],F:[{min:18,max:18.9,p50:20.2},{min:19,max:24.9,p50:20.0},{min:25,max:34.9,p50:21.2},{min:35,max:44.9,p50:21.8},{min:45,max:54.9,p50:22.0},{min:55,max:64.9,p50:22.5},{min:65,max:74.9,p50:22.5}]};
+const AMB_P50={M:[{min:18,max:24.9,p50:49.4},{min:25,max:29.9,p50:53.0},{min:30,max:34.9,p50:54.4},{min:35,max:39.9,p50:55.3},{min:40,max:44.9,p50:56.0},{min:45,max:49.9,p50:55.5},{min:50,max:54.9,p50:54.7},{min:55,max:59.9,p50:53.9},{min:60,max:64.9,p50:52.3},{min:65,max:74.9,p50:48.8}],F:[{min:18,max:24.9,p50:29.6},{min:25,max:29.9,p50:31.1},{min:30,max:34.9,p50:33.0},{min:35,max:39.9,p50:34.1},{min:40,max:44.9,p50:35.3},{min:45,max:49.9,p50:36.0},{min:50,max:54.9,p50:36.5},{min:55,max:59.9,p50:37.2},{min:60,max:64.9,p50:36.6},{min:65,max:74.9,p50:35.3}]};
+
+function getP50(t,sex,age){return(t[sex]||[]).find(r=>age>=r.min&&age<=r.max)?.p50??null}
+
+// ─── CÁLCULOS ────────────────────────────────────────────────────────────────
+function classIMCAdulto(v){if(v<18.5)return{label:"Baixo peso",color:"blue"};if(v<=24.9)return{label:"Eutrofia",color:"green"};if(v<=29.9)return{label:"Pré-obesidade / Sobrepeso",color:"yellow"};if(v<=34.9)return{label:"Obesidade Classe I",color:"orange"};if(v<=39.9)return{label:"Obesidade Classe II",color:"red"};return{label:"Obesidade Classe III",color:"red"}}
+function classIMCIdoso(v,s){if(s==="L"){return v<22?{label:"Desnutrição (Lipschitz)",color:"blue"}:v<=27?{label:"Eutrofia (Lipschitz)",color:"green"}:{label:"Sobrepeso (Lipschitz)",color:"yellow"}}return v<23?{label:"Baixo peso (OPAS)",color:"blue"}:v<=28?{label:"Eutrofia (OPAS)",color:"green"}:v<=30?{label:"Sobrepeso (OPAS)",color:"yellow"}:{label:"Obesidade (OPAS)",color:"red"}}
+function classIMCGestante(v){if(v<18.5)return{label:"Baixo peso",gainTotal:"12,7 a 18,1 kg",gainWeekly:"0,5 kg/sem",color:"blue"};if(v<=24.9)return{label:"Normal",gainTotal:"11,3 a 15,9 kg",gainWeekly:"0,5 kg/sem",color:"green"};if(v<=29.9)return{label:"Sobrepeso",gainTotal:"6,8 a 11,3 kg",gainWeekly:"0,3 kg/sem",color:"yellow"};return{label:"Obesidade",gainTotal:"5 a 9 kg",gainWeekly:"0,2 kg/sem",color:"red"}}
+function classAdeqCB(a){if(!a)return{label:"—",color:"gray"};if(a<70)return{label:"Desnutrição Grave",color:"red"};if(a<80)return{label:"Desnutrição Moderada",color:"orange"};if(a<90)return{label:"Desnutrição Leve",color:"yellow"};if(a<=110)return{label:"Eutrofia",color:"green"};if(a<=120)return{label:"Acima da média",color:"cyan"};return{label:"Muito acima da média",color:"purple"}}
+function classAdeqMuscular(a){if(!a)return{label:"—",color:"gray"};if(a<70)return{label:"Desnutrição Grave",color:"red"};if(a<80)return{label:"Desnutrição Moderada",color:"orange"};if(a<90)return{label:"Desnutrição Leve",color:"yellow"};if(a<=110)return{label:"Eutrofia",color:"green"};return{label:"Acima da média",color:"cyan"}}
+function classAMBPercentil(a){
+  // a = % adequação AMB em relação ao P50
+  // Quadro 4 Frisancho: Categoria I (<p5)=Baixa muscularidade, II(p5-15)=Abaixo da média, III(p15-85)=Média, IV(p85-95)=Acima da média, V(>p95)=Alta muscularidade
+  // Mapeamento aproximado via % adequação ao P50:
+  // P5≈73%, P15≈84%, P85≈116%, P95≈127% (estimativa baseada em distribuição normal)
+  if(a<73)return{label:"Baixa muscularidade (< P5)",color:"red"};
+  if(a<84)return{label:"Abaixo da média (P5–P15)",color:"orange"};
+  if(a<=116)return{label:"Média (P15–P85)",color:"green"};
+  if(a<=127)return{label:"Acima da média (P85–P95)",color:"cyan"};
+  return{label:"Alta muscularidade (> P95)",color:"purple"};
+}
+function classCC(cc,sex){
+  if(sex==='M'){
+    if(cc<94)return{label:"Sem risco aumentado",color:"green"};
+    if(cc<102)return{label:"Risco aumentado",color:"yellow"};
+    return{label:"Risco muito aumentado",color:"red"};
+  } else {
+    if(cc<80)return{label:"Sem risco aumentado",color:"green"};
+    if(cc<88)return{label:"Risco aumentado",color:"yellow"};
+    return{label:"Risco muito aumentado",color:"red"};
+  }
+}
+function classGorduraNIDDK(g,sex){
+  if(sex==='M'){
+    if(g<15)return{label:"Abaixo do esperado",color:"blue"};
+    if(g<=20)return{label:"Leve",color:"green"};
+    if(g<=25)return{label:"Moderada",color:"yellow"};
+    if(g<=30)return{label:"Elevada",color:"orange"};
+    return{label:"Mórbida",color:"red"};
+  } else {
+    if(g<25)return{label:"Abaixo do esperado",color:"blue"};
+    if(g<=30)return{label:"Leve",color:"green"};
+    if(g<=35)return{label:"Moderada",color:"yellow"};
+    if(g<=40)return{label:"Elevada",color:"orange"};
+    return{label:"Mórbida",color:"red"};
+  }
+}
+function classGordura(g,age,sex){const mM=[[20,29,[11,13,20,23]],[30,39,[12,14,21,24]],[40,49,[14,16,23,26]],[50,59,[15,17,24,27]],[60,199,[16,18,25,28]]];const mF=[[20,29,[16,19,28,31]],[30,39,[17,20,29,32]],[40,49,[18,21,30,33]],[50,59,[19,22,31,34]],[60,199,[20,23,32,35]]];const tab=sex==="M"?mM:mF;const row=tab.find(([a,b])=>age>=a&&age<=b)||tab[tab.length-1];const[e,b,m,r]=row[2];if(g<e)return{label:"Excelente / Atlético",color:"blue"};if(g<=b)return{label:"Bom",color:"green"};if(g<=m)return{label:"Dentro da média",color:"yellow"};if(g<=r)return{label:"Regular",color:"orange"};return{label:"Alto percentual de gordura",color:"red"}}
+function durninDC(sum4,age,sex){const l=Math.log10(sum4);if(sex==="M"){if(age<=19)return 1.162-0.0630*l;if(age<=29)return 1.1631-0.0632*l;if(age<=39)return 1.1422-0.0544*l;if(age<=49)return 1.162-0.0700*l;return 1.1715-0.0779*l}else{if(age<=19)return 1.1549-0.0678*l;if(age<=29)return 1.1599-0.0717*l;if(age<=39)return 1.1423-0.0632*l;if(age<=49)return 1.1333-0.0612*l;return 1.1339-0.0645*l}}
+function getDurninCoefs(age,sex){if(sex==="M"){if(age<=19)return["1,1620","0,0630","Homens 16-19 anos"];if(age<=29)return["1,1631","0,0632","Homens 20-29 anos"];if(age<=39)return["1,1422","0,0544","Homens 30-39 anos"];if(age<=49)return["1,1620","0,0700","Homens 40-49 anos"];return["1,1715","0,0779","Homens 50-72 anos"]}else{if(age<=19)return["1,1549","0,0678","Mulheres 16-19 anos"];if(age<=29)return["1,1599","0,0717","Mulheres 20-29 anos"];if(age<=39)return["1,1423","0,0632","Mulheres 30-39 anos"];if(age<=49)return["1,1333","0,0612","Mulheres 40-49 anos"];return["1,1339","0,0645","Mulheres 50-72 anos"]}}
+function calcEER(p,h,age,sex,naf){if(sex==="M"){if(naf==="sedentario")return 753.07-10.83*age+6.50*h+14.10*p;if(naf==="pouco_ativo")return 581.47-10.83*age+8.30*h+14.94*p;if(naf==="ativo")return 1004.82-10.83*age+6.52*h+15.91*p;return-517.88-10.83*age+15.61*h+19.11*p}else{if(naf==="sedentario")return 584.90-7.01*age+5.72*h+11.71*p;if(naf==="pouco_ativo")return 575.77-7.01*age+6.60*h+12.14*p;if(naf==="ativo")return 710.25-7.01*age+6.54*h+12.34*p;return 511.83-7.01*age+9.07*h+12.56*p}}
+function getEERFormula(sex,naf){const m={M:{sedentario:"EER = 753,07 − (10,83 × Idade) + (6,50 × Altura) + (14,10 × Peso)",pouco_ativo:"EER = 581,47 − (10,83 × Idade) + (8,30 × Altura) + (14,94 × Peso)",ativo:"EER = 1.004,82 − (10,83 × Idade) + (6,52 × Altura) + (15,91 × Peso)",muito_ativo:"EER = −517,88 − (10,83 × Idade) + (15,61 × Altura) + (19,11 × Peso)"},F:{sedentario:"EER = 584,90 − (7,01 × Idade) + (5,72 × Altura) + (11,71 × Peso)",pouco_ativo:"EER = 575,77 − (7,01 × Idade) + (6,60 × Altura) + (12,14 × Peso)",ativo:"EER = 710,25 − (7,01 × Idade) + (6,54 × Altura) + (12,34 × Peso)",muito_ativo:"EER = 511,83 − (7,01 × Idade) + (9,07 × Altura) + (12,56 × Peso)"}};return m[sex][naf]||"—"}
+function getEERSubst(p,h,age,sex,naf,eer){const parts={M:{sedentario:`753,07 − (10,83 × ${age}) + (6,50 × ${h}) + (14,10 × ${p})`,pouco_ativo:`581,47 − (10,83 × ${age}) + (8,30 × ${h}) + (14,94 × ${p})`,ativo:`1.004,82 − (10,83 × ${age}) + (6,52 × ${h}) + (15,91 × ${p})`,muito_ativo:`−517,88 − (10,83 × ${age}) + (15,61 × ${h}) + (19,11 × ${p})`},F:{sedentario:`584,90 − (7,01 × ${age}) + (5,72 × ${h}) + (11,71 × ${p})`,pouco_ativo:`575,77 − (7,01 × ${age}) + (6,60 × ${h}) + (12,14 × ${p})`,ativo:`710,25 − (7,01 × ${age}) + (6,54 × ${h}) + (12,34 × ${p})`,muito_ativo:`511,83 − (7,01 × ${age}) + (9,07 × ${h}) + (12,56 × ${p})`}};return`EER = ${parts[sex][naf]}\n= ${Number(eer).toFixed(1)} kcal/dia`}
+
+// ─── ESTADO ───────────────────────────────────────────────────────────────────
+let profile="adulto", currentTab="dados", corrMode=false;
+let SA={};
+const videos=[];
+
+function fmt(v,d=1){return(v==null||isNaN(v))?"—":Number(v).toFixed(d)}
+function gv(id){return parseFloat(document.getElementById(id)?.value)||NaN}
+function gs(id){return document.getElementById(id)?.value||""}
+
+function setProfile(p){
+  profile=p;
+  document.querySelectorAll('.profile-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['adulto','idoso','gestante','adolescente'][i]===p)
+  });
+  document.getElementById('cp-field').style.display=p==='idoso'?'block':'none';
+  document.getElementById('gest-card').style.display=p==='gestante'?'block':'none';
+  setTab('dados');recalc();
+}
+
+function setTab(t){
+  currentTab=t;
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  document.querySelectorAll('.tab-btn')[['dados','resultados','videos'].indexOf(t)].classList.add('active');
+  if(t==='resultados') renderResultados();
+}
+
+function toggleCorr(){
+  corrMode=!corrMode;
+  const btn=document.getElementById('corrToggle');
+  btn.classList.toggle('on',corrMode);
+  btn.classList.toggle('off',!corrMode);
+  renderResultados();
+}
+
+// ─── HTML HELPERS ─────────────────────────────────────────────────────────────
+function badge(cls){if(!cls)return'';return`<span class="badge badge-${cls.color}">${cls.label}</span>`}
+function warn(txt){return`<div class="warn"><span class="warn-icon">⚠️</span><span class="warn-text">${txt}</span></div>`}
+
+function stepCard(id,{stepLabel,title,formula,disclaimer,substitution,result,classification,note}){
+  let corrHTML='';
+  if(corrMode){
+    const sv=SA[id]||'';
+    const sn=parseFloat(sv.replace(',','.'));
+    const rn=parseFloat((result||'').replace(/[^\d.,-]/g,'').replace(',','.'));
+    const ok=!isNaN(sn)&&!isNaN(rn)&&Math.abs(sn-rn)<=Math.abs(rn)*0.015+0.1;
+    const has=sv!=='';
+    corrHTML=`<div class="corr-section">
+      <div class="corr-label">Resposta do aluno:</div>
+      <div class="corr-row">
+        <input class="corr-input${has?(ok?' ok':' err'):''}" type="text" value="${sv}" placeholder="Digite o valor do aluno..." oninput="SA['${id}']=this.value;updateCorr(this,'${id}','${(result||'').replace(/'/g,"\\'")}')">
+        ${has?`<span class="corr-tag ${ok?'ok':'err'}">${ok?'✓ Correto':'✗ Esperado: '+result}</span>`:''}
+      </div>
+    </div>`;
+  }
+  return`<div class="step-card">
+    <div class="step-header"><span class="step-badge">${stepLabel}</span><span class="step-title">${title}</span></div>
+    <div class="step-body">
+      ${formula?`<div><div class="step-label">Fórmula</div><div class="formula-box">${formula}</div></div>`:''}
+      ${disclaimer?warn(disclaimer):''}
+      ${substitution?`<div><div class="step-label">Substituição passo a passo</div><div class="subst-box">${substitution}</div></div>`:''}
+      <div class="result-row">
+        <div><div class="step-label">Resultado</div><div class="result-val">${result}</div></div>
+        ${classification?badge(classification):''}
+      </div>
+      ${note?`<div class="note-box">${note}</div>`:''}
+      ${corrHTML}
+    </div>
+  </div>`;
+}
+
+function updateCorr(input,id,expectedRaw){
+  const sv=input.value;
+  SA[id]=sv;
+  const sn=parseFloat(sv.replace(',','.'));
+  const rn=parseFloat(expectedRaw.replace(/[^\d.,-]/g,'').replace(',','.'));
+  const ok=!isNaN(sn)&&!isNaN(rn)&&Math.abs(sn-rn)<=Math.abs(rn)*0.015+0.1;
+  const has=sv!=='';
+  input.className='corr-input'+(has?(ok?' ok':' err'):'');
+  let tag=input.nextElementSibling;
+  if(has){
+    if(!tag||!tag.classList.contains('corr-tag')){tag=document.createElement('span');input.parentNode.appendChild(tag);}
+    tag.className='corr-tag '+(ok?'ok':'err');
+    tag.textContent=ok?'✓ Correto':'✗ Esperado: '+expectedRaw;
+  } else {if(tag&&tag.classList.contains('corr-tag'))tag.remove();}
+}
+
+function emptyBlock(msg){return`<div class="block-empty"><p>${msg}</p></div>`}
+
+// ─── RENDER RESULTADOS ────────────────────────────────────────────────────────
+function recalc(){if(currentTab==='resultados')renderResultados();}
+
+function renderResultados(){
+  const sex=gs('sex'), naf=gs('naf');
+  const peso=gv('peso'), alt=gv('alt'), age=gv('age');
+  const cbN=gv('cb'), dctN=gv('dct'), dcbN=gv('dcb'), dcseN=gv('dcse'), dcsiN=gv('dcsi');
+  const ppgN=gv('ppg'), cpN=gv('cp');
+  const hm=alt/100;
+
+  // ── IMC ──
+  let imcHTML='';
+  if(isNaN(peso)||isNaN(hm)||hm<=0){
+    imcHTML=emptyBlock('Preencha peso e altura.');
+  } else {
+    const imc=peso/(hm*hm);
+    const imcF=fmt(imc);
+    const altM=fmt(hm,2);
+    const altM2=fmt(hm*hm,4);
+    const subst=`IMC = ${peso} ÷ (${altM})²\n= ${peso} ÷ ${altM2}\n= ${imcF} kg/m²`;
+    if(profile==='gestante'&&!isNaN(ppgN)&&ppgN>0){
+      const imcPG=ppgN/(hm*hm);
+      const clsPG=classIMCGestante(imcPG);
+      imcHTML+=stepCard('imc_pg',{stepLabel:'1a',title:'IMC Pré-Gestacional',formula:'IMC = Peso pré-gestacional (kg) ÷ Altura² (m)',
+        substitution:`IMC = ${ppgN} ÷ (${altM})²\n= ${ppgN} ÷ ${altM2}\n= ${fmt(imcPG)} kg/m²`,
+        result:`${fmt(imcPG)} kg/m²`,classification:clsPG,
+        note:clsPG?`Ganho total recomendado: ${clsPG.gainTotal} | Semanal (2º e 3º tri): ${clsPG.gainWeekly}`:null});
+    }
+    const lbl=profile==='gestante'?'1b':'1';
+    let cls, noteStr;
+    if(profile==='idoso'){cls=classIMCIdoso(imc,'L');noteStr='Lipschitz (1994): <22 Desnutrição | 22-27 Eutrofia | >27 Sobrepeso';}
+    else{cls=classIMCAdulto(imc);noteStr='OMS: <18,5 Baixo peso | 18,5-24,9 Eutrofia | 25-29,9 Pré-obesidade | 30-34,9 OB I | 35-39,9 OB II | ≥40 OB III';}
+    imcHTML+=stepCard('imc',{stepLabel:lbl,title:'IMC Atual',formula:'IMC = Peso atual (kg) ÷ Altura² (m)',
+      substitution:subst,result:`${imcF} kg/m²`,classification:cls,note:noteStr});
+    if(profile==='idoso'){
+      const clsO=classIMCIdoso(imc,'O');
+      imcHTML+=stepCard('imc_opas',{stepLabel:'1b',title:'Classificação OPAS/2003 (Projeto SABE)',formula:'Mesmo IMC',
+        substitution:`IMC = ${imcF} kg/m²`,result:`${imcF} kg/m²`,classification:clsO,
+        note:'OPAS 2003: <23 Baixo peso | 23-28 Eutrofia | 28-30 Sobrepeso | >30 Obesidade'});
+    }
+  }
+  document.getElementById('block-imc').innerHTML=imcHTML;
+
+  // ── CC ──
+  const ccN=gv('cc');
+  let ccHTML='';
+  if(isNaN(ccN)){
+    ccHTML=emptyBlock('Preencha a Circunferência da Cintura (CC).');
+  } else {
+    const clsCC=classCC(ccN,sex);
+    const refStr=sex==='M'
+      ? 'Homens — Sem risco: <94 cm | Risco aumentado: 94–101 cm | Risco muito aumentado: ≥102 cm'
+      : 'Mulheres — Sem risco: <80 cm | Risco aumentado: 80–87 cm | Risco muito aumentado: ≥88 cm';
+    ccHTML+=stepCard('cc_val',{stepLabel:'CC',title:'Circunferência da Cintura — Risco Cardiovascular (OMS)',
+      formula:'Ponto de corte por sexo (OMS / IDF)',
+      substitution:`CC = ${ccN} cm → ${clsCC.label}`,
+      result:`${ccN} cm`,
+      classification:clsCC,
+      note:refStr});
+  }
+  document.getElementById('block-cc').innerHTML=ccHTML;
+  let cbHTML='';
+  const cbP50=getP50(CB_P50,sex,age);
+  if(isNaN(cbN)||!cbP50){
+    cbHTML=emptyBlock('Preencha CB, DCT, idade e sexo.');
+  } else {
+    const adeqCB=(cbN/cbP50)*100;
+    cbHTML+=stepCard('adeqCB',{stepLabel:'2a',title:'% Adequação da CB em relação ao P50 (Frisancho, 1990)',
+      formula:'% Adequação CB = (CB medida ÷ P50 referência) × 100',
+      substitution:`% Adeq. CB = (${cbN} ÷ ${fmt(cbP50)}) × 100\n= ${fmt(cbN/cbP50,4)} × 100\n= ${fmt(adeqCB)} %`,
+      result:`${fmt(adeqCB)} %`,classification:classAdeqCB(adeqCB),
+      note:`P50 Frisancho 1990 (${sex==='M'?'Homem':'Mulher'}, ${age} anos): ${fmt(cbP50)} cm | <70% Desnut. Grave | 70-80% Moderada | 80-90% Leve | 90-110% Eutrofia | 110-120% Acima | >120% Muito acima`});
+
+    if(!isNaN(dctN)){
+      const cmb=cbN-dctN*0.314;
+      cbHTML+=stepCard('cmb',{stepLabel:'2b',title:'Circunferência Muscular do Braço (CMB)',
+        formula:'CMB = CB − (DCT × 0,314)',
+        substitution:`CMB = ${cbN} − (${dctN} × 0,314)\n= ${cbN} − ${fmt(dctN*0.314)}\n= ${fmt(cmb)} cm`,
+        result:`${fmt(cmb)} cm`});
+
+      const cmbP50=getP50(CMB_P50,sex,age);
+      if(cmbP50){
+        const adeqCMB=(cmb/cmbP50)*100;
+        cbHTML+=stepCard('adeqCMB',{stepLabel:'2c',title:'% Adequação da CMB em relação ao P50',
+          formula:'% Adequação CMB = (CMB ÷ P50 CMB) × 100',
+          substitution:`% Adeq. CMB = (${fmt(cmb)} ÷ ${fmt(cmbP50)}) × 100\n= ${fmt(cmb/cmbP50,4)} × 100\n= ${fmt(adeqCMB)} %`,
+          result:`${fmt(adeqCMB)} %`,classification:classAdeqMuscular(adeqCMB),
+          note:`P50 CMB: ${fmt(cmbP50)} cm | <70% Desnut. Grave | 70-80% Moderada | 80-90% Leve | 90-110% Eutrofia | >110% Acima`});
+      }
+
+      const cmb2=cmb*cmb;
+      const amb=cmb2/(4*Math.PI)-(sex==='M'?10.0:6.5);
+      const corr=sex==='M'?'10,0 (homens)':'6,5 (mulheres)';
+      const corrN=sex==='M'?'10,0':'6,5';
+      cbHTML+=stepCard('amb',{stepLabel:'2d',title:`Área Muscular do Braço (AMB) – Correção Heymsfield (−${corrN})`,
+        formula:`AMB = (CMB²) ÷ (4 × π) − ${corr}`,
+        substitution:`Passo 1 — Elevar CMB ao quadrado:\nCMB² = (${fmt(cmb)})² = ${fmt(cmb2,1)}\n\nPasso 2 — Dividir por (4 × π = 12,56):\n${fmt(cmb2,1)} ÷ 12,56 = ${fmt(cmb2/12.56,2)}\n\nPasso 3 — Subtrair correção de sexo (${corrN}):\n${fmt(cmb2/12.56,2)} − ${corrN} = ${fmt(amb)} cm²`,
+        result:`${fmt(amb)} cm²`,
+        note:null});
+
+      const ambP50=getP50(AMB_P50,sex,age);
+      if(ambP50){
+        const adeqAMB=(amb/ambP50)*100;
+        const clsAMB=classAMBPercentil(adeqAMB);
+        cbHTML+=stepCard('adeqAMB',{stepLabel:'2e',title:'% Adequação da AMB em relação ao P50 — Classificação Muscular (Frisancho, 1990)',
+          formula:'% Adequação AMB = (AMB ÷ P50 AMB) × 100',
+          substitution:`% Adeq. AMB = (${fmt(amb)} ÷ ${fmt(ambP50)}) × 100\n= ${fmt(amb/ambP50,4)} × 100\n= ${fmt(adeqAMB)} %`,
+          result:`${fmt(adeqAMB)} %`,classification:clsAMB,
+          note:`P50 AMB: ${fmt(ambP50)} cm² | Classificação: Baixa muscularidade (<P5) | Abaixo da média (P5–P15) | Média (P15–P85) | Acima da média (P85–P95) | Alta muscularidade (>P95)`});
+      }
+
+    }
+  }
+  document.getElementById('block-cb').innerHTML=cbHTML;
+
+  // ── DOBRAS ──
+  let dobrasHTML='';
+  if(isNaN(dctN)||isNaN(dcbN)||isNaN(dcseN)||isNaN(dcsiN)||isNaN(age)||age<16||age>72){
+    dobrasHTML=emptyBlock('Preencha as 4 dobras, peso e idade (16-72 anos).');
+  } else {
+    const sum4=dctN+dcbN+dcseN+dcsiN;
+    const logS=Math.log10(sum4);
+    const dc=durninDC(sum4,age,sex);
+    const s495=4.95/dc;
+    const sMinus=s495-4.5;
+    const pctG=sMinus*100;
+    const [c1,c2,faixa]=getDurninCoefs(age,sex);
+    const c2n=parseFloat(c2.replace(',','.'));
+
+    dobrasHTML+=`<div class="info-amber">
+      <div class="info-amber-title">⚠️ Cálculo passo a passo — sem atalhos de calculadora científica</div>
+      <div class="info-amber-body">Os alunos <strong>não utilizam o botão LOG</strong> da calculadora científica como atalho direto. Cada operação deve ser registrada individualmente nos passos obrigatórios. O uso direto de LOG como atalho <strong>não é aceito</strong>.</div>
+    </div>`;
+
+    // Passo 1 — Soma das 4 dobras
+    dobrasHTML+=stepCard('sum4',{stepLabel:'P1',title:'Passo 1 — Somatória das 4 Dobras (∑4)',
+      formula:'∑4 = DCT + DCB + DCSE + DCSI',
+      substitution:`∑4 = ${dctN} + ${dcbN} + ${dcseN} + ${dcsiN}\n= ${fmt(sum4,1)} mm`,
+      result:`${fmt(sum4,1)} mm`});
+
+    // % de Gordura — estimado pela tabela (Durnin & Womersley, 1974) + classificação NIDDK 1993
+    const clsG=classGorduraNIDDK(pctG,sex);
+    dobrasHTML+=stepCard('pctG',{stepLabel:'%G',title:'% de Gordura Corporal — Estimado pela Tabela (Durnin &amp; Womersley, 1974)',
+      formula:'Localizar a linha correspondente à ∑4 na tabela · coluna do sexo e faixa etária',
+      substitution:`∑4 = ${fmt(sum4,1)} mm\n→ Consultar tabela: "Porcentagem de Gordura Corpórea Baseada nas Quatro Medidas da Prega Cutânea: Bíceps, Tríceps, Subescapular e Suprailíaca"\n→ Coluna: ${sex==='M'?'Homens':'Mulheres'} · faixa etária correspondente\n→ % de Gordura estimado ≈ ${fmt(pctG)} %`,
+      result:`≈ ${fmt(pctG)} %`,classification:clsG,
+      note:`Fonte: Durnin; Womersley, 1974 · Classificação: Quadro 5 — Classificação da Gordura Corporal (NIDDK, 1993)`});
+
+    dobrasHTML+=`<div class="class-table">
+      <p><b>Quadro 5 — Classificação da Gordura Corporal (NIDDK, 1993)</b></p>
+      <p style="margin-top:6px">
+        ${sex==='M'
+          ?'<b>Leve:</b> 15–20% &nbsp;|&nbsp; <b>Moderada:</b> 20–25% &nbsp;|&nbsp; <b>Elevada:</b> 25–30% &nbsp;|&nbsp; <b>Mórbida:</b> >30%'
+          :'<b>Leve:</b> 25–30% &nbsp;|&nbsp; <b>Moderada:</b> 30–35% &nbsp;|&nbsp; <b>Elevada:</b> 35–40% &nbsp;|&nbsp; <b>Mórbida:</b> >40%'}
+      </p>
+      <p style="margin-top:6px;font-size:.65rem;color:var(--muted)">Tabela de estimativa do %G: <em>Porcentagem de Gordura Corpórea Baseada nas Quatro Medidas da Prega Cutânea — Bíceps, Tríceps, Subescapular e Suprailíaca</em> (Durnin &amp; Womersley, 1974). Localizar a linha da ∑4 e a coluna do sexo/faixa etária do paciente.</p>
+    </div>`;
+
+    // Acordeão: passos intermediários (curiosidade técnica)
+    dobrasHTML+=`<div class="curio-collapsible">
+      <button class="curio-toggle-btn" onclick="(function(btn){const c=btn.nextElementSibling;const open=c.classList.toggle('open');btn.querySelector('.curio-arrow').style.transform=open?'rotate(90deg)':'rotate(0deg)'})(this)">
+        <span>🔍 A título de curiosidade — Passos intermediários do cálculo (clique para expandir)</span>
+        <span class="curio-arrow">▶</span>
+      </button>
+      <div class="curio-content">
+        ${stepCard('logS',{stepLabel:'P2',title:'Passo 2 — Logaritmo de base 10 da Somatória',
+          formula:'log₁₀ (∑4)',
+          disclaimer:'Os alunos devem utilizar a tabela de logaritmos ou realizar a operação explicitamente — o uso direto do botão LOG da calculadora científica como único registro NÃO é aceito neste protocolo.',
+          substitution:`log₁₀ (${fmt(sum4,1)}) = ${fmt(logS,4)}`,
+          result:fmt(logS,4)})}
+        ${stepCard('dc',{stepLabel:'P3',title:`Passo 3 — Equação de Durnin &amp; Womersley [${faixa}]`,
+          formula:`DC = ${c1} − ${c2} × log₁₀(∑4)`,
+          disclaimer:`Equação correta para sexo e faixa etária: ${faixa}.`,
+          substitution:`DC = ${c1} − ${c2} × ${fmt(logS,4)}\n= ${c1} − ${fmt(c2n*logS,4)}\n= ${fmt(dc,4)}`,
+          result:fmt(dc,4),note:'DC = Densidade Corporal (g/mL)'})}
+        ${stepCard('s495',{stepLabel:'P4',title:'Passo 4 — Dividir 4,95 pela Densidade Corporal',
+          formula:'4,95 ÷ DC',
+          substitution:`4,95 ÷ ${fmt(dc,4)}\n= ${fmt(s495,4)}`,
+          result:fmt(s495,4)})}
+        ${stepCard('sMinus',{stepLabel:'P5',title:'Passo 5 — Subtrair 4,50',
+          formula:'(4,95 ÷ DC) − 4,50',
+          substitution:`${fmt(s495,4)} − 4,50\n= ${fmt(sMinus,4)}`,
+          result:fmt(sMinus,4)})}
+        ${stepCard('p6detail',{stepLabel:'P6',title:'Passo 6 — Multiplicar por 100 → % de Gordura (Equação de Siri, 1961)',
+          formula:'%G = [(4,95 ÷ DC) − 4,50] × 100',
+          substitution:`%G = ${fmt(sMinus,4)} × 100\n= ${fmt(pctG)} %`,
+          result:`${fmt(pctG)} %`})}
+        ${(()=>{let mgSubst='Informe o peso para calcular.',mgResult='—';if(!isNaN(peso)){const mg=(pctG/100)*peso;const mm=peso-mg;mgSubst=`MG = ${peso} × (${fmt(pctG)} ÷ 100)\n= ${peso} × ${fmt(pctG/100,4)}\n= ${fmt(mg)} kg\n\nMM = ${peso} − ${fmt(mg)}\n= ${fmt(mm)} kg`;mgResult=`MG = ${fmt(mg)} kg  |  MM = ${fmt(mm)} kg`;}return stepCard('mg',{stepLabel:'P7',title:'Passo 7 — Massa Gorda (MG) e Massa Magra (MM)',formula:'MG = Peso × (%G ÷ 100)   |   MM = Peso − MG',substitution:mgSubst,result:mgResult})})()}
+        ${stepCard('atb',{stepLabel:'2f',title:'Área Total do Braço (ATB)',
+          formula:'ATB = CB² ÷ (4 × π)',
+          substitution:(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);return`Passo 1: CB² = (${cbN})² = ${cb2}\nPasso 2: ATB = ${cb2} ÷ (4 × 3,1416) = ${cb2} ÷ 12,5664 = ${fmt(atb)} cm²`})(),
+          result:(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);return`${fmt(atb)} cm²`})()})}
+        ${(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);const agb=atb-(cbN?(cbN-(dctN*0.314))*(cbN-(dctN*0.314))/(4*Math.PI)-(sex==='M'?10.0:6.5):0);const igb=(agb/atb)*100;return stepCard('agb',{stepLabel:'2g',title:'Área de Gordura do Braço (AGB)',formula:'AGB = ATB − AMB',substitution:`AGB = ${fmt(atb)} − — cm²`,result:`${fmt(atb)} cm² (ver AMB acima)`})+stepCard('igb',{stepLabel:'2h',title:'Índice de Gordura do Braço (IGB)',formula:'IGB = (AGB ÷ ATB) × 100',substitution:`Ver valores de AGB e ATB acima`,result:`—`})})()}
+      </div>
+    </div>`;
+  }
+  document.getElementById('block-dobras').innerHTML=dobrasHTML;
+
+  // ── EER ──
+  let eerHTML='';
+  if(isNaN(peso)||isNaN(alt)||isNaN(age)){
+    eerHTML=emptyBlock('Preencha peso, altura e idade.');
+  } else {
+    const eer=calcEER(peso,alt,age,sex,naf);
+    const nafLabel={sedentario:'Sedentário',pouco_ativo:'Pouco ativo',ativo:'Ativo',muito_ativo:'Muito ativo'}[naf];
+    eerHTML+=`<div class="info-teal">
+      <span style="font-size:1.5rem">📌</span>
+      <div>
+        <div class="info-teal-title">Método único adotado pela Clínica: EER — DRI 2023</div>
+        <div class="info-teal-body">A partir de 2023, a Clínica adota <strong>exclusivamente</strong> a equação EER (Estimated Energy Requirement) do DRI 2023. Fórmulas anteriores como <strong>Harris-Benedict, Mifflin-St Jeor, FAO/OMS (TMB × NAF)</strong> etc. <strong>não são aceitas</strong> neste protocolo e devem ser sinalizadas como <span style="color:#dc2626;font-weight:700">ERRO</span> na correção.</div>
+      </div>
+    </div>`;
+    eerHTML+=stepCard('eer',{stepLabel:'EER',title:`EER DRI 2023 — ${sex==='M'?'Homem':'Mulher'} · NAF: ${nafLabel}`,
+      formula:getEERFormula(sex,naf),
+      disclaimer:'Atenção: a Altura deve ser inserida em centímetros (cm) — NÃO convertida para metros. O Peso em kg e a Idade em anos. Alunos que converterem altura para metros cometerão erro de unidade.',
+      substitution:getEERSubst(peso,alt,age,sex,naf,eer),
+      result:`${fmt(eer,1)} kcal/dia`,
+      note:'Referência: DRI 2023 — Dietary Reference Intakes for Energy · National Academies of Sciences'});
+  }
+  document.getElementById('block-eer').innerHTML=eerHTML;
+
+  // ── PANTURRILHA ──
+  const cpWrap=document.getElementById('block-cp-wrap');
+  if(profile==='idoso'&&!isNaN(cpN)){
+    cpWrap.style.display='block';
+    const below=cpN<31;
+    document.getElementById('block-cp').innerHTML=stepCard('cp_val',{stepLabel:'CP',title:'Avaliação da CP — OMS, 1995',
+      formula:'Ponto de corte: CP < 31 cm → perda de massa muscular',
+      substitution:`CP = ${cpN} cm → ${below?'ABAIXO do ponto de corte (< 31 cm)':'ACIMA do ponto de corte (≥ 31 cm)'}`,
+      result:`${cpN} cm`,
+      classification:{label:below?'< 31 cm → Sarcopenia / Perda muscular':'≥ 31 cm → Sem indicativo de perda muscular',color:below?'red':'green'},
+      note:'Medida antropométrica mais sensível de massa muscular em idosos. (OMS, 1995)'});
+  } else {
+    cpWrap.style.display='none';
+  }
+}
+
+// ─── VÍDEOS ───────────────────────────────────────────────────────────────────
+function handleVideoFiles(files){
+  Array.from(files).forEach(f=>{
+    if(f.type.startsWith('video/')){
+      videos.push({name:f.name,url:URL.createObjectURL(f),size:(f.size/1024/1024).toFixed(1)});
+    }
+  });
+  renderVideos();
+}
+function handleDrop(e){
+  e.preventDefault();
+  handleVideoFiles(e.dataTransfer.files);
+}
+function removeVideo(i){videos.splice(i,1);renderVideos();}
+function renderVideos(){
+  const list=document.getElementById('video-list');
+  if(!videos.length){
+    list.innerHTML=`<div class="empty-state"><p>📭</p><p style="font-size:.875rem;color:#94a3b8">Nenhum vídeo carregado.</p><p style="font-size:.75rem;color:#cbd5e1;margin-top:4px">Os vídeos aparecem aqui após o upload.</p></div>`;
+    return;
+  }
+  list.innerHTML=videos.map((v,i)=>`<div class="video-card">
+    <div class="video-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span>🎬</span>
+        <div><div class="video-title">${v.name}</div><div class="video-size">${v.size} MB</div></div>
+      </div>
+      <button class="video-remove" onclick="removeVideo(${i})">🗑 Remover</button>
+    </div>
+    <div class="video-body"><video controls src="${v.url}"></video></div>
+  </div>`).join('')+`<div class="video-note"><strong>ℹ️ Sobre os vídeos carregados</strong><br>Os vídeos são armazenados localmente nesta sessão do navegador. Ao fechar ou recarregar a página, será necessário carregá-los novamente.</div>`;
+}
+// ─── TEMAS ────────────────────────────────────────────────────────────────────
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.theme-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.t===t);
+  });
+  try{localStorage.setItem('theme',t)}catch(e){}
+}
+try{const saved=localStorage.getItem('theme');if(saved)setTheme(saved);}catch(e){}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderVideos();
+</script>
+</body>
+</html>
