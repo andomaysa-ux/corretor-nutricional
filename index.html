@@ -6,47 +6,47 @@
 <title>Corretor de Avaliação Nutricional</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
-   TOKENS — LIGHT (default)
+   TOKENS — LIGHT
 ═══════════════════════════════════════════════════════ */
 :root,[data-theme="light"]{
-  --bg:         #f4f7f6;
+  --bg:         #f0f4f8;
   --bg2:        #ffffff;
-  --bg3:        #eef2f0;
+  --bg3:        #e8eef4;
   --surface:    #ffffff;
-  --surface2:   #f8faf9;
-  --border:     #e0e8e5;
-  --border2:    #d1ddd9;
-  --text:       #1c2e2a;
-  --text2:      #3d5450;
-  --text3:      #6b8a84;
-  --muted:      #9ab4ae;
-  --accent:     #0d9488;
-  --accent2:    #0f766e;
-  --accent3:    #ccfbf1;
-  --accent-glow:rgba(13,148,136,.12);
-  --accent-text:#0f766e;
-  --header-bg:  linear-gradient(135deg,#134e4a 0%,#0d9488 60%,#14b8a6 100%);
+  --surface2:   #f5f8fb;
+  --border:     #dce5ee;
+  --border2:    #c8d6e2;
+  --text:       #0f1e2d;
+  --text2:      #2c4258;
+  --text3:      #5a7a96;
+  --muted:      #8fa8bf;
+  --accent:     #0891b2;
+  --accent2:    #0e7490;
+  --accent3:    #cffafe;
+  --accent-glow:rgba(8,145,178,.13);
+  --accent-text:#0e7490;
+  --header-bg:  linear-gradient(135deg,#0c4a6e 0%,#0891b2 60%,#22d3ee 100%);
   --header-text:#ffffff;
-  --header-sub: rgba(255,255,255,.65);
-  --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
-  --step-shadow:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
-  --tab-active-bg:#0d9488;
-  --tab-active-shadow:0 2px 10px rgba(13,148,136,.35);
-  --formula-bg: #f2f7f6;
-  --formula-text:#2d4a45;
-  --subst-bg:   #edfaf7;
-  --subst-text: #0f766e;
-  --toggle-off: #c8d8d4;
+  --header-sub: rgba(255,255,255,.6);
+  --card-shadow:0 1px 2px rgba(15,30,50,.04),0 4px 16px rgba(15,30,50,.06);
+  --step-shadow:0 1px 2px rgba(15,30,50,.04),0 2px 8px rgba(15,30,50,.05);
+  --tab-active-bg:#0891b2;
+  --tab-active-shadow:0 2px 12px rgba(8,145,178,.3);
+  --formula-bg: #f0f7fa;
+  --formula-text:#1e3a4a;
+  --subst-bg:   #e0f7fa;
+  --subst-text: #0e7490;
+  --toggle-off: #bcd4e0;
   --warn-bg:    #fffbeb;
   --warn-border:#fcd34d;
   --warn-text:  #92400e;
-  --info-bg:    #edfaf7;
-  --info-border:#2dd4bf;
-  --info-title: #134e4a;
-  --info-text:  #0f766e;
+  --info-bg:    #e0f7fa;
+  --info-border:#22d3ee;
+  --info-title: #0c4a6e;
+  --info-text:  #0e7490;
   --amber-bg:   #fffbeb;
   --amber-border:#fcd34d;
   --amber-title:#92400e;
@@ -55,14 +55,14 @@
   --corr-ok-bd: #34d399;
   --corr-err-bg:#fef2f2;
   --corr-err-bd:#f87171;
-  --note-border:#d1e8e3;
-  --curio-bg:   #f8faf9;
-  --curio-bd:   #c8d8d4;
-  --refs-bg:    #f8faf9;
+  --note-border:#bcd8e8;
+  --curio-bg:   #f5f8fb;
+  --curio-bd:   #c8d8e8;
+  --refs-bg:    #f5f8fb;
 }
 
 /* ═══════════════════════════════════════════════════════
-   WARM (amarelo/bege — conforto diurno)
+   WARM
 ═══════════════════════════════════════════════════════ */
 [data-theme="warm"]{
   --bg:         #faf6ee;
@@ -81,7 +81,7 @@
   --accent3:    #d4f0e8;
   --accent-glow:rgba(10,124,111,.12);
   --accent-text:#085f55;
-  --header-bg:  linear-gradient(135deg,#1a3a2e 0%,#0a7c6f 60%,#12a090 100%);
+  --header-bg:  linear-gradient(135deg,#083344 0%,#0a7c6f 60%,#0fbfad 100%);
   --header-text:#fff8ee;
   --header-sub: rgba(255,248,238,.6);
   --card-shadow:0 1px 3px rgba(60,30,0,.06),0 4px 12px rgba(60,30,0,.04);
@@ -115,189 +115,217 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   DARK — conforto ocular noturno
+   DARK
 ═══════════════════════════════════════════════════════ */
 [data-theme="dark"]{
-  --bg:         #0f1a18;
-  --bg2:        #162220;
-  --bg3:        #1c2e2a;
-  --surface:    #1c2e2a;
-  --surface2:   #223530;
-  --border:     #2a4038;
-  --border2:    #345048;
-  --text:       #d4ece7;
-  --text2:      #9ecec5;
-  --text3:      #6aaba0;
-  --muted:      #4a7870;
-  --accent:     #14b8a6;
-  --accent2:    #0d9488;
-  --accent3:    rgba(20,184,166,.18);
-  --accent-glow:rgba(20,184,166,.18);
-  --accent-text:#5eead4;
-  --header-bg:  linear-gradient(135deg,#0a1410 0%,#0f1e1c 60%,#162e28 100%);
-  --header-text:#d4ece7;
-  --header-sub: rgba(212,236,231,.5);
-  --card-shadow:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.2);
-  --step-shadow:0 1px 2px rgba(0,0,0,.25),0 2px 8px rgba(0,0,0,.15);
-  --tab-active-bg:#14b8a6;
-  --tab-active-shadow:0 2px 10px rgba(20,184,166,.25);
-  --formula-bg: #162220;
-  --formula-text:#9ecec5;
-  --subst-bg:   rgba(20,184,166,.1);
-  --subst-text: #5eead4;
-  --toggle-off: #2a4038;
-  --warn-bg:    rgba(252,211,77,.07);
-  --warn-border:rgba(252,211,77,.3);
+  --bg:         #080f14;
+  --bg2:        #0d1822;
+  --bg3:        #121f2c;
+  --surface:    #0d1822;
+  --surface2:   #111d2a;
+  --border:     #1a2d3e;
+  --border2:    #1f3548;
+  --text:       #cce4f4;
+  --text2:      #88b8d8;
+  --text3:      #4e7fa0;
+  --muted:      #2d5570;
+  --accent:     #22d3ee;
+  --accent2:    #0891b2;
+  --accent3:    rgba(34,211,238,.15);
+  --accent-glow:rgba(34,211,238,.15);
+  --accent-text:#67e8f9;
+  --header-bg:  linear-gradient(135deg,#060c12 0%,#0a1520 60%,#0d1e2e 100%);
+  --header-text:#cce4f4;
+  --header-sub: rgba(204,228,244,.45);
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25);
+  --step-shadow:0 1px 2px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.2);
+  --tab-active-bg:#0891b2;
+  --tab-active-shadow:0 2px 12px rgba(8,145,178,.3);
+  --formula-bg: #0a1520;
+  --formula-text:#88b8d8;
+  --subst-bg:   rgba(34,211,238,.07);
+  --subst-text: #67e8f9;
+  --toggle-off: #1a2d3e;
+  --warn-bg:    rgba(252,211,77,.06);
+  --warn-border:rgba(252,211,77,.25);
   --warn-text:  #e8c860;
-  --info-bg:    rgba(20,184,166,.08);
-  --info-border:rgba(20,184,166,.3);
-  --info-title: #5eead4;
-  --info-text:  #9ecec5;
-  --amber-bg:   rgba(252,211,77,.06);
-  --amber-border:rgba(252,211,77,.25);
+  --info-bg:    rgba(34,211,238,.07);
+  --info-border:rgba(34,211,238,.25);
+  --info-title: #67e8f9;
+  --info-text:  #88b8d8;
+  --amber-bg:   rgba(252,211,77,.05);
+  --amber-border:rgba(252,211,77,.2);
   --amber-title:#e8c860;
   --amber-text: #c8a840;
-  --corr-ok-bg: rgba(52,211,153,.1);
+  --corr-ok-bg: rgba(52,211,153,.08);
   --corr-ok-bd: #34d399;
-  --corr-err-bg:rgba(248,113,113,.1);
+  --corr-err-bg:rgba(248,113,113,.08);
   --corr-err-bd:#f87171;
-  --note-border:#2a4038;
-  --curio-bg:   #162220;
-  --curio-bd:   #2a4038;
-  --refs-bg:    #162220;
+  --note-border:#1a2d3e;
+  --curio-bg:   #0d1822;
+  --curio-bd:   #1a2d3e;
+  --refs-bg:    #0d1822;
 }
 
 /* ═══════════════════════════════════════════════════════
    BASE
 ═══════════════════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0}
-html{transition:background .3s,color .3s}
+html{transition:background .35s,color .35s}
 body{
   background:var(--bg);
-  font-family:'Poppins',sans-serif;
+  font-family:'DM Sans',sans-serif;
   font-size:14px;
   min-height:100vh;
   color:var(--text);
-  line-height:1.5;
-  transition:background .3s,color .3s;
+  line-height:1.55;
+  transition:background .35s,color .35s;
+  -webkit-font-smoothing:antialiased;
 }
 
 /* ═══════════════════════════════════════════════════════
-   THEME SWITCHER
+   THEME SWITCHER — pill flutuante refinado
 ═══════════════════════════════════════════════════════ */
 .theme-bar{
-  position:fixed;top:16px;right:16px;z-index:100;
-  display:flex;gap:6px;align-items:center;
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,.12);
+  position:fixed;top:20px;right:20px;z-index:200;
+  display:flex;gap:4px;align-items:center;
+  background:rgba(8,15,22,.55);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
-  padding:4px 8px;
+  padding:5px 10px;
+  box-shadow:0 4px 24px rgba(0,0,0,.25);
 }
 .theme-btn{
-  width:26px;height:26px;border-radius:50%;border:2px solid transparent;
+  width:24px;height:24px;border-radius:50%;border:1.5px solid transparent;
   cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
-  font-size:14px;background:none;
+  font-size:13px;background:none;
 }
-.theme-btn:hover{transform:scale(1.15)}
-.theme-btn.active{border-color:rgba(255,255,255,.7);box-shadow:0 0 8px rgba(255,255,255,.3)}
-.theme-btn[data-t="light"]{background:#f0faf8}
+.theme-btn:hover{transform:scale(1.18)}
+.theme-btn.active{border-color:rgba(255,255,255,.55);box-shadow:0 0 6px rgba(255,255,255,.2)}
+.theme-btn[data-t="light"]{background:#e8f4f8}
 .theme-btn[data-t="warm"]{background:#faf0d8}
-.theme-btn[data-t="dark"]{background:#1c2e2a}
+.theme-btn[data-t="dark"]{background:#0d1822}
 
 /* ═══════════════════════════════════════════════════════
-   HEADER
+   HEADER — aurora mesh premium
 ═══════════════════════════════════════════════════════ */
 .header{
-  background:var(--header-bg);
-  color:var(--header-text);
-  padding:36px 24px 28px;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 55%, rgba(6,182,212,.42) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 25%, rgba(14,116,144,.55) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 50% 90%, rgba(8,47,73,.8) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 5% 5%,  rgba(34,211,238,.18) 0%, transparent 50%),
+    linear-gradient(160deg, #061824 0%, #082234 35%, #091c30 70%, #060f18 100%);
+  color:#fff;
+  padding:44px 28px 32px;
   position:relative;
   overflow:hidden;
 }
 .header::before{
-  content:'';position:absolute;inset:0;
+  content:'';
+  position:absolute;inset:0;
   background:
-    radial-gradient(ellipse at 15% 80%, rgba(255,255,255,.07) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 20%, rgba(255,255,255,.05) 0%, transparent 50%);
+    radial-gradient(ellipse 35% 25% at 62% 38%, rgba(255,255,255,.045) 0%, transparent 100%);
   pointer-events:none;
 }
 .header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg, transparent 5%, rgba(34,211,238,.2) 40%, rgba(34,211,238,.2) 60%, transparent 95%);
   pointer-events:none;
 }
-.header-inner{max-width:880px;margin:0 auto;position:relative;text-align:center}
-.header-top{display:flex;align-items:center;justify-content:center;gap:16px;flex-direction:column}
-.header-icon{
-  font-size:2rem;
-  background:rgba(255,255,255,.13);
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:20px;
-  width:58px;height:58px;
+
+.header-inner{
+  max-width:900px;margin:0 auto;
+  position:relative;text-align:center;
+}
+.header-top{
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(10px);
-  box-shadow:0 4px 20px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.2);
+  gap:18px;flex-direction:column;
+}
+.header-icon{
+  font-size:1.9rem;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:18px;
+  width:60px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(12px);
+  box-shadow:0 2px 16px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.12);
   flex-shrink:0;
 }
 .header-title{
-  font-size:1.45rem;font-weight:700;letter-spacing:-.02em;
-  color:var(--header-text);
-  text-shadow:0 1px 8px rgba(0,0,0,.15);
+  font-size:1.5rem;font-weight:700;letter-spacing:-.025em;
+  color:#fff;
+  text-shadow:0 1px 20px rgba(6,182,212,.3);
 }
 .header-sub{
-  font-size:.67rem;color:var(--header-sub);
-  margin-top:5px;font-weight:400;
-  letter-spacing:.03em;
-  display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+  font-size:.65rem;color:rgba(255,255,255,.5);
+  margin-top:6px;font-weight:400;
+  letter-spacing:.06em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
 }
-.header-dot{opacity:.4;font-size:.5rem}
-.profile-tabs{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap;justify-content:center}
+.header-dot{opacity:.3;font-size:.4rem}
+
+/* Profile tabs */
+.profile-tabs{
+  display:flex;gap:6px;margin-top:26px;
+  flex-wrap:wrap;justify-content:center;
+}
 .profile-btn{
-  padding:7px 18px;border-radius:999px;font-size:.73rem;font-weight:500;
-  font-family:'Poppins',sans-serif;
-  border:1px solid rgba(255,255,255,.2);
-  cursor:pointer;transition:all .25s;
-  background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.75);
-  backdrop-filter:blur(6px);
+  padding:7px 17px;border-radius:8px;font-size:.72rem;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.68);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   letter-spacing:.01em;
 }
-.profile-btn:hover{background:rgba(255,255,255,.16);color:#fff;transform:translateY(-1px)}
-.profile-btn.active{
-  background:rgba(255,255,255,.95);
-  color:var(--accent2);
-  border-color:transparent;
-  font-weight:700;
-  box-shadow:0 3px 12px rgba(0,0,0,.2), 0 1px 3px rgba(0,0,0,.1);
+.profile-btn:hover{
+  background:rgba(255,255,255,.12);
+  color:rgba(255,255,255,.92);
+  border-color:rgba(255,255,255,.2);
   transform:translateY(-1px);
+}
+.profile-btn.active{
+  background:rgba(34,211,238,.14);
+  color:#fff;
+  border-color:rgba(34,211,238,.4);
+  font-weight:600;
+  box-shadow:0 0 0 1px rgba(34,211,238,.15), inset 0 1px 0 rgba(255,255,255,.08);
 }
 
 /* ═══════════════════════════════════════════════════════
    MAIN
 ═══════════════════════════════════════════════════════ */
-.main{max-width:880px;margin:0 auto;padding:16px}
+.main{max-width:900px;margin:0 auto;padding:20px 16px}
 
 /* ═══════════════════════════════════════════════════════
-   TABS
+   TABS — linha underline elegante
 ═══════════════════════════════════════════════════════ */
 .tabs{
-  display:flex;gap:3px;
+  display:flex;gap:0;
   background:var(--surface);
-  border-radius:14px;padding:4px;
+  border-radius:12px;
   box-shadow:var(--card-shadow);
-  margin-bottom:16px;
+  margin-bottom:18px;
   border:1px solid var(--border);
+  padding:4px;
+  gap:3px;
 }
 .tab-btn{
-  flex:1;padding:8px 4px;
-  font-size:.8rem;font-weight:500;
-  font-family:'Poppins',sans-serif;
-  border:none;border-radius:10px;cursor:pointer;
-  transition:all .2s;
+  flex:1;padding:9px 6px;
+  font-size:.78rem;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  border:none;border-radius:8px;cursor:pointer;
+  transition:all .18s;
   color:var(--text3);
   background:transparent;
+  letter-spacing:.01em;
 }
 .tab-btn:hover{color:var(--text);background:var(--bg3)}
 .tab-btn.active{
@@ -311,110 +339,117 @@ body{
    PANELS
 ═══════════════════════════════════════════════════════ */
 .panel{display:none}.panel.active{display:block}
-.space-y>*+*{margin-top:14px}
+.space-y>*+*{margin-top:12px}
 
 /* ═══════════════════════════════════════════════════════
-   CARDS
+   CARDS — refined elevation
 ═══════════════════════════════════════════════════════ */
 .card{
   background:var(--surface);
-  border-radius:16px;
+  border-radius:14px;
   border:1px solid var(--border);
   box-shadow:var(--card-shadow);
-  padding:18px;
-  transition:background .3s,border-color .3s;
+  padding:20px;
+  transition:background .35s,border-color .35s;
 }
 .card-title{
-  font-size:.65rem;font-weight:600;
+  font-size:.64rem;font-weight:600;
   color:var(--accent-text);
-  text-transform:uppercase;letter-spacing:.08em;
-  margin-bottom:14px;
-  display:flex;align-items:center;gap:6px;
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
 }
 .card-title::before{
-  content:'';width:3px;height:14px;
+  content:'';width:2px;height:12px;
   background:var(--accent);
   border-radius:2px;display:inline-block;
   flex-shrink:0;
+  opacity:.8;
 }
 
 /* ═══════════════════════════════════════════════════════
    BLOCK TITLES
 ═══════════════════════════════════════════════════════ */
 .block-title{
-  font-size:.8rem;font-weight:600;
+  font-size:.78rem;font-weight:600;
   color:var(--text2);
-  margin-bottom:8px;
-  display:flex;align-items:center;gap:8px;
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+  letter-spacing:-.01em;
 }
 .block-num{
-  width:22px;height:22px;border-radius:50%;
+  width:22px;height:22px;border-radius:6px;
   background:var(--accent-glow);
   color:var(--accent-text);
-  font-size:.65rem;font-weight:700;
+  font-size:.6rem;font-weight:700;
   display:inline-flex;align-items:center;justify-content:center;
   flex-shrink:0;border:1px solid var(--accent3);
+  font-family:'DM Mono',monospace;
 }
 .block-empty{
-  background:var(--surface);border-radius:14px;
+  background:var(--surface);border-radius:12px;
   border:1px dashed var(--border2);padding:12px 16px;
 }
 .block-empty p{font-size:.8rem;color:var(--muted)}
 
 /* ═══════════════════════════════════════════════════════
-   GRID — corrigido para não estourar
+   GRID
 ═══════════════════════════════════════════════════════ */
 .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-@media(max-width:720px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:580px){.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+.chart-bloco{width:100%;margin-bottom:20px;border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow)}
+.chart-bloco canvas{display:block;width:100%!important;height:auto!important}
 
 /* ═══════════════════════════════════════════════════════
    FORM INPUTS
 ═══════════════════════════════════════════════════════ */
 .f-label{
-  font-size:.7rem;font-weight:600;
+  font-size:.68rem;font-weight:500;
   color:var(--text3);display:block;
-  margin-bottom:5px;font-family:'Poppins',sans-serif;
+  margin-bottom:5px;font-family:'DM Sans',sans-serif;
+  letter-spacing:.01em;
 }
 .f-row{display:flex;min-width:0}
 .f-input{
   flex:1;min-width:0;
   border:1.5px solid var(--border);
-  border-radius:10px 0 0 10px;
+  border-radius:9px 0 0 9px;
   padding:8px 12px;
   font-size:.82rem;
-  font-family:'Poppins',sans-serif;
+  font-family:'DM Sans',sans-serif;
   outline:none;
   background:var(--surface2);
   color:var(--text);
-  transition:border .2s,box-shadow .2s,background .3s;
+  transition:border .18s,box-shadow .18s,background .35s;
 }
 .f-input:focus{
   border-color:var(--accent);
   box-shadow:0 0 0 3px var(--accent-glow);
   background:var(--surface);
 }
-.f-input-solo{border-radius:10px!important}
+.f-input-solo{border-radius:9px!important}
 .f-unit{
   background:var(--bg3);
   border:1.5px solid var(--border);border-left:none;
-  border-radius:0 10px 10px 0;
+  border-radius:0 9px 9px 0;
   padding:8px 10px;
-  font-size:.72rem;color:var(--text3);
+  font-size:.7rem;color:var(--text3);
   font-weight:500;white-space:nowrap;
   display:flex;align-items:center;
-  font-family:'Poppins',sans-serif;
-  transition:background .3s;
+  font-family:'DM Mono',monospace;
+  transition:background .35s;
+  letter-spacing:.02em;
 }
-.f-note{font-size:.67rem;color:var(--muted);margin-top:3px}
+.f-note{font-size:.65rem;color:var(--muted);margin-top:3px}
 select.f-input{
-  border-radius:10px!important;
+  border-radius:9px!important;
   border-right:1.5px solid var(--border);
   cursor:pointer;
   appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b8a84' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a7a96' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:right 10px center;
   padding-right:28px;
@@ -425,11 +460,11 @@ select.f-input{
 ═══════════════════════════════════════════════════════ */
 .step-card{
   background:var(--surface);
-  border-radius:14px;
+  border-radius:12px;
   border:1px solid var(--border);
   box-shadow:var(--step-shadow);
-  margin-bottom:10px;overflow:hidden;
-  transition:background .3s,border-color .3s;
+  margin-bottom:8px;overflow:hidden;
+  transition:background .35s,border-color .35s;
 }
 .step-header{
   display:flex;align-items:center;gap:10px;
@@ -438,47 +473,48 @@ select.f-input{
   border-bottom:1px solid var(--border);
 }
 .step-badge{
-  width:28px;height:28px;border-radius:50%;
+  width:26px;height:26px;border-radius:7px;
   background:var(--accent);color:#fff;
-  font-size:.65rem;font-weight:700;
+  font-size:.6rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
-  box-shadow:0 2px 6px var(--accent-glow);
+  font-family:'DM Mono',monospace;
 }
-.step-title{font-weight:600;color:var(--text);font-size:.8rem}
+.step-title{font-weight:600;color:var(--text);font-size:.78rem}
 .step-body{padding:12px 16px}
 .step-body>*+*{margin-top:8px}
 .step-label{
-  font-size:.6rem;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--muted);
+  font-size:.58rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);
   font-weight:600;margin-bottom:4px;
 }
 .formula-box{
-  font-family:'Poppins',monospace;font-size:.8rem;
+  font-family:'DM Mono',monospace;font-size:.78rem;
   color:var(--formula-text);
   background:var(--formula-bg);
   border-radius:8px;padding:8px 12px;
   border:1px solid var(--border);
+  letter-spacing:.01em;
 }
 .subst-box{
-  font-family:'Poppins',monospace;font-size:.8rem;
+  font-family:'DM Mono',monospace;font-size:.78rem;
   color:var(--subst-text);
   background:var(--subst-bg);
   border-radius:8px;padding:10px 12px;
-  white-space:pre-line;line-height:1.65;
+  white-space:pre-line;line-height:1.7;
   border:1px solid var(--accent3);
 }
 .result-val{
-  font-family:'Poppins',sans-serif;
+  font-family:'DM Sans',sans-serif;
   font-size:.95rem;font-weight:700;
   color:var(--text);
 }
 .result-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .note-box{
-  font-size:.72rem;color:var(--text3);
+  font-size:.7rem;color:var(--text3);
   font-style:italic;
   border-left:2px solid var(--note-border);
-  padding-left:8px;line-height:1.5;
+  padding-left:8px;line-height:1.6;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -492,7 +528,7 @@ select.f-input{
 .warn-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
 .warn-text{font-size:.72rem;color:var(--warn-text);line-height:1.5}
 
-.badge{display:inline-block;padding:2px 9px;border-radius:6px;border:1px solid;font-size:.7rem;font-weight:600}
+.badge{display:inline-block;padding:2px 9px;border-radius:5px;border:1px solid;font-size:.68rem;font-weight:600;letter-spacing:.01em}
 .badge-green{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
 .badge-yellow{background:#fef9c3;color:#713f12;border-color:#fde047}
 .badge-orange{background:#ffedd5;color:#7c2d12;border-color:#fdba74}
@@ -502,54 +538,54 @@ select.f-input{
 .badge-purple{background:#ede9fe;color:#3b0764;border-color:#c4b5fd}
 .badge-gray{background:var(--bg3);color:var(--text3);border-color:var(--border)}
 
-[data-theme="dark"] .badge-green{background:rgba(52,211,153,.15);color:#6ee7b7;border-color:rgba(52,211,153,.3)}
-[data-theme="dark"] .badge-yellow{background:rgba(253,224,71,.1);color:#fde047;border-color:rgba(253,224,71,.3)}
-[data-theme="dark"] .badge-orange{background:rgba(251,146,60,.12);color:#fdba74;border-color:rgba(251,146,60,.3)}
-[data-theme="dark"] .badge-red{background:rgba(248,113,113,.12);color:#fca5a5;border-color:rgba(248,113,113,.3)}
-[data-theme="dark"] .badge-blue{background:rgba(147,197,253,.1);color:#93c5fd;border-color:rgba(147,197,253,.25)}
-[data-theme="dark"] .badge-cyan{background:rgba(103,232,249,.1);color:#67e8f9;border-color:rgba(103,232,249,.25)}
-[data-theme="dark"] .badge-purple{background:rgba(196,181,253,.1);color:#c4b5fd;border-color:rgba(196,181,253,.25)}
+[data-theme="dark"] .badge-green{background:rgba(52,211,153,.12);color:#6ee7b7;border-color:rgba(52,211,153,.28)}
+[data-theme="dark"] .badge-yellow{background:rgba(253,224,71,.08);color:#fde047;border-color:rgba(253,224,71,.28)}
+[data-theme="dark"] .badge-orange{background:rgba(251,146,60,.1);color:#fdba74;border-color:rgba(251,146,60,.28)}
+[data-theme="dark"] .badge-red{background:rgba(248,113,113,.1);color:#fca5a5;border-color:rgba(248,113,113,.28)}
+[data-theme="dark"] .badge-blue{background:rgba(147,197,253,.08);color:#93c5fd;border-color:rgba(147,197,253,.22)}
+[data-theme="dark"] .badge-cyan{background:rgba(103,232,249,.08);color:#67e8f9;border-color:rgba(103,232,249,.22)}
+[data-theme="dark"] .badge-purple{background:rgba(196,181,253,.08);color:#c4b5fd;border-color:rgba(196,181,253,.22)}
 
 .corr-section{margin-top:8px;padding-top:8px;border-top:1px dashed var(--border2)}
-.corr-label{font-size:.7rem;color:var(--text3);font-weight:600;margin-bottom:4px}
+.corr-label{font-size:.68rem;color:var(--text3);font-weight:600;margin-bottom:4px}
 .corr-row{display:flex;align-items:center;gap:8px}
 .corr-input{
-  flex:1;font-family:'Poppins',sans-serif;font-size:.8rem;
+  flex:1;font-family:'DM Sans',sans-serif;font-size:.8rem;
   border:1.5px solid var(--border);border-radius:8px;
   padding:6px 12px;outline:none;
   background:var(--surface2);color:var(--text);
-  transition:all .2s;
+  transition:all .18s;
 }
 .corr-input:focus{box-shadow:0 0 0 3px var(--accent-glow)}
 .corr-input.ok{border-color:var(--corr-ok-bd);background:var(--corr-ok-bg)}
 .corr-input.err{border-color:var(--corr-err-bd);background:var(--corr-err-bg)}
-.corr-tag{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.corr-tag{font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:6px;white-space:nowrap}
 .corr-tag.ok{background:var(--corr-ok-bg);color:#065f46;border:1px solid var(--corr-ok-bd)}
 .corr-tag.err{background:var(--corr-err-bg);color:#7f1d1d;border:1px solid var(--corr-err-bd)}
 [data-theme="dark"] .corr-tag.ok{color:#6ee7b7}
 [data-theme="dark"] .corr-tag.err{color:#fca5a5}
 
 /* ═══════════════════════════════════════════════════════
-   TOGGLE (correção)
+   TOGGLE
 ═══════════════════════════════════════════════════════ */
 .toggle-wrap{
   display:flex;align-items:center;justify-content:space-between;
-  background:var(--surface);border-radius:14px;
-  padding:13px 18px;border:1px solid var(--border);
+  background:var(--surface);border-radius:12px;
+  padding:14px 18px;border:1px solid var(--border);
   box-shadow:var(--card-shadow);
 }
 .toggle-btn{
-  position:relative;width:46px;height:24px;
+  position:relative;width:44px;height:22px;
   border-radius:999px;border:none;cursor:pointer;
   transition:background .3s;flex-shrink:0;
 }
 .toggle-btn.off{background:var(--toggle-off)}
 .toggle-btn.on{background:var(--accent);box-shadow:0 0 10px var(--accent-glow)}
 .toggle-knob{
-  position:absolute;top:2px;width:20px;height:20px;
+  position:absolute;top:2px;width:18px;height:18px;
   background:#fff;border-radius:50%;
-  box-shadow:0 1px 4px rgba(0,0,0,.25);
-  transition:left .25s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+  transition:left .22s cubic-bezier(.4,0,.2,1);
 }
 .toggle-btn.off .toggle-knob{left:2px}
 .toggle-btn.on .toggle-knob{left:24px}
@@ -557,22 +593,22 @@ select.f-input{
 /* ═══════════════════════════════════════════════════════
    INFO BOXES
 ═══════════════════════════════════════════════════════ */
-.refs{background:var(--refs-bg);border-radius:14px;border:1px solid var(--border);padding:12px 16px}
-.refs-title{font-weight:600;color:var(--text3);font-size:.72rem;margin-bottom:4px}
-.refs p{font-size:.67rem;color:var(--muted);line-height:1.8}
+.refs{background:var(--refs-bg);border-radius:12px;border:1px solid var(--border);padding:12px 16px}
+.refs-title{font-weight:600;color:var(--text3);font-size:.7rem;margin-bottom:4px}
+.refs p{font-size:.65rem;color:var(--muted);line-height:1.9}
 
-.curiosity-box{background:var(--curio-bg);border:1px dashed var(--curio-bd);border-radius:14px;padding:12px;margin-top:4px}
-.curiosity-title{font-size:.72rem;font-weight:600;color:var(--text3);margin-bottom:8px}
+.curiosity-box{background:var(--curio-bg);border:1px dashed var(--curio-bd);border-radius:12px;padding:12px;margin-top:4px}
+.curiosity-title{font-size:.7rem;font-weight:600;color:var(--text3);margin-bottom:8px}
 
-.info-teal{background:var(--info-bg);border:1.5px solid var(--info-border);border-radius:14px;padding:12px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
-.info-teal-title{font-size:.82rem;font-weight:700;color:var(--info-title)}
-.info-teal-body{font-size:.72rem;color:var(--info-text);margin-top:4px;line-height:1.5}
+.info-teal{background:var(--info-bg);border:1.5px solid var(--info-border);border-radius:12px;padding:12px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
+.info-teal-title{font-size:.8rem;font-weight:700;color:var(--info-title)}
+.info-teal-body{font-size:.7rem;color:var(--info-text);margin-top:4px;line-height:1.55}
 
-.info-amber{background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:14px;padding:12px;margin-bottom:12px}
-.info-amber-title{font-size:.72rem;font-weight:700;color:var(--amber-title)}
-.info-amber-body{font-size:.72rem;color:var(--amber-text);margin-top:4px;line-height:1.5}
+.info-amber{background:var(--amber-bg);border:1.5px solid var(--amber-border);border-radius:12px;padding:12px;margin-bottom:12px}
+.info-amber-title{font-size:.7rem;font-weight:700;color:var(--amber-title)}
+.info-amber-body{font-size:.7rem;color:var(--amber-text);margin-top:4px;line-height:1.55}
 
-.class-table{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:.68rem;color:var(--text3)}
+.class-table{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.67rem;color:var(--text3)}
 .class-table b{color:var(--text2)}
 .class-table .teal{color:var(--accent-text);font-weight:600}
 
@@ -580,57 +616,126 @@ select.f-input{
    CALC BUTTON
 ═══════════════════════════════════════════════════════ */
 .calc-btn{
-  width:100%;background:var(--accent);color:#fff;
-  border:none;border-radius:12px;padding:13px;
-  font-size:.85rem;font-weight:600;
-  font-family:'Poppins',sans-serif;
+  width:100%;
+  background:linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
+  color:#fff;
+  border:none;border-radius:10px;padding:13px;
+  font-size:.84rem;font-weight:600;
+  font-family:'DM Sans',sans-serif;
   cursor:pointer;
-  box-shadow:0 3px 12px var(--accent-glow),0 1px 3px rgba(0,0,0,.1);
+  box-shadow:0 2px 12px var(--accent-glow);
   transition:all .2s;letter-spacing:.01em;
 }
-.calc-btn:hover{background:var(--accent2);box-shadow:0 4px 16px var(--accent-glow),0 2px 6px rgba(0,0,0,.12);transform:translateY(-1px)}
-.calc-btn:active{transform:translateY(0)}
+.calc-btn:hover{
+  filter:brightness(1.08);
+  box-shadow:0 4px 18px var(--accent-glow);
+  transform:translateY(-1px);
+}
+.calc-btn:active{transform:translateY(0);filter:brightness(.96)}
 
 /* ═══════════════════════════════════════════════════════
    VIDEOS
 ═══════════════════════════════════════════════════════ */
 .drop-zone{
   border:2px dashed var(--border2);
-  border-radius:14px;padding:32px;
+  border-radius:12px;padding:32px;
   text-align:center;cursor:pointer;
   transition:background .2s,border-color .2s;
 }
 .drop-zone:hover{background:var(--bg3);border-color:var(--accent)}
-.video-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--step-shadow);overflow:hidden;margin-bottom:14px}
+.video-card{background:var(--surface);border-radius:12px;border:1px solid var(--border);box-shadow:var(--step-shadow);overflow:hidden;margin-bottom:14px}
 .video-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
-.video-title{font-size:.82rem;font-weight:600;color:var(--text)}
-.video-size{font-size:.67rem;color:var(--muted)}
-.video-remove{font-size:.7rem;color:#f87171;font-weight:600;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:'Poppins',sans-serif}
+.video-title{font-size:.8rem;font-weight:600;color:var(--text)}
+.video-size{font-size:.65rem;color:var(--muted)}
+.video-remove{font-size:.68rem;color:#f87171;font-weight:600;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-family:'DM Sans',sans-serif}
 .video-remove:hover{background:var(--corr-err-bg);color:#ef4444}
 .video-body{padding:8px}
 video{width:100%;border-radius:8px;max-height:320px;background:#000}
-.empty-state{background:var(--surface);border-radius:14px;border:1px dashed var(--border);padding:40px;text-align:center}
+.empty-state{background:var(--surface);border-radius:12px;border:1px dashed var(--border);padding:40px;text-align:center}
 .empty-state p:first-child{font-size:2.5rem;margin-bottom:8px}
-.video-note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:10px;padding:10px 14px;font-size:.72rem;color:var(--amber-text);margin-top:12px}
+.video-note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;font-size:.7rem;color:var(--amber-text);margin-top:12px}
 
 /* ═══════════════════════════════════════════════════════
-   COLLAPSIBLE CURIOSITY
+   COLLAPSIBLE
 ═══════════════════════════════════════════════════════ */
-.curio-collapsible{border:1px dashed var(--curio-bd);border-radius:14px;overflow:hidden;margin-top:12px}
+.curio-collapsible{border:1px dashed var(--curio-bd);border-radius:12px;overflow:hidden;margin-top:12px}
 .curio-toggle-btn{
   width:100%;background:var(--curio-bg);border:none;cursor:pointer;
-  padding:10px 16px;font-family:'Poppins',sans-serif;font-size:.72rem;
+  padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:.7rem;
   font-weight:600;color:var(--text3);text-align:left;
   display:flex;align-items:center;justify-content:space-between;
-  transition:background .2s;
+  transition:background .18s;
 }
 .curio-toggle-btn:hover{background:var(--bg3)}
 .curio-arrow{transition:transform .3s;display:inline-block;font-size:.8rem}
 .curio-content{display:none;padding:12px;background:var(--curio-bg)}
 .curio-content.open{display:block}
 
-/* NAF info box inline */
-.naf-info{margin-top:12px;background:var(--info-bg);border:1px solid var(--info-border);border-radius:10px;padding:10px 12px}
+/* NAF info box */
+.naf-info{margin-top:12px;background:var(--info-bg);border:1px solid var(--info-border);border-radius:9px;padding:10px 12px}
+
+/* ═══════════════════════════════════════════════════════
+   PAINEL DADOS — premium light
+═══════════════════════════════════════════════════════ */
+#panel-dados {
+  background: linear-gradient(155deg, #e8f4fc 0%, #d8edf8 20%, #eef6fb 55%, #f7fbfe 100%);
+  border-radius: 16px;
+  padding: 18px 14px 22px;
+  margin: -2px -2px 0;
+  position: relative;
+}
+#panel-dados::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(8,145,178,.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 92% 100%, rgba(6,182,212,.07) 0%, transparent 50%);
+  pointer-events: none;
+}
+#panel-dados .card {
+  background: rgba(255,255,255,.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(8,145,178,.14);
+  box-shadow: 0 1px 12px rgba(8,145,178,.07), 0 1px 3px rgba(0,0,0,.04);
+  border-radius: 14px;
+}
+#panel-dados .f-input { border-color: rgba(8,145,178,.2); background: rgba(255,255,255,.9) }
+#panel-dados .f-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(8,145,178,.12) }
+#panel-dados .f-unit { background: rgba(232,244,252,.85); border-color: rgba(8,145,178,.16); color: #0e7490 }
+#panel-dados .calc-btn {
+  background: linear-gradient(135deg, #0e7490 0%, #0891b2 60%, #06b6d4 100%);
+  box-shadow: 0 3px 16px rgba(8,145,178,.28);
+  border-radius: 10px;
+}
+#panel-dados .calc-btn:hover { filter: brightness(1.06); box-shadow: 0 5px 22px rgba(8,145,178,.35) }
+
+[data-theme="dark"] #panel-dados {
+  background: linear-gradient(155deg, #070e16 0%, #090f1a 25%, #0a1420 60%, #080d14 100%);
+}
+[data-theme="dark"] #panel-dados .card {
+  background: rgba(9,18,30,.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(34,211,238,.1);
+  box-shadow: 0 2px 16px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.2);
+}
+[data-theme="dark"] #panel-dados .f-input { background: rgba(6,12,22,.8); border-color: rgba(34,211,238,.14); color: #cce4f4 }
+[data-theme="dark"] #panel-dados .f-unit { background: rgba(0,20,40,.5); border-color: rgba(34,211,238,.12); color: #4e7fa0 }
+[data-theme="dark"] #panel-dados .f-label { color: #4e7fa0 }
+[data-theme="dark"] #panel-dados .f-note { color: #2d5570 }
+[data-theme="dark"] #panel-dados .calc-btn {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 60%, #0891b2 100%);
+  box-shadow: 0 3px 16px rgba(8,145,178,.2);
+}
+[data-theme="warm"] #panel-dados {
+  background: linear-gradient(155deg, #e8f2f4 0%, #d8ecf0 20%, #f0f9fa 55%, #fdfefe 100%);
+}
+[data-theme="warm"] #panel-dados .card {
+  background: rgba(255,252,245,.88);
+  border: 1px solid rgba(10,124,111,.12);
+}
 </style>
 </head>
 <body>
@@ -663,6 +768,8 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
       <button class="profile-btn" onclick="setProfile('idoso')">🧓 Idoso (≥60a)</button>
       <button class="profile-btn" onclick="setProfile('gestante')">🤰 Gestante</button>
       <button class="profile-btn" onclick="setProfile('adolescente')">🧒 Adolescente</button>
+      <button class="profile-btn" onclick="setProfile('crianca')">🧒 Criança (2-10a)</button>
+      <button class="profile-btn" onclick="setProfile('bebe')">👶 Bebê (0-24m)</button>
     </div>
   </div>
 </div>
@@ -672,6 +779,7 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
   <div class="tabs">
     <button class="tab-btn active" onclick="setTab('dados')">📋 Dados</button>
     <button class="tab-btn" onclick="setTab('resultados')">📊 Resultados &amp; Correção</button>
+    <button class="tab-btn" id="tab-graficos" onclick="setTab('graficos')" style="display:none">📈 Curvas OMS</button>
     <button class="tab-btn" onclick="setTab('videos')">🎥 Vídeos</button>
   </div>
 
@@ -681,6 +789,10 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
       <div class="card">
         <div class="card-title">📌 Identificação &amp; Dados Básicos</div>
         <div class="grid-3" id="basic-grid">
+          <div style="grid-column:1/-1">
+            <label class="f-label">Nome do Paciente <span style="font-weight:400;color:var(--muted)">(opcional)</span></label>
+            <input id="nome" type="text" class="f-input f-input-solo" placeholder="Nome completo..." style="width:100%;box-sizing:border-box" oninput="recalc()">
+          </div>
           <div>
             <label class="f-label">Sexo</label>
             <select id="sex" class="f-input f-input-solo" style="width:100%" onchange="recalc()">
@@ -696,15 +808,15 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
             <label class="f-label">Peso atual</label>
             <div class="f-row"><input id="peso" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">kg</span></div>
           </div>
-          <div>
+          <div id="alt-wrap">
             <label class="f-label">Altura</label>
             <div class="f-row"><input id="alt" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
           </div>
-          <div>
+          <div id="cb-wrap">
             <label class="f-label">Circunferência do Braço (CB)</label>
             <div class="f-row"><input id="cb" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
           </div>
-          <div>
+          <div id="cc-wrap">
             <label class="f-label">Circunferência da Cintura (CC)</label>
             <div class="f-row"><input id="cc" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">cm</span></div>
           </div>
@@ -736,8 +848,55 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
         </div>
       </div>
 
+      <!-- BEBÊ / CRIANÇA -->
+      <div class="card" id="crianca-card" style="display:none">
+        <div class="card-title" id="crianca-card-title">👶 Dados do Bebê</div>
+        <div class="grid-3">
+          <div>
+            <label class="f-label">Idade</label>
+            <div class="f-row"><input id="idadeMeses" type="number" class="f-input" placeholder="0" min="0" max="228" oninput="recalc()"><span class="f-unit">meses</span></div>
+            <div class="f-note" id="crianca-idade-nota">Bebê: 0–24 meses</div>
+          </div>
+          <div>
+            <label class="f-label" id="lbl-comp">Comprimento (deitado)</label>
+            <div class="f-row"><input id="comprimento" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">cm</span></div>
+            <div class="f-note">&lt; 24m = comprimento deitado · ≥ 24m = estatura em pé</div>
+          </div>
+          <div id="pc-wrap">
+            <label class="f-label">Perímetro Cefálico (PC)</label>
+            <div class="f-row"><input id="pc_bebe" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">cm</span></div>
+            <div class="f-note">Bebês até 36 meses</div>
+          </div>
+          <div>
+            <label class="f-label">CB — Circunferência do Braço</label>
+            <div class="f-row"><input id="cb_c" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">cm</span></div>
+          </div>
+          <div id="cc-c-wrap" style="display:none">
+            <label class="f-label">CC — Circunferência da Cintura</label>
+            <div class="f-row"><input id="cc_c" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">cm</span></div>
+            <div class="f-note">A partir de 5 anos (Frisancho 1990)</div>
+          </div>
+          <div>
+            <label class="f-label">DCT — Dobra Cutânea Tricipital</label>
+            <div class="f-row"><input id="dct_c" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+          <div>
+            <label class="f-label">DCSE — Dobra Cutânea Subescapular</label>
+            <div class="f-row"><input id="dcse_c" type="number" class="f-input" placeholder="0" step="0.1" oninput="recalc()"><span class="f-unit">mm</span></div>
+          </div>
+        </div>
+        <div class="naf-info" style="margin-top:10px">
+          <p style="font-size:.72rem;font-weight:700;color:var(--info-title)">📌 OMS 2006/2007 · Frisancho 1990 · Slaughter 1988 · Apostila Clínica Anhanguera 2023</p>
+          <p style="font-size:.68rem;color:var(--info-text);margin-top:3px;line-height:1.5">
+            <strong>Bebês (0–24m):</strong> Peso/Idade · Comprimento/Idade · IMC/Idade · PC/Idade<br>
+            <strong>Crianças (2–10a):</strong> IMC/I · CC (≥5a) · CB (percentil + % adeq.) · CMB · AMB · DCT/DCSE por percentil<br>
+            <strong>A partir de 8 anos:</strong> Soma DCT+DCSE → % Gordura corporal (Slaughter et al., 1988)
+          </p>
+        </div>
+      </div>
+
       <!-- DOBRAS -->
-      <div class="card">
+      <div class="card" id="dobras-card">
         <div class="card-title">📐 4 Dobras Cutâneas — Durnin &amp; Womersley (16-72 anos)</div>
         <div class="grid-4">
           <div>
@@ -797,31 +956,31 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
       </div>
 
       <!-- 1. IMC -->
-      <div>
+      <div id="wrap-imc">
         <div class="block-title"><span class="block-num">1</span> Índice de Massa Corporal (IMC)</div>
         <div id="block-imc"></div>
       </div>
 
       <!-- 1b. CC -->
-      <div>
+      <div id="wrap-cc">
         <div class="block-title"><span class="block-num">1b</span> Circunferência da Cintura (CC) — Risco Cardiovascular</div>
         <div id="block-cc"></div>
       </div>
 
       <!-- 2. CB e derivadas -->
-      <div>
+      <div id="wrap-cb">
         <div class="block-title"><span class="block-num">2</span> Circunferência do Braço (CB) e Derivadas</div>
         <div id="block-cb"></div>
       </div>
 
       <!-- 3. Dobras -->
-      <div>
-        <div class="block-title"><span class="block-num">3</span> Composição Corporal — Soma das 4 Dobras e % de Gordura (Durnin &amp; Womersley, 1974 · Siri, 1961)</div>
+      <div id="wrap-dobras">
+        <div class="block-title"><span class="block-num">3</span> Composição Corporal — Dobras Cutâneas e % de Gordura</div>
         <div id="block-dobras"></div>
       </div>
 
       <!-- 4. EER -->
-      <div>
+      <div id="wrap-eer">
         <div class="block-title"><span class="block-num">4</span> Gasto Energético Total — GET / EER (DRI 2023)</div>
         <div id="block-eer"></div>
       </div>
@@ -832,6 +991,15 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
         <div id="block-cp"></div>
       </div>
 
+      <!-- 6. Ganho de Peso Gestacional (aparece só para gestante) -->
+      <div id="block-gpg-wrap" style="display:none">
+        <div class="block-title"><span class="block-num">6</span> Ganho de Peso Gestacional — IOM 2009</div>
+        <div id="block-gpg"></div>
+      </div>
+
+      <!-- BLOCO PEDIÁTRICO (aparece só para bebê/criança) -->
+      <div id="block-crianca" style="display:none"></div>
+
       <!-- REFS -->
       <div class="refs">
         <div class="refs-title">Referências:</div>
@@ -840,6 +1008,30 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
         <p>• DRI 2023 — Dietary Reference Intakes for Energy. National Academies.</p>
         <p>• Lipschitz DA, 1994. | OPAS/Projeto SABE, 2003. | Blackburn &amp; Thornton, 1979.</p>
         <p>• Apostila Clínica de Nutrição — Anhanguera Osasco, 2023.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CURVAS OMS ── -->
+  <div id="panel-graficos" class="panel">
+    <div class="space-y">
+      <div class="card">
+        <div class="card-title">📈 Curvas de Crescimento OMS</div>
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:14px;line-height:1.6">
+          Selecione perfil <strong>Bebê</strong> ou <strong>Criança</strong> e preencha os dados para visualizar as curvas com o ponto do paciente plotado automaticamente.
+        </p>
+        <!-- Legenda -->
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;font-size:.72rem;color:var(--text3)">
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#16a34a;border-radius:2px"></span>Mediana (P50)</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ca8a04;border-radius:2px"></span>±1 DP</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ea580c;border-radius:2px"></span>±2 DP</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#dc2626;border-radius:2px"></span>±3 DP</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1d4ed8"></span>Ponto ♂</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#db2777"></span>Ponto ♀</span>
+        </div>
+        <div id="graficos-container">
+          <div class="block-empty"><p>Selecione o perfil <strong>👶 Bebê</strong> ou <strong>🧒 Criança</strong> e preencha os dados para visualizar.</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -944,12 +1136,39 @@ function gs(id){return document.getElementById(id)?.value||""}
 
 function setProfile(p){
   profile=p;
+  const profiles=['adulto','idoso','gestante','adolescente','crianca','bebe'];
   document.querySelectorAll('.profile-btn').forEach((b,i)=>{
-    b.classList.toggle('active',['adulto','idoso','gestante','adolescente'][i]===p)
+    b.classList.toggle('active',profiles[i]===p);
   });
+  const isCrianca=p==='bebe'||p==='crianca';
   document.getElementById('cp-field').style.display=p==='idoso'?'block':'none';
   document.getElementById('gest-card').style.display=p==='gestante'?'block':'none';
-  setTab('dados');recalc();
+  document.getElementById('crianca-card').style.display=isCrianca?'block':'none';
+
+  // Para bebê/criança: esconder campos do grid principal que duplicam os da ficha pediátrica
+  document.getElementById('alt-wrap').style.display=isCrianca?'none':'block';
+  document.getElementById('cb-wrap').style.display=isCrianca?'none':'block';
+  document.getElementById('cc-wrap').style.display=isCrianca?'none':'block';
+  document.getElementById('dobras-card').style.display=isCrianca?'none':'block';
+
+  // Tab gráficos só para pediátrico
+  const tabGraf=document.getElementById('tab-graficos');
+  if(tabGraf) tabGraf.style.display=isCrianca?'inline-flex':'none';
+  if(p==='bebe'){
+    document.getElementById('crianca-card-title').textContent='👶 Dados do Bebê (0–24 meses)';
+    document.getElementById('crianca-idade-nota').textContent='Bebê: 0 a 24 meses';
+    document.getElementById('lbl-comp').textContent='Comprimento (deitado)';
+    document.getElementById('pc-wrap').style.display='block';
+    document.getElementById('cc-c-wrap').style.display='none';
+  } else if(p==='crianca'){
+    document.getElementById('crianca-card-title').textContent='🧒 Dados da Criança (2–10 anos)';
+    document.getElementById('crianca-idade-nota').textContent='Criança: 24 a 120 meses';
+    document.getElementById('lbl-comp').textContent='Estatura (em pé)';
+    document.getElementById('pc-wrap').style.display='none';
+    // CC visível para crianças (a partir de 5 anos — será verificado no cálculo)
+    document.getElementById('cc-c-wrap').style.display='block';
+  }
+  setTab('dados'); recalc();
 }
 
 function setTab(t){
@@ -957,8 +1176,13 @@ function setTab(t){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
-  document.querySelectorAll('.tab-btn')[['dados','resultados','videos'].indexOf(t)].classList.add('active');
+  // Marcar tab ativo corretamente
+  const tabMap={dados:0,resultados:1,graficos:2,videos:3};
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    if(b.onclick?.toString().includes("'"+t+"'")||b.getAttribute('onclick')?.includes("'"+t+"'")) b.classList.add('active');
+  });
   if(t==='resultados') renderResultados();
+  if(t==='graficos') renderGraficos();
 }
 
 function toggleCorr(){
@@ -1024,7 +1248,10 @@ function updateCorr(input,id,expectedRaw){
 function emptyBlock(msg){return`<div class="block-empty"><p>${msg}</p></div>`}
 
 // ─── RENDER RESULTADOS ────────────────────────────────────────────────────────
-function recalc(){if(currentTab==='resultados')renderResultados();}
+function recalc(){
+  if(currentTab==='resultados') renderResultados();
+  if(currentTab==='graficos') renderGraficos();
+}
 
 function renderResultados(){
   const sex=gs('sex'), naf=gs('naf');
@@ -1054,6 +1281,13 @@ function renderResultados(){
     const lbl=profile==='gestante'?'1b':'1';
     let cls, noteStr;
     if(profile==='idoso'){cls=classIMCIdoso(imc,'L');noteStr='Lipschitz (1994): <22 Desnutrição | 22-27 Eutrofia | >27 Sobrepeso';}
+    else if(profile==='adolescente' && age>=10 && age<20){
+      // OMS 2007: IMC para Idade em adolescentes (Z-score)
+      const rowAdol=interpOMS07(sex==='M'?OMS07_IMC_M_EXT:OMS07_IMC_F_EXT, age);
+      const zAdol=calcZ(imc,rowAdol);
+      cls=classZ(zAdol,'imc');
+      noteStr=`OMS 2007 — IMC para Idade (Escore-Z = ${fmt(zAdol,2)}) | <-3DP Magreza acentuada | -3 a -2 Magreza | -2 a +1 Eutrofia | +1 a +2 Risco sobrepeso | +2 a +3 Sobrepeso | >+3 Obesidade`;
+    }
     else{cls=classIMCAdulto(imc);noteStr='OMS: <18,5 Baixo peso | 18,5-24,9 Eutrofia | 25-29,9 Pré-obesidade | 30-34,9 OB I | 35-39,9 OB II | ≥40 OB III';}
     imcHTML+=stepCard('imc',{stepLabel:lbl,title:'IMC Atual',formula:'IMC = Peso atual (kg) ÷ Altura² (m)',
       substitution:subst,result:`${imcF} kg/m²`,classification:cls,note:noteStr});
@@ -1140,8 +1374,71 @@ function renderResultados(){
 
   // ── DOBRAS ──
   let dobrasHTML='';
-  if(isNaN(dctN)||isNaN(dcbN)||isNaN(dcseN)||isNaN(dcsiN)||isNaN(age)||age<16||age>72){
-    dobrasHTML=emptyBlock('Preencha as 4 dobras, peso e idade (16-72 anos).');
+  // Para adolescentes 10-17: Slaughter (DCT + DCSE). Para 18+: Durnin & Womersley (4 dobras)
+  const isAdolescente = profile === 'adolescente';
+  const useSlaughter = isAdolescente && age >= 10 && age < 18;
+  const useDurnin = !isAdolescente || age >= 18;
+
+  if(useSlaughter && !isNaN(dctN) && !isNaN(dcseN) && dctN > 0 && dcseN > 0){
+    // Adolescente 10–17 anos: Slaughter 1988 (DCT + DCSE)
+    const soma2 = dctN + dcseN;
+    let gc2 = null;
+    if(sex==='M'){
+      gc2 = soma2<=35 ? 1.21*soma2 - 0.008*(soma2**2) - 1.7 : 0.783*soma2 + 1.6;
+    } else {
+      gc2 = soma2<=35 ? 1.33*soma2 - 0.013*(soma2**2) - 2.5 : 0.546*soma2 + 9.7;
+    }
+    // Classificação Houtkooper 1996 (apostila)
+    let gcClass2='', gcColor2='gray';
+    if(gc2!==null){
+      if(sex==='M'){
+        if(gc2<5){gcClass2='Muito Baixo (<5%)';gcColor2='blue';}
+        else if(gc2<=10){gcClass2='Baixo (5–10%)';gcColor2='cyan';}
+        else if(gc2<=20){gcClass2='Ótimo (11–20%)';gcColor2='green';}
+        else if(gc2<=25){gcClass2='Moderadamente Alto (21–25%)';gcColor2='yellow';}
+        else if(gc2<=31){gcClass2='Alto (26–31%)';gcColor2='orange';}
+        else{gcClass2='Muito Alto (>31%)';gcColor2='red';}
+      } else {
+        if(gc2<12){gcClass2='Muito Baixo (<12%)';gcColor2='blue';}
+        else if(gc2<=15){gcClass2='Baixo (12–15%)';gcColor2='cyan';}
+        else if(gc2<=25){gcClass2='Ótimo (16–25%)';gcColor2='green';}
+        else if(gc2<=30){gcClass2='Moderadamente Alto (26–30%)';gcColor2='yellow';}
+        else if(gc2<=36){gcClass2='Alto (31–36%)';gcColor2='orange';}
+        else{gcClass2='Muito Alto (>36%)';gcColor2='red';}
+      }
+    }
+    const fSlaughter=sex==='M'
+      ?(soma2<=35?'% GC = 1,21 × (DCT+DCSE) − 0,008 × (DCT+DCSE)² − 1,7':'% GC = 0,783 × (DCT+DCSE) + 1,6')
+      :(soma2<=35?'% GC = 1,33 × (DCT+DCSE) − 0,013 × (DCT+DCSE)² − 2,5':'% GC = 0,546 × (DCT+DCSE) + 9,7');
+    dobrasHTML+=`<div class="info-teal">
+      <span style="font-size:1.5rem">📌</span>
+      <div>
+        <div class="info-teal-title">Adolescentes 10–17 anos: Protocolo Slaughter et al. (1988)</div>
+        <div class="info-teal-body">Para adolescentes nesta faixa etária, o % de gordura é calculado com <strong>duas dobras</strong> (DCT + DCSE), segundo Slaughter et al. (1988). O protocolo de 4 dobras (Durnin &amp; Womersley) aplica-se a partir dos 18 anos.</div>
+      </div>
+    </div>`;
+    dobrasHTML+=stepCard('adol_soma',{stepLabel:'P1',title:'Passo 1 — Soma das Dobras (Σ = DCT + DCSE)',
+      formula:'Σ = DCT + DCSE  (ambas em mm)',
+      substitution:`Σ = ${dctN} + ${dcseN}\n= ${fmt(soma2,1)} mm`,
+      result:`${fmt(soma2,1)} mm`});
+    dobrasHTML+=stepCard('adol_gc',{stepLabel:'%GC',title:'% Gordura Corporal — Slaughter et al. (1988)',
+      formula:fSlaughter+`  [∑ ${soma2<=35?'≤':'>'} 35 mm]`,
+      substitution:`Σ = ${fmt(soma2,1)} mm\n% GC = ${fmt(gc2,2)} %`,
+      result:`${fmt(gc2,1)} %`,
+      classification:{label:gcClass2,color:gcColor2},
+      note:'Slaughter MH et al., Hum. Biol. 60:709-723, 1988 · Classificação: Houtkooper (1996) — Apostila Clínica Anhanguera 2023'});
+    dobrasHTML+=`<div class="class-table">
+      <p><b>Classificação do % Gordura Corporal — Houtkooper (1996)</b></p>
+      <p style="margin-top:6px">
+        ${sex==='M'
+          ?'<b>Muito Baixo:</b> <5% | <b>Baixo:</b> 5–10% | <b>Ótimo:</b> 11–20% | <b>Mod. Alto:</b> 21–25% | <b>Alto:</b> 26–31% | <b>Muito Alto:</b> >31%'
+          :'<b>Muito Baixo:</b> <12% | <b>Baixo:</b> 12–15% | <b>Ótimo:</b> 16–25% | <b>Mod. Alto:</b> 26–30% | <b>Alto:</b> 31–36% | <b>Muito Alto:</b> >36%'}
+      </p>
+    </div>`;
+  } else if(useSlaughter){
+    dobrasHTML=emptyBlock('Preencha DCT e DCSE (ambas em mm) para calcular o % de gordura (Slaughter 1988).');
+  } else if(isNaN(dctN)||isNaN(dcbN)||isNaN(dcseN)||isNaN(dcsiN)||isNaN(age)||age<16||age>72){
+    dobrasHTML=emptyBlock('Preencha as 4 dobras (DCT, DCB, DCSE, DCSI), peso e idade (16–72 anos) para o protocolo Durnin & Womersley.');
   } else {
     const sum4=dctN+dcbN+dcseN+dcsiN;
     const logS=Math.log10(sum4);
@@ -1258,9 +1555,982 @@ function renderResultados(){
   } else {
     cpWrap.style.display='none';
   }
+
+  // ── GANHO DE PESO GESTACIONAL ──
+  const gpgWrap=document.getElementById('block-gpg-wrap');
+  if(gpgWrap){
+    if(profile==='gestante'){
+      gpgWrap.style.display='block';
+      renderGanhoPesoGestacional();
+    } else {
+      gpgWrap.style.display='none';
+    }
+  }
+
+  // ── BLOCO PEDIÁTRICO ──
+  const blocCrianca=document.getElementById('block-crianca');
+  const isPed=profile==='bebe'||profile==='crianca';
+
+  // Para perfis pediátricos: mostrar somente bloco criança e esconder todos os adultos
+  ['wrap-imc','wrap-cc','wrap-cb','wrap-dobras','wrap-eer'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=isPed?'none':'block';
+  });
+  if(blocCrianca) blocCrianca.style.display=isPed?'block':'none';
+  if(isPed && blocCrianca) blocCrianca.innerHTML=renderCrianca();
+
+  // Esconder blocos adulto quando pediátrico
+  ['block-imc','block-cc','block-cb','block-dobras','block-eer'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.closest('div[class=""]')||null; // blocos já ficam vazios pois não calculamos
+  });
 }
 
-// ─── VÍDEOS ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// TABELAS OMS — DADOS DE REFERÊNCIA
+// ═══════════════════════════════════════════════════════
+// Formato: [mês, -3DP, -2DP, -1DP, mediana, +1DP, +2DP, +3DP]
+
+// PESO PARA IDADE — MENINOS 0-60m (OMS 2006)
+const OMS_PESO_M=[
+  [0,2.1,2.5,2.9,3.3,3.9,4.4,5.0],[1,2.9,3.4,3.9,4.5,5.1,5.8,6.6],[2,3.8,4.3,4.9,5.6,6.3,7.1,8.0],
+  [3,4.4,5.0,5.7,6.4,7.2,8.0,9.0],[4,4.9,5.6,6.2,7.0,7.8,8.7,9.7],[5,5.3,6.0,6.7,7.5,8.4,9.3,10.4],
+  [6,5.7,6.4,7.1,7.9,8.8,9.8,10.9],[7,5.9,6.7,7.4,8.3,9.2,10.3,11.4],[8,6.2,7.0,7.7,8.6,9.6,10.7,11.9],
+  [9,6.4,7.1,8.0,8.9,9.9,11.0,12.3],[10,6.6,7.4,8.2,9.2,10.2,11.4,12.7],[11,6.8,7.6,8.4,9.4,10.5,11.7,13.0],
+  [12,6.9,7.7,8.6,9.6,10.8,12.0,13.3],[13,7.1,7.9,8.8,9.9,11.0,12.3,13.7],[14,7.2,8.1,9.0,10.1,11.3,12.6,14.0],
+  [15,7.4,8.3,9.2,10.3,11.5,12.8,14.3],[16,7.5,8.4,9.4,10.5,11.7,13.1,14.6],[17,7.7,8.6,9.6,10.7,12.0,13.4,14.9],
+  [18,7.8,8.8,9.8,10.9,12.2,13.7,15.3],[19,8.0,8.9,10.0,11.1,12.5,14.0,15.6],[20,8.1,9.1,10.1,11.3,12.7,14.2,15.9],
+  [21,8.2,9.2,10.3,11.5,12.9,14.5,16.2],[22,8.4,9.4,10.5,11.8,13.2,14.7,16.5],[23,8.5,9.5,10.7,12.0,13.4,15.0,16.8],
+  [24,8.6,9.7,10.8,12.2,13.6,15.3,17.1],[30,9.4,10.6,11.8,13.3,14.9,16.8,18.9],[36,10.1,11.4,12.7,14.3,16.1,18.2,20.5],
+  [42,10.7,12.1,13.6,15.3,17.2,19.5,22.1],[48,11.3,12.7,14.3,16.3,18.4,20.9,23.8],[54,11.9,13.4,15.1,17.2,19.6,22.4,25.7],
+  [60,12.4,14.1,16.0,18.3,20.9,24.0,27.6]
+];
+const OMS_PESO_F=[
+  [0,2.0,2.4,2.8,3.2,3.7,4.2,4.8],[1,2.7,3.2,3.6,4.2,4.8,5.5,6.2],[2,3.4,3.9,4.5,5.1,5.8,6.6,7.5],
+  [3,4.0,4.5,5.2,5.8,6.6,7.5,8.5],[4,4.4,5.0,5.7,6.4,7.3,8.2,9.3],[5,4.8,5.4,6.1,6.9,7.8,8.8,10.0],
+  [6,5.1,5.7,6.5,7.3,8.2,9.3,10.6],[7,5.3,6.0,6.8,7.6,8.6,9.8,11.1],[8,5.6,6.3,7.0,7.9,9.0,10.2,11.6],
+  [9,5.8,6.5,7.3,8.2,9.3,10.5,12.0],[10,5.9,6.7,7.5,8.5,9.6,10.9,12.4],[11,6.1,6.9,7.7,8.7,9.9,11.2,12.8],
+  [12,6.3,7.0,7.9,8.9,10.1,11.5,13.1],[13,6.4,7.2,8.1,9.2,10.4,11.8,13.5],[14,6.6,7.4,8.3,9.4,10.7,12.1,13.8],
+  [15,6.7,7.6,8.5,9.6,10.9,12.4,14.1],[16,6.9,7.7,8.7,9.8,11.1,12.6,14.5],[17,7.0,7.9,8.9,10.0,11.4,12.9,14.8],
+  [18,7.2,8.1,9.1,10.2,11.6,13.2,15.1],[19,7.3,8.2,9.2,10.4,11.8,13.5,15.4],[20,7.5,8.4,9.4,10.6,12.1,13.7,15.7],
+  [21,7.6,8.6,9.6,10.9,12.3,14.0,16.0],[22,7.8,8.7,9.8,11.1,12.5,14.3,16.4],[23,7.9,8.9,10.0,11.3,12.8,14.6,16.7],
+  [24,8.1,9.0,10.2,11.5,13.0,14.8,17.0],[30,8.8,9.9,11.1,12.6,14.3,16.4,18.9],[36,9.6,10.8,12.1,13.9,15.8,18.2,21.2],
+  [42,10.3,11.6,13.0,15.0,17.2,19.9,23.4],[48,10.9,12.3,13.9,16.1,18.6,21.7,25.7],[54,11.5,12.9,14.7,17.1,19.9,23.5,28.2],
+  [60,12.1,13.7,15.6,18.2,21.4,25.5,30.9]
+];
+// COMPRIMENTO/ESTATURA PARA IDADE 0-60m (dados combinados OMS 2006 + 2007)
+const OMS_COMP_M=[
+  [0,44.2,46.1,48.0,49.9,51.8,53.7,55.6],[1,48.9,50.8,52.8,54.7,56.7,58.6,60.6],[2,52.4,54.4,56.4,58.4,60.4,62.4,64.4],
+  [3,55.3,57.3,59.4,61.4,63.5,65.5,67.6],[4,57.6,59.7,61.8,63.9,66.0,68.0,70.1],[5,59.6,61.7,63.8,65.9,68.0,70.1,72.2],
+  [6,61.2,63.3,65.5,67.6,69.8,71.9,74.0],[7,62.7,64.8,67.0,69.2,71.3,73.5,75.7],[8,64.0,66.2,68.4,70.6,72.8,75.0,77.2],
+  [9,65.2,67.5,69.7,72.0,74.2,76.5,78.7],[10,66.4,68.7,71.0,73.3,75.6,77.9,80.2],[11,67.6,69.9,72.2,74.5,76.9,79.2,81.5],
+  [12,68.6,71.0,73.4,75.7,78.1,80.5,82.9],[13,69.6,72.1,74.5,76.9,79.4,81.8,84.2],[14,70.6,73.1,75.6,78.0,80.5,83.0,85.5],
+  [15,71.6,74.1,76.6,79.1,81.7,84.2,86.7],[16,72.5,75.0,77.6,80.2,82.8,85.4,88.0],[17,73.3,76.0,78.6,81.2,83.9,86.5,89.2],
+  [18,74.2,76.9,79.6,82.3,85.0,87.7,90.4],[19,75.0,77.7,80.5,83.2,86.0,88.8,91.5],[20,75.8,78.6,81.4,84.2,87.0,89.8,92.6],
+  [21,76.5,79.4,82.3,85.1,88.0,90.9,93.8],[22,77.2,80.2,83.1,86.0,89.0,91.9,94.9],[23,77.9,80.9,83.9,86.9,89.9,92.9,95.9],
+  [24,78.7,81.7,84.8,87.8,90.9,93.9,97.0],[27,80.7,84.0,87.2,90.4,93.6,96.9,100.1],[30,82.7,86.1,89.5,92.9,96.4,99.8,103.2],
+  [33,84.5,88.0,91.6,95.2,98.8,102.4,106.0],[36,86.3,89.9,93.6,97.4,101.1,104.8,108.6],[39,88.1,91.9,95.7,99.6,103.4,107.3,111.2],
+  [42,89.9,93.8,97.7,101.7,105.7,109.7,113.7],[45,91.6,95.7,99.8,103.9,108.0,112.1,116.3],[48,93.2,97.5,101.7,106.0,110.2,114.5,118.7],
+  [51,94.9,99.3,103.7,108.0,112.3,116.7,121.1],[54,96.5,101.0,105.6,110.0,114.4,118.9,123.3],[57,98.1,102.7,107.4,111.9,116.5,121.0,125.6],
+  [60,99.6,104.4,109.1,113.9,118.6,123.2,127.9]
+];
+const OMS_COMP_F=[
+  [0,43.6,45.4,47.3,49.1,51.0,52.9,54.7],[1,47.8,49.8,51.7,53.7,55.6,57.6,59.5],[2,51.0,53.0,55.0,57.1,59.1,61.1,63.2],
+  [3,53.5,55.6,57.7,59.8,61.9,64.0,66.1],[4,55.6,57.8,59.9,62.1,64.3,66.4,68.6],[5,57.4,59.6,61.8,64.0,66.2,68.5,70.7],
+  [6,58.9,61.2,63.5,65.7,68.0,70.3,72.5],[7,60.3,62.7,65.0,67.3,69.6,72.0,74.3],[8,61.7,64.0,66.4,68.7,71.1,73.5,75.8],
+  [9,62.9,65.3,67.7,70.1,72.6,75.0,77.4],[10,64.1,66.5,69.0,71.5,74.0,76.4,78.9],[11,65.2,67.7,70.3,72.8,75.3,77.8,80.4],
+  [12,66.3,68.9,71.4,74.0,76.6,79.2,81.7],[13,67.3,70.0,72.6,75.2,77.8,80.5,83.1],[14,68.3,71.0,73.7,76.4,79.1,81.8,84.5],
+  [15,69.3,72.0,74.8,77.5,80.3,83.1,85.8],[16,70.2,73.0,75.8,78.6,81.5,84.3,87.1],[17,71.1,74.0,76.8,79.7,82.6,85.5,88.4],
+  [18,71.9,74.9,77.8,80.7,83.7,86.6,89.6],[19,72.8,75.8,78.8,81.7,84.7,87.7,90.7],[20,73.7,76.7,79.7,82.7,85.7,88.8,91.8],
+  [21,74.5,77.5,80.6,83.7,86.7,89.8,92.9],[22,75.2,78.4,81.5,84.6,87.7,90.9,94.0],[23,76.0,79.2,82.3,85.5,88.7,91.9,95.0],
+  [24,76.7,80.0,83.2,86.4,89.7,92.9,96.1],[27,78.9,82.3,85.7,89.1,92.5,95.9,99.3],[30,81.0,84.5,88.1,91.6,95.2,98.7,102.3],
+  [33,83.0,86.7,90.3,94.0,97.7,101.4,105.0],[36,85.0,88.7,92.5,96.3,100.2,104.0,107.8],[39,86.9,90.8,94.7,98.6,102.5,106.5,110.4],
+  [42,88.7,92.7,96.8,100.8,104.8,108.9,112.9],[45,90.5,94.6,98.8,102.9,107.1,111.2,115.4],[48,92.2,96.5,100.7,105.0,109.3,113.5,117.8],
+  [51,93.9,98.3,102.7,107.0,111.4,115.8,120.2],[54,95.6,100.1,104.6,109.0,113.5,118.0,122.6],[57,97.2,101.8,106.4,111.0,115.6,120.2,124.8],
+  [60,98.7,103.5,108.2,112.9,117.6,122.3,127.1]
+];
+// IMC PARA IDADE 0-60m
+const OMS_IMC_M=[
+  [0,10.2,11.1,12.2,13.4,14.8,16.3,18.1],[3,12.7,13.7,14.8,16.0,17.3,18.8,20.5],[6,12.5,13.5,14.5,15.7,17.0,18.4,20.0],
+  [9,12.2,13.2,14.2,15.4,16.7,18.1,19.7],[12,12.0,12.9,14.0,15.1,16.4,17.8,19.5],[18,11.8,12.7,13.7,14.9,16.2,17.7,19.3],
+  [24,11.7,12.6,13.6,14.8,16.1,17.6,19.3],[30,11.6,12.5,13.5,14.7,16.0,17.5,19.2],[36,11.7,12.6,13.5,14.7,16.0,17.5,19.2],
+  [42,11.8,12.6,13.6,14.7,16.0,17.5,19.2],[48,11.9,12.8,13.7,14.8,16.1,17.6,19.4],[54,12.0,12.9,13.8,14.9,16.2,17.8,19.7],
+  [60,12.1,13.0,14.0,15.1,16.5,18.2,20.2]
+];
+const OMS_IMC_F=[
+  [0,10.1,11.1,12.2,13.3,14.6,16.1,17.7],[3,11.9,12.9,14.0,15.2,16.5,18.0,19.7],[6,12.0,13.0,14.0,15.2,16.5,18.0,19.8],
+  [9,11.8,12.8,13.8,15.0,16.4,17.9,19.7],[12,11.8,12.8,13.8,14.9,16.2,17.7,19.5],[18,11.7,12.6,13.6,14.8,16.0,17.5,19.2],
+  [24,11.6,12.5,13.5,14.7,16.0,17.5,19.3],[30,11.6,12.5,13.5,14.7,16.0,17.6,19.5],[36,11.7,12.6,13.6,14.8,16.1,17.7,19.7],
+  [42,11.8,12.7,13.7,14.9,16.2,17.9,19.9],[48,11.9,12.8,13.8,15.0,16.4,18.1,20.2],[54,12.0,13.0,14.0,15.2,16.7,18.5,20.7],
+  [60,12.1,13.1,14.2,15.5,17.1,19.0,21.4]
+];
+// ═══════════════════════════════════════════════════════
+// TABELAS FRISANCHO 1990 — CRIANÇAS
+// Fonte: Apostila Clínica Anhanguera 2023 (Frisancho 1990)
+// ═══════════════════════════════════════════════════════
+
+// ── CB (cm) — Tabela 2 da apostila (image37.png — valores confirmados visualmente)
+// A apostila fornece APENAS P5, P50 e P95 para CB.
+// Índice: 0=1a, 1=2a, 2=3a, 3=4a, 4=5a, 5=6a, 6=7a, 7=8a, 8=9a, 9=10a
+const CB_CRIANCA_M = [
+  {p5:14.2, p50:16.0, p95:18.2}, // 1.0-1.9a
+  {p5:14.3, p50:16.3, p95:18.6}, // 2.0-2.9a
+  {p5:15.0, p50:16.8, p95:19.0}, // 3.0-3.9a
+  {p5:15.1, p50:17.1, p95:19.3}, // 4.0-4.9a
+  {p5:15.5, p50:17.5, p95:20.5}, // 5.0-5.9a
+  {p5:15.8, p50:18.0, p95:22.8}, // 6.0-6.9a
+  {p5:16.1, p50:18.7, p95:22.9}, // 7.0-7.9a
+  {p5:16.5, p50:19.2, p95:24.0}, // 8.0-8.9a
+  {p5:17.5, p50:20.1, p95:26.0}, // 9.0-9.9a
+  {p5:18.1, p50:21.1, p95:27.9}, // 10.0-10.9a
+];
+const CB_CRIANCA_F = [
+  {p5:13.6, p50:15.7, p95:17.8}, // 1.0-1.9a
+  {p5:14.2, p50:16.1, p95:18.5}, // 2.0-2.9a
+  {p5:14.4, p50:16.6, p95:19.0}, // 3.0-3.9a
+  {p5:14.8, p50:17.0, p95:19.5}, // 4.0-4.9a
+  {p5:15.2, p50:17.5, p95:21.0}, // 5.0-5.9a
+  {p5:15.7, p50:17.8, p95:22.0}, // 6.0-6.9a
+  {p5:16.4, p50:18.6, p95:23.3}, // 7.0-7.9a
+  {p5:16.7, p50:19.5, p95:25.1}, // 8.0-8.9a
+  {p5:17.6, p50:20.6, p95:26.7}, // 9.0-9.9a
+  {p5:17.8, p50:21.2, p95:27.3}, // 10.0-10.9a
+];
+
+// ── DCT (mm) — apostila linhas 786-1009 — P5/P10/P15/P25/P50/P75/P85/P90/P95
+// Índice: 0=5a, 1=6a, 2=7a, 3=8a, 4=9a, 5=10a
+const DCT_CRIANCA_M = [
+  {p5:5.0, p10:6.0, p15:6.0, p25:7.0, p50:8.0,  p75:10.0, p85:11.5, p90:13.0, p95:14.5}, // 5a
+  {p5:5.0, p10:5.5, p15:6.0, p25:6.5, p50:8.0,  p75:10.0, p85:12.0, p90:13.0, p95:16.0}, // 6a
+  {p5:4.5, p10:5.0, p15:6.0, p25:6.0, p50:8.0,  p75:10.5, p85:12.5, p90:14.0, p95:16.0}, // 7a
+  {p5:5.0, p10:5.5, p15:6.0, p25:7.0, p50:8.5,  p75:11.0, p85:13.0, p90:16.0, p95:19.0}, // 8a
+  {p5:5.0, p10:5.5, p15:6.0, p25:6.5, p50:9.0,  p75:12.5, p85:15.5, p90:17.0, p95:20.0}, // 9a
+  {p5:5.0, p10:6.0, p15:6.0, p25:7.5, p50:10.0, p75:14.0, p85:17.0, p90:20.0, p95:24.0}, // 10a (P50=1.0 na apostila é typo; correto=10.0)
+];
+const DCT_CRIANCA_F = [
+  {p5:5.5, p10:7.0, p15:7.0, p25:8.0, p50:10.0, p75:12.0, p85:13.5, p90:15.0, p95:17.0}, // 5a
+  {p5:6.0, p10:6.5, p15:7.0, p25:8.0, p50:10.0, p75:12.0, p85:13.0, p90:15.0, p95:17.0}, // 6a
+  {p5:6.0, p10:7.0, p15:7.0, p25:8.0, p50:10.5, p75:12.5, p85:15.0, p90:16.0, p95:19.0}, // 7a
+  {p5:6.0, p10:7.0, p15:7.5, p25:8.5, p50:11.0, p75:14.5, p85:17.0, p90:18.0, p95:22.5}, // 8a
+  {p5:6.5, p10:7.0, p15:8.0, p25:9.0, p50:12.0, p75:16.0, p85:19.0, p90:21.0, p95:25.0}, // 9a
+  {p5:7.0, p10:8.0, p15:8.0, p25:9.0, p50:12.5, p75:17.5, p85:20.0, p90:22.5, p95:27.0}, // 10a
+];
+
+// ── CMB (cm) — apostila linhas 1103-1174 — P5/P10/P25/P50/P75/P90/P95 (sem P15/P85)
+// Índice: 0=5a, 1=6a, 2=7a, 3=8a, 4=9a, 5=10a
+const CMB_CRIANCA_M = [
+  {p5:12.5, p10:12.8, p25:13.4, p50:14.2, p75:15.1, p90:15.9, p95:16.5}, // 5a
+  {p5:13.0, p10:13.3, p25:13.8, p50:14.5, p75:15.4, p90:16.6, p95:17.1}, // 6a
+  {p5:12.9, p10:13.5, p25:14.2, p50:15.1, p75:16.0, p90:17.1, p95:17.6}, // 7a
+  {p5:13.8, p10:14.0, p25:15.1, p50:16.0, p75:17.1, p90:18.3, p95:19.4}, // 8a
+  {p5:14.7, p10:15.0, p25:15.8, p50:16.7, p75:18.0, p90:19.4, p95:19.8}, // 9a
+  {p5:14.8, p10:15.0, p25:15.9, p50:17.0, p75:18.0, p90:19.0, p95:19.7}, // 10a
+];
+const CMB_CRIANCA_F = [
+  {p5:12.8, p10:13.3, p25:14.0, p50:14.7, p75:15.4, p90:16.2, p95:16.9}, // 5a
+  {p5:13.1, p10:13.5, p25:14.2, p50:15.1, p75:16.1, p90:17.0, p95:17.7}, // 6a
+  {p5:13.7, p10:13.9, p25:15.1, p50:16.0, p75:16.8, p90:17.7, p95:18.0}, // 7a
+  {p5:14.0, p10:14.5, p25:15.4, p50:16.2, p75:17.0, p90:18.2, p95:18.7}, // 8a
+  {p5:15.1, p10:15.4, p25:16.1, p50:17.0, p75:18.3, p90:19.6, p95:20.2}, // 9a
+  {p5:15.6, p10:16.0, p25:16.6, p50:18.0, p75:19.1, p90:20.9, p95:22.1}, // 10a
+];
+
+// ── AMB (cm²) — apostila linhas 1192-1263 — P5/P10/P25/P50/P75/P90/P95 (sem P15/P85)
+// Índice: 0=5a, 1=6a, 2=7a, 3=8a, 4=9a, 5=10a
+const AMB_CRIANCA_M = [
+  {p5:12.4, p10:13.2, p25:14.8, p50:16.4, p75:18.3, p90:20.6, p95:22.1}, // 5a
+  {p5:13.5, p10:14.1, p25:15.6, p50:17.4, p75:19.5, p90:22.0, p95:24.2}, // 6a
+  {p5:14.4, p10:15.2, p25:16.7, p50:18.9, p75:21.2, p90:23.9, p95:25.3}, // 7a
+  {p5:15.2, p10:16.0, p25:18.2, p50:20.8, p75:23.2, p90:26.5, p95:28.0}, // 8a
+  {p5:17.0, p10:17.9, p25:19.8, p50:21.9, p75:25.4, p90:28.3, p95:31.1}, // 9a
+  {p5:17.6, p10:18.5, p25:20.9, p50:23.8, p75:27.0, p90:31.0, p95:33.1}, // 10a
+];
+const AMB_CRIANCA_F = [
+  {p5:13.2, p10:14.2, p25:15.7, p50:17.6, p75:19.5, p90:21.7, p95:23.2}, // 5a
+  {p5:14.4, p10:15.3, p25:16.8, p50:18.7, p75:21.3, p90:23.8, p95:25.7}, // 6a
+  {p5:15.1, p10:16.2, p25:18.5, p50:20.6, p75:22.6, p90:25.2, p95:28.6}, // 7a
+  {p5:16.3, p10:17.8, p25:19.5, p50:21.6, p75:24.0, p90:26.6, p95:29.0}, // 8a
+  {p5:18.2, p10:19.3, p25:21.7, p50:23.5, p75:26.7, p90:30.4, p95:32.9}, // 9a
+  {p5:19.6, p10:20.7, p25:23.0, p50:25.7, p75:29.0, p90:34.0, p95:37.1}, // 10a
+];
+
+// ── FUNÇÕES DE ÍNDICE ──────────────────────────────────
+// Para CB: índice 0=1a, 1=2a, ..., 9=10a
+function idxCB(anosFrac) {
+  const a = Math.floor(anosFrac);
+  if(a <= 1) return 0;
+  if(a >= 10) return 9;
+  return a - 1;
+}
+// Para DCT/CMB/AMB: índice 0=5a, 1=6a, ..., 5=10a
+function idxFrisancho5a(anosFrac) {
+  const a = Math.floor(anosFrac);
+  if(a <= 5) return 0;
+  if(a >= 10) return 5;
+  return a - 5;
+}
+
+// ── INTERPOLAÇÃO DE PERCENTIL ──────────────────────────
+// Aceita qualquer combinação de percentis presentes na tabela
+function getPercentilCrianca(val, tabPerc) {
+  const pts = [];
+  if(tabPerc.p5  !== undefined) pts.push({p:5,  v:tabPerc.p5});
+  if(tabPerc.p10 !== undefined) pts.push({p:10, v:tabPerc.p10});
+  if(tabPerc.p15 !== undefined) pts.push({p:15, v:tabPerc.p15});
+  if(tabPerc.p25 !== undefined) pts.push({p:25, v:tabPerc.p25});
+  if(tabPerc.p50 !== undefined) pts.push({p:50, v:tabPerc.p50});
+  if(tabPerc.p75 !== undefined) pts.push({p:75, v:tabPerc.p75});
+  if(tabPerc.p85 !== undefined) pts.push({p:85, v:tabPerc.p85});
+  if(tabPerc.p90 !== undefined) pts.push({p:90, v:tabPerc.p90});
+  if(tabPerc.p95 !== undefined) pts.push({p:95, v:tabPerc.p95});
+  pts.sort((a,b) => a.v - b.v);
+  if(!pts.length) return 50;
+  if(val <= pts[0].v) return pts[0].p - 1;
+  if(val >= pts[pts.length-1].v) return 97;
+  for(let i=0; i<pts.length-1; i++){
+    if(val >= pts[i].v && val <= pts[i+1].v){
+      const t = (val - pts[i].v) / (pts[i+1].v - pts[i].v);
+      return pts[i].p + t * (pts[i+1].p - pts[i].p);
+    }
+  }
+  return 50;
+}
+
+// ── CLASSIFICAÇÕES ─────────────────────────────────────
+// Frisancho 1990 — CB, CMB, AMB (estado muscular)
+function classFrisanchoMusculo(percentil) {
+  if(percentil < 5)   return {label:'Categoria I — Baixa musculatura (< P5)', color:'red'};
+  if(percentil <= 15) return {label:'Categoria II — Abaixo da média (P5–P15)', color:'orange'};
+  if(percentil <= 85) return {label:'Categoria III — Média (P15–P85)', color:'green'};
+  if(percentil <= 95) return {label:'Categoria IV — Acima da média (P85–P95)', color:'cyan'};
+  return {label:'Categoria V — Alta muscularidade (> P95)', color:'purple'};
+}
+// Frisancho 1990 — DCT, AGB, IGB (estado de gordura)
+function classFrisanchoGordura(percentil) {
+  if(percentil < 5)   return {label:'Categoria I — Magro (< P5)', color:'blue'};
+  if(percentil <= 15) return {label:'Categoria II — Abaixo da média (P5–P15)', color:'cyan'};
+  if(percentil <= 75) return {label:'Categoria III — Média (P15–P75)', color:'green'};
+  if(percentil <= 85) return {label:'Categoria IV — Acima da média (P75–P85)', color:'yellow'};
+  return {label:'Categoria V — Gordura excessiva (> P85)', color:'red'};
+}
+// Blackburn & Thornton 1979 — adequação CB e CMB
+function classBlackburnCB(adeq) {
+  if(adeq < 70)   return {label:'Desnutrição Grave (< 70%)', color:'red'};
+  if(adeq < 80)   return {label:'Desnutrição Moderada (70–80%)', color:'orange'};
+  if(adeq < 90)   return {label:'Desnutrição Leve (80–90%)', color:'yellow'};
+  if(adeq <= 110) return {label:'Eutrofia (90–110%)', color:'green'};
+  if(adeq <= 120) return {label:'Acima da média (110–120%)', color:'cyan'};
+  return {label:'Muito acima da média (> 120%)', color:'purple'};
+}
+
+// Mantido para compatibilidade com código adulto existente
+const CB_P50_M=[13.5,14.5,15.0,15.5,16.0,16.5,17.0,17.5,18.0,18.5];
+const CB_P50_F=[13.5,14.5,15.0,15.5,16.0,16.5,17.0,17.5,18.0,18.5];
+
+// ═══════════════════════════════════════════════════════
+// FUNÇÕES OMS
+// ═══════════════════════════════════════════════════════
+function interpOMS(tabela,meses){
+  // Interpola linearmente entre os pontos da tabela
+  const tb=tabela.filter(r=>!isNaN(r[0]));
+  if(!tb.length) return null;
+  if(meses<=tb[0][0]) return tb[0].slice(1);
+  if(meses>=tb[tb.length-1][0]) return tb[tb.length-1].slice(1);
+  for(let i=0;i<tb.length-1;i++){
+    if(meses>=tb[i][0]&&meses<=tb[i+1][0]){
+      const t=(meses-tb[i][0])/(tb[i+1][0]-tb[i][0]);
+      return tb[i].slice(1).map((v,j)=>v+(tb[i+1][j+1]-v)*t);
+    }
+  }
+  return null;
+}
+function calcZ(valor,row){
+  // row = [-3SD,-2SD,-1SD,median,+1SD,+2SD,+3SD]
+  if(!row||isNaN(valor)) return null;
+  const [m3,m2,m1,med,p1,p2,p3]=row;
+  if(valor<med){
+    const sd=(med-m1);
+    return sd>0?(valor-med)/sd:null;
+  } else {
+    const sd=(p1-med);
+    return sd>0?(valor-med)/sd:null;
+  }
+}
+function classZ(z, tipo){
+  if(z===null) return {label:'—',color:'gray'};
+  if(tipo==='imc'){
+    if(z<-3) return{label:'Magreza acentuada (< -3 DP)',color:'red'};
+    if(z<-2) return{label:'Magreza (-3 a -2 DP)',color:'orange'};
+    if(z<1)  return{label:'Eutrofia (-2 a +1 DP)',color:'green'};
+    if(z<2)  return{label:'Risco de sobrepeso (+1 a +2 DP)',color:'yellow'};
+    if(z<3)  return{label:'Sobrepeso (+2 a +3 DP)',color:'orange'};
+    return{label:'Obesidade (> +3 DP)',color:'red'};
+  }
+  // peso/comprimento
+  if(z<-3) return{label:'Muito baixo (< -3 DP)',color:'red'};
+  if(z<-2) return{label:'Baixo (-3 a -2 DP)',color:'orange'};
+  if(z<2)  return{label:'Adequado (-2 a +2 DP)',color:'green'};
+  return{label:'Elevado (> +2 DP)',color:'red'};
+}
+
+// ═══════════════════════════════════════════════════════
+// GANHO DE PESO GESTACIONAL — IOM 2009
+// ═══════════════════════════════════════════════════════
+function renderGanhoPesoGestacional(){
+  const el=document.getElementById('block-gpg');
+  if(!el) return;
+  const ppg=gv('ppg'), peso=gv('peso'), igSemV=gv('igSem'), igDiasV=gv('igDias');
+  const alt=gv('alt');
+  if(isNaN(ppg)||ppg<=0||isNaN(alt)||alt<=0){
+    el.innerHTML=emptyBlock('Preencha: peso pré-gestacional e altura para calcular o ganho de peso.');
+    return;
+  }
+  const hm=alt/100;
+  const imcPPG=ppg/(hm*hm);
+  let enPG,gBaixo,gAlto,gSem,imcClass;
+  if(imcPPG<18.5){enPG='Baixo peso';gBaixo=12.7;gAlto=18.1;gSem=0.5;imcClass='blue';}
+  else if(imcPPG<=24.9){enPG='Eutrofia (normal)';gBaixo=11.3;gAlto=15.9;gSem=0.5;imcClass='green';}
+  else if(imcPPG<=29.9){enPG='Sobrepeso';gBaixo=6.8;gAlto=11.3;gSem=0.3;imcClass='yellow';}
+  else{enPG='Obesidade';gBaixo=5.0;gAlto=9.0;gSem=0.2;imcClass='red';}
+
+  let html='';
+  // Bloco G1 — IMC pré-gestacional
+  html+=stepCard('gpg1',{stepLabel:'G1',
+    title:'IMC Pré-Gestacional — Classificação',
+    formula:'IMC = Peso pré-gestacional ÷ Altura²',
+    substitution:`IMC = ${ppg} kg ÷ (${fmt(hm,2)} m)² = ${fmt(imcPPG)} kg/m²`,
+    result:`${fmt(imcPPG)} kg/m²`,
+    classification:{label:enPG,color:imcClass},
+    note:'Referência: WHO (OMS) 2004 para classificação do IMC pré-gestacional · Apostila Clínica Anhanguera 2023'});
+
+  // Bloco G2 — Recomendação de ganho total
+  html+=stepCard('gpg2',{stepLabel:'G2',
+    title:'Recomendação de Ganho de Peso Total — IOM 2009',
+    formula:'Ganho de peso total recomendado segundo estado nutricional pré-gestacional',
+    substitution:`Estado nutricional: ${enPG}\nGanho total recomendado: ${gBaixo} a ${gAlto} kg\nGanho semanal recomendado (2° e 3° trimestres): ${gSem} kg/semana`,
+    result:`${gBaixo} a ${gAlto} kg`,
+    note:'Fonte: Institute of Medicine (IOM), 2009 · Apostila Clínica de Nutrição — Anhanguera Osasco 2023'});
+
+  // Bloco G3 — Ganho atual (se tiver peso atual e IG)
+  if(!isNaN(peso)&&peso>0&&!isNaN(igSemV)){
+    // Cálculo da IG corrigida (apostila: 1-3 dias = semana atual; 4-6 = próxima)
+    const igCorr=!isNaN(igDiasV)&&igDiasV>=4?igSemV+1:igSemV;
+    const ganhoAtual=peso-ppg;
+    // Estimativa simplificada: 1° trimestre ~1–2 kg, depois gSem/semana
+    const esperadoBaixo=igCorr<=13?Math.min(gBaixo*0.15,2):Math.min(gBaixo*0.15,2)+(igCorr-13)*gSem;
+    const esperadoAlto=igCorr<=13?Math.min(gAlto*0.15,3):Math.min(gAlto*0.15,3)+(igCorr-13)*gSem*1.1;
+    let statusLabel,statusColor;
+    if(ganhoAtual<esperadoBaixo-0.3){statusLabel='Ganho insuficiente';statusColor='blue';}
+    else if(ganhoAtual>esperadoAlto+0.3){statusLabel='Ganho excessivo';statusColor='red';}
+    else{statusLabel='Ganho adequado';statusColor='green';}
+    html+=stepCard('gpg3',{stepLabel:'G3',
+      title:'Avaliação do Ganho de Peso Atual',
+      formula:'Ganho atual = Peso atual − Peso pré-gestacional',
+      substitution:`Ganho atual = ${fmt(peso,1)} − ${fmt(ppg,1)} = ${fmt(ganhoAtual,1)} kg\nIG corrigida: ${igCorr} semanas (${!isNaN(igDiasV)?igDiasV:0} dias adicionais → ${!isNaN(igDiasV)&&igDiasV>=4?'próxima semana':'mesma semana'})\nEsperado para ${igCorr} semanas: ${fmt(esperadoBaixo,1)} a ${fmt(esperadoAlto,1)} kg`,
+      result:`${fmt(ganhoAtual,1)} kg`,
+      classification:{label:statusLabel,color:statusColor},
+      note:`Cálculo da IG: 1-3 dias = considera semana atual · 4-6 dias = considera semana seguinte (Apostila Clínica 2023)`});
+  } else {
+    html+=emptyBlock('Preencha peso atual e idade gestacional para avaliar o ganho de peso.');
+  }
+  el.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// BLOCO PEDIÁTRICO
+// ═══════════════════════════════════════════════════════
+function renderCrianca(){
+  const sex=gs('sex');
+  const peso=gv('peso'), meses=gv('idadeMeses'), comp=gv('comprimento');
+  const cb=gv('cb_c'), dct=gv('dct_c'), dcse=gv('dcse_c'), pc=gv('pc_bebe');
+  const ccC=gv('cc_c');
+  const isBebe=profile==='bebe';
+  const anosF = meses/12;
+  const idadeFracAnos = meses / 12;
+  const idadeIntAnos = Math.floor(idadeFracAnos);
+  let html='<div class="space-y">';
+
+  // ─ P1. IMC PARA IDADE ─
+  html+='<div><div class="block-title"><span class="block-num">P1</span> IMC para Idade — OMS 2006/2007</div>';
+  if(isNaN(peso)||isNaN(comp)||comp<=0||isNaN(meses)||meses<=0){
+    html+=emptyBlock('Preencha: peso, comprimento/estatura e idade em meses.');
+  } else {
+    const hm=comp/100, imc=peso/(hm*hm);
+    const row=interpOMS(sex==='M'?OMS_IMC_M:OMS_IMC_F,meses);
+    const z=calcZ(imc,row), cl=classZ(z,'imc');
+    html+=stepCard('p_imc',{stepLabel:'IMC/I',
+      title:'IMC para Idade',
+      formula:'IMC = Peso (kg) ÷ Comprimento² (m)',
+      substitution:`IMC = ${fmt(peso,1)} ÷ (${fmt(comp/100,2)})²\n= ${fmt(peso,1)} ÷ ${fmt((comp/100)**2,4)}\n= ${fmt(imc)} kg/m²\nEscore-Z = ${fmt(z,2)} DP`,
+      result:`${fmt(imc)} kg/m² · Z = ${fmt(z,2)}`,
+      classification:cl,
+      note:'OMS 2006 (0–5a) / OMS 2007 (5–10a) · Classificação por Escore-Z · Apostila Clínica Anhanguera 2023'});
+  }
+  html+='</div>';
+
+  // ─ P2. PESO PARA IDADE ─
+  html+='<div><div class="block-title"><span class="block-num">P2</span> Peso para Idade — OMS 2006</div>';
+  if(isNaN(peso)||isNaN(meses)||meses<=0){
+    html+=emptyBlock('Preencha: peso e idade em meses.');
+  } else {
+    const row=interpOMS(sex==='M'?OMS_PESO_M:OMS_PESO_F,meses);
+    const z=calcZ(peso,row), cl=classZ(z,'peso');
+    html+=stepCard('p_peso',{stepLabel:'P/I',
+      title:'Peso para Idade',
+      formula:'Comparação do peso com a curva de referência OMS para sexo e idade',
+      substitution:`Peso = ${fmt(peso,1)} kg · Mediana OMS para ${Math.round(meses)}m = ${row?fmt(row[3],1):'—'} kg\nEscore-Z = ${fmt(z,2)} DP`,
+      result:`${fmt(peso,1)} kg · Z = ${fmt(z,2)}`,
+      classification:cl,
+      note:'OMS 2006 · Usado principalmente até 10 anos · Apostila Clínica 2023'});
+  }
+  html+='</div>';
+
+  // ─ P3. COMPRIMENTO/ESTATURA PARA IDADE ─
+  const lblComp=meses<24?'Comprimento para Idade (0-24m)':'Estatura para Idade (2-10a)';
+  html+=`<div><div class="block-title"><span class="block-num">P3</span> ${lblComp} — OMS 2006/2007</div>`;
+  if(isNaN(comp)||comp<=0||isNaN(meses)||meses<=0){
+    html+=emptyBlock('Preencha: comprimento/estatura e idade em meses.');
+  } else {
+    const row=interpOMS(sex==='M'?OMS_COMP_M:OMS_COMP_F,meses);
+    const z=calcZ(comp,row), cl=classZ(z,'comprimento');
+    html+=stepCard('p_comp',{stepLabel:'C/I',
+      title:lblComp,
+      formula:`${meses<24?'Comprimento deitado':'Estatura em pé'} comparado à curva OMS para sexo e idade`,
+      substitution:`${meses<24?'Comprimento':'Estatura'} = ${fmt(comp,1)} cm · Mediana OMS para ${Math.round(meses)}m = ${row?fmt(row[3],1):'—'} cm\nEscore-Z = ${fmt(z,2)} DP`,
+      result:`${fmt(comp,1)} cm · Z = ${fmt(z,2)}`,
+      classification:cl,
+      note:'OMS 2006 (0-24m deitado) · OMS 2007 (2-10a em pé) · Apostila Clínica Anhanguera 2023'});
+  }
+  html+='</div>';
+
+  // ─ P4. CIRCUNFERÊNCIA DA CINTURA (a partir de 5 anos) ─
+  if(!isBebe && idadeIntAnos >= 5){
+    html+='<div><div class="block-title"><span class="block-num">P4</span> Circunferência da Cintura (CC) — Risco Cardiovascular (OMS, 2000)</div>';
+    if(isNaN(ccC)||ccC<=0){
+      html+=emptyBlock('Preencha a Circunferência da Cintura (CC) para classificar.');
+    } else {
+      const clsCC_c=classCC(ccC,sex);
+      const refStr=sex==='M'
+        ? 'Meninos — Sem risco: <94 cm | Risco aumentado: 94–101 cm | Risco muito aumentado: ≥102 cm'
+        : 'Meninas — Sem risco: <80 cm | Risco aumentado: 80–87 cm | Risco muito aumentado: ≥88 cm';
+      html+=stepCard('p_cc',{stepLabel:'CC',
+        title:'Circunferência da Cintura — Risco Cardiovascular (OMS, 2000)',
+        formula:'Ponto de corte por sexo (OMS, 2000)',
+        substitution:`CC = ${fmt(ccC,1)} cm → ${clsCC_c.label}`,
+        result:`${fmt(ccC,1)} cm`,
+        classification:clsCC_c,
+        note:refStr+' · Apostila Clínica Anhanguera 2023'});
+    }
+    html+='</div>';
+  }
+
+  // ─ P5. CB ─ (disponível para 1–10 anos)
+  html+='<div><div class="block-title"><span class="block-num">P5</span> Circunferência do Braço (CB) — Frisancho 1990</div>';
+  if(isNaN(cb)||cb<=0||isNaN(meses)||meses<=0){
+    html+=emptyBlock('Preencha a Circunferência do Braço (CB) e a idade para calcular.');
+  } else if(idadeIntAnos < 1 || idadeIntAnos > 10){
+    html+=emptyBlock('CB por percentis disponível para crianças de 1 a 10 anos (Frisancho 1990).');
+  } else {
+    const idx = idxCB(idadeFracAnos);
+    const tabCB = sex==='M' ? CB_CRIANCA_M[idx] : CB_CRIANCA_F[idx];
+    const p50cb = tabCB.p50;
+    const adeqCB = (cb / p50cb) * 100;
+    const pCB = getPercentilCrianca(cb, tabCB);
+    const classCBAdq = classBlackburnCB(adeqCB);
+    const classCBPerc = classFrisanchoMusculo(pCB);
+
+    html += stepCard('p_cb_adeq', {
+      stepLabel: '5a',
+      title: '% Adequação da CB (Blackburn & Thornton, 1979)',
+      formula: 'Adequação CB (%) = (CB medida ÷ P50 CB) × 100',
+      substitution: `Idade: ${idadeIntAnos} anos · Sexo: ${sex==='M'?'Masculino':'Feminino'}\nP50 CB (Frisancho 1990) = ${fmt(p50cb,1)} cm\n\nAdequação CB = (${fmt(cb,1)} ÷ ${fmt(p50cb,1)}) × 100\n= ${fmt(cb/p50cb,4)} × 100\n= ${fmt(adeqCB,1)} %`,
+      result: `${fmt(adeqCB,1)} %`,
+      classification: classCBAdq,
+      note: `P50 CB (${idadeIntAnos}a, ${sex==='M'?'M':'F'}): ${fmt(p50cb,1)} cm | <70% Desnut. Grave | 70–80% Moderada | 80–90% Leve | 90–110% Eutrofia | 110–120% Acima | >120% Muito acima`
+    });
+
+    html += stepCard('p_cb_perc', {
+      stepLabel: '5b',
+      title: 'CB por Percentil — Frisancho, 1990',
+      formula: 'Localização no percentil da tabela de referência por sexo e idade',
+      substitution: `CB medida = ${fmt(cb,1)} cm\nReferência (${idadeIntAnos}a, ${sex==='M'?'Meninos':'Meninas'}): P5=${tabCB.p5} | P50=${tabCB.p50} | P95=${tabCB.p95}\nPercentil estimado ≈ P${fmt(pCB,0)}`,
+      result: `P${fmt(pCB,0)} (CB = ${fmt(cb,1)} cm)`,
+      classification: classCBPerc,
+      note: 'Frisancho 1990 · <P5 Baixa musculatura · P5–P15 Abaixo da média · P15–P85 Média · P85–P95 Acima da média · >P95 Alta muscularidade'
+    });
+  }
+  html+='</div>';
+
+  // ─ P6. CMB e AMB (a partir de 5 anos, com DCT) ─
+  const podeAntropCrianca = idadeIntAnos >= 5 && idadeIntAnos <= 10;
+  if(podeAntropCrianca || (idadeIntAnos >= 1 && idadeIntAnos < 5 && !isNaN(dct) && dct > 0)){
+    html+='<div><div class="block-title"><span class="block-num">P6</span> CMB e AMB — Frisancho, 1990</div>';
+    if(isNaN(cb)||cb<=0||isNaN(dct)||dct<=0){
+      html+=emptyBlock('Preencha CB e DCT (mm) para calcular CMB e AMB.');
+    } else if(!podeAntropCrianca){
+      html+=emptyBlock('Tabela de referência CMB/AMB disponível a partir de 5 anos (Frisancho 1990).');
+    } else {
+      const idx = idxFrisancho5a(idadeFracAnos);
+      const tabCMB = sex==='M' ? CMB_CRIANCA_M[idx] : CMB_CRIANCA_F[idx];
+      const tabAMB = sex==='M' ? AMB_CRIANCA_M[idx] : AMB_CRIANCA_F[idx];
+
+      // CMB: DCT em mm (campo dct_c já em mm), fórmula da apostila: CMB = CB − (DCT × 0,314)
+      const cmb = cb - (dct * 0.314);
+      // AMB com correção de Heymsfield: −10 meninos, −6,5 meninas
+      const cmb2 = cmb * cmb;
+      const ambSemCorr = cmb2 / (4 * Math.PI);
+      const corr = sex === 'M' ? 10.0 : 6.5;
+      const amb = ambSemCorr - corr;
+      // ATB
+      const cb2 = cb * cb;
+      const atb = cb2 / (4 * Math.PI);
+      // AGB e IGB
+      const agb = atb - (amb > 0 ? amb : 0);
+      const igb = atb > 0 ? (agb / atb) * 100 : 0;
+
+      // Percentis e classificações CMB
+      const pCMB = getPercentilCrianca(cmb, tabCMB);
+      const classCMBPerc = classFrisanchoMusculo(pCMB);
+      const adeqCMB = (cmb / tabCMB.p50) * 100;
+      const classCMBAdq = classBlackburnCB(adeqCMB);
+
+      // Percentis AMB
+      const pAMB = amb > 0 ? getPercentilCrianca(amb, tabAMB) : 0;
+      const classAMBPerc = classFrisanchoMusculo(pAMB);
+
+      html += stepCard('p_cmb', {
+        stepLabel: '6a',
+        title: 'Circunferência Muscular do Braço (CMB)',
+        formula: 'CMB = CB − (DCT × 0,314)',
+        substitution: `DCT inserida em mm (${fmt(dct,1)} mm)\n\nCMB = ${fmt(cb,1)} − (${fmt(dct,1)} × 0,314)\n= ${fmt(cb,1)} − ${fmt(dct*0.314,3)}\n= ${fmt(cmb,2)} cm`,
+        result: `${fmt(cmb,2)} cm`,
+        classification: classCMBAdq,
+        note: `P50 CMB (${idadeIntAnos}a, ${sex==='M'?'M':'F'}): ${fmt(tabCMB.p50,1)} cm | Adequação: ${fmt(adeqCMB,1)}% (Blackburn & Thornton, 1979)`
+      });
+
+      html += stepCard('p_cmb_perc', {
+        stepLabel: '6b',
+        title: 'CMB por Percentil — Frisancho, 1990',
+        formula: 'Localização no percentil da tabela de referência CMB',
+        substitution: `CMB = ${fmt(cmb,2)} cm\nRef. (${idadeIntAnos}a, ${sex==='M'?'Meninos':'Meninas'}): P5=${tabCMB.p5} | P50=${tabCMB.p50} | P95=${tabCMB.p95}\nPercentil estimado ≈ P${fmt(pCMB,0)}`,
+        result: `P${fmt(pCMB,0)} (CMB = ${fmt(cmb,2)} cm)`,
+        classification: classCMBPerc,
+        note: 'Frisancho 1990 · Cat. I (<P5): Baixa musculatura · II (P5–P15): Abaixo da média · III (P15–P85): Média · IV (P85–P95): Acima · V (>P95): Alta'
+      });
+
+      html += stepCard('p_amb', {
+        stepLabel: '6c',
+        title: `AMB — Área Muscular do Braço com Correção de Heymsfield (−${corr} ${sex==='M'?'meninos':'meninas'})`,
+        formula: `AMB = (CMB²) ÷ (4 × π) − ${corr}    |    4π = 12,566`,
+        substitution: `Passo 1 — CMB²:\n(${fmt(cmb,2)})² = ${fmt(cmb2,3)} cm²\n\nPasso 2 — Dividir por 4π (12,566):\n${fmt(cmb2,3)} ÷ 12,566 = ${fmt(ambSemCorr,3)} cm²\n\nPasso 3 — Subtrair correção (${corr}):\n${fmt(ambSemCorr,3)} − ${corr} = ${fmt(amb,2)} cm²`,
+        result: `${fmt(amb,2)} cm²`,
+        classification: classAMBPerc,
+        note: `P50 AMB (${idadeIntAnos}a, ${sex==='M'?'M':'F'}): ${fmt(tabAMB.p50,1)} cm² · Percentil ≈ P${fmt(pAMB,0)} | Cat. I (<P5): Baixa · II (P5–P15): Abaixo · III (P15–P85): Média · IV (P85–P95): Acima · V (>P95): Alta`
+      });
+
+      // ATB, AGB, IGB
+      html += stepCard('p_atb', {
+        stepLabel: '6d',
+        title: 'Área Total do Braço (ATB)',
+        formula: 'ATB = CB² ÷ (4 × π)',
+        substitution: `CB² = (${fmt(cb,1)})² = ${fmt(cb2,2)} cm²\nATB = ${fmt(cb2,2)} ÷ 12,566 = ${fmt(atb,2)} cm²`,
+        result: `${fmt(atb,2)} cm²`
+      });
+
+      html += stepCard('p_agb', {
+        stepLabel: '6e',
+        title: 'Área de Gordura do Braço (AGB) e Índice de Gordura do Braço (IGB)',
+        formula: 'AGB = ATB − AMB    |    IGB = (AGB ÷ ATB) × 100',
+        substitution: `AGB = ${fmt(atb,2)} − ${fmt(amb>0?amb:0,2)} = ${fmt(agb,2)} cm²\nIGB = (${fmt(agb,2)} ÷ ${fmt(atb,2)}) × 100 = ${fmt(igb,1)} %`,
+        result: `AGB = ${fmt(agb,2)} cm²  |  IGB = ${fmt(igb,1)} %`
+      });
+    }
+    html+='</div>';
+  }
+
+  // ─ P7. DCT por Percentil (a partir de 5 anos) ─
+  if(podeAntropCrianca){
+    html+='<div><div class="block-title"><span class="block-num">P7</span> DCT por Percentil — Frisancho, 1990</div>';
+    if(isNaN(dct)||dct<=0){
+      html+=emptyBlock('Preencha a DCT (mm) para classificar por percentil.');
+    } else {
+      const idx = idxFrisancho5a(idadeFracAnos);
+      const tabDCT = sex==='M' ? DCT_CRIANCA_M[idx] : DCT_CRIANCA_F[idx];
+      const pDCT = getPercentilCrianca(dct, tabDCT);
+      const classDCTPerc = classFrisanchoGordura(pDCT);
+      html += stepCard('p_dct_perc', {
+        stepLabel: '7',
+        title: 'DCT por Percentil — Frisancho, 1990',
+        formula: 'Localização no percentil da tabela de referência DCT por sexo e idade',
+        substitution: `DCT medida = ${fmt(dct,1)} mm\nRef. (${idadeIntAnos}a, ${sex==='M'?'Meninos':'Meninas'}): P5=${tabDCT.p5} | P50=${tabDCT.p50} | P85=${tabDCT.p85} | P95=${tabDCT.p95}\nPercentil estimado ≈ P${fmt(pDCT,0)}`,
+        result: `P${fmt(pDCT,0)} (DCT = ${fmt(dct,1)} mm)`,
+        classification: classDCTPerc,
+        note: 'Frisancho 1990 · Cat. I (<P5): Magro · II (P5–P15): Abaixo da média · III (P15–P75): Média · IV (P75–P85): Acima da média · V (>P85): Gordura excessiva'
+      });
+    }
+    html+='</div>';
+  }
+
+  // ─ P8. SOMA DCT + DCSE e % GORDURA por Slaughter (a partir de 8 anos) ─
+  if(meses>=96 && !isNaN(dct) && !isNaN(dcse) && dct>0 && dcse>0){
+    html+='<div><div class="block-title"><span class="block-num">P8</span> Soma das Dobras e % Gordura Corporal — Slaughter et al., 1988</div>';
+    const soma=dct+dcse;
+    let gc=null;
+    if(sex==='M'){
+      if(soma<=35) gc=1.21*soma-0.008*(soma**2)-1.7;
+      else gc=0.783*soma+1.6;
+    } else {
+      if(soma<=35) gc=1.33*soma-0.013*(soma**2)-2.5;
+      else gc=0.546*soma+9.7;
+    }
+    // Classificação Houtkooper 1996 (apostila)
+    let gcClass='', gcColor='gray';
+    if(gc!==null){
+      if(sex==='M'){
+        if(gc<5){gcClass='Muito Baixo (<5%)';gcColor='blue';}
+        else if(gc<=10){gcClass='Baixo (5–10%)';gcColor='cyan';}
+        else if(gc<=20){gcClass='Ótimo (11–20%)';gcColor='green';}
+        else if(gc<=25){gcClass='Moderadamente Alto (21–25%)';gcColor='yellow';}
+        else if(gc<=31){gcClass='Alto (26–31%)';gcColor='orange';}
+        else{gcClass='Muito Alto (>31%)';gcColor='red';}
+      } else {
+        if(gc<12){gcClass='Muito Baixo (<12%)';gcColor='blue';}
+        else if(gc<=15){gcClass='Baixo (12–15%)';gcColor='cyan';}
+        else if(gc<=25){gcClass='Ótimo (16–25%)';gcColor='green';}
+        else if(gc<=30){gcClass='Moderadamente Alto (26–30%)';gcColor='yellow';}
+        else if(gc<=36){gcClass='Alto (31–36%)';gcColor='orange';}
+        else{gcClass='Muito Alto (>36%)';gcColor='red';}
+      }
+    }
+    const formulaUsada=sex==='M'
+      ?(soma<=35?'% GC = 1,21 × (DCT+DCSE) − 0,008 × (DCT+DCSE)² − 1,7  [∑ ≤ 35 mm]':'% GC = 0,783 × (DCT+DCSE) + 1,6  [∑ > 35 mm]')
+      :(soma<=35?'% GC = 1,33 × (DCT+DCSE) − 0,013 × (DCT+DCSE)² − 2,5  [∑ ≤ 35 mm]':'% GC = 0,546 × (DCT+DCSE) + 9,7  [∑ > 35 mm]');
+
+    // Passo 1 — soma
+    html+=stepCard('p_soma_dc',{stepLabel:'8a',title:'Passo 1 — Soma das Dobras (Σ DCT + DCSE)',
+      formula:'Σ = DCT + DCSE  (ambas em mm)',
+      substitution:`Σ = ${fmt(dct,1)} + ${fmt(dcse,1)}\n= ${fmt(soma,1)} mm`,
+      result:`${fmt(soma,1)} mm`});
+
+    html+=stepCard('p_gc',{stepLabel:'8b',
+      title:'% Gordura Corporal — Slaughter et al. (1988)',
+      formula:formulaUsada,
+      substitution:`Σ = ${fmt(soma,1)} mm ${soma<=35?'(≤ 35 mm → fórmula quadrática)':'(> 35 mm → fórmula linear)'}\n% GC = ${gc!==null?fmt(gc,2):'—'} %`,
+      result:`${fmt(gc,1)} %`,
+      classification:{label:gcClass, color:gcColor},
+      note:'Slaughter MH et al., Hum. Biol., 1988 · Válido para 8–18 anos · Tr = Tricipital; Se = Subescapular · Classificação: Houtkooper (1996) — Apostila Clínica Anhanguera 2023'});
+
+    html+=`<div class="class-table">
+      <p><b>Classificação do % Gordura Corporal — Houtkooper (1996)</b></p>
+      <p style="margin-top:6px">
+        ${sex==='M'
+          ?'<b>Muito Baixo:</b> <5% &nbsp;|&nbsp; <b>Baixo:</b> 5–10% &nbsp;|&nbsp; <b>Ótimo:</b> 11–20% &nbsp;|&nbsp; <b>Mod. Alto:</b> 21–25% &nbsp;|&nbsp; <b>Alto:</b> 26–31% &nbsp;|&nbsp; <b>Muito Alto:</b> >31%'
+          :'<b>Muito Baixo:</b> <12% &nbsp;|&nbsp; <b>Baixo:</b> 12–15% &nbsp;|&nbsp; <b>Ótimo:</b> 16–25% &nbsp;|&nbsp; <b>Mod. Alto:</b> 26–30% &nbsp;|&nbsp; <b>Alto:</b> 31–36% &nbsp;|&nbsp; <b>Muito Alto:</b> >36%'}
+      </p>
+    </div>`;
+    html+='</div>';
+  } else if(meses>=96 && (!isNaN(dct)||!isNaN(dcse))){
+    html+='<div><div class="block-title"><span class="block-num">P8</span> Soma das Dobras e % Gordura Corporal — Slaughter et al., 1988</div>';
+    html+=emptyBlock('Preencha DCT e DCSE (ambas em mm) para calcular o % de gordura.');
+    html+='</div>';
+  }
+
+  // ─ P9. PERÍMETRO CEFÁLICO (bebês ≤36m) ─
+  if(isBebe&&!isNaN(pc)&&pc>0&&!isNaN(meses)&&meses<=36){
+    html+='<div><div class="block-title"><span class="block-num">P9</span> Perímetro Cefálico para Idade — OMS 2006</div>';
+    html+=stepCard('p_pc',{stepLabel:'PC/I',
+      title:'Perímetro Cefálico para Idade',
+      formula:'Avaliação do PC em relação à curva OMS por sexo e idade (0–36 meses)',
+      substitution:`PC medido = ${fmt(pc,1)} cm · Idade = ${Math.round(meses)} meses\n(Classificação visual pela curva OMS — ver aba Curvas OMS)`,
+      result:`${fmt(pc,1)} cm`,
+      note:'OMS 2006 · Indicador do desenvolvimento cerebral · Apostila Clínica Anhanguera 2023'});
+    html+='</div>';
+  }
+
+  html+='</div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════
+// CURVAS OMS — CANVAS
+// OMS 2006: 0-60 meses (bebê); OMS 2007: 5-10 anos (criança, eixo em anos)
+// ═══════════════════════════════════════════════════════
+
+// OMS 2007 — IMC para Idade — Meninos 5-19 anos (eixo em anos)
+// Formato: [ano, -3DP, -2DP, -1DP, mediana, +1DP, +2DP, +3DP]
+const OMS07_IMC_M=[
+  [5,12.1,13.0,14.0,15.3,16.8,18.8,21.2],[6,12.1,13.1,14.1,15.5,17.3,19.7,22.6],
+  [7,12.3,13.2,14.3,15.8,17.8,20.6,24.0],[8,12.5,13.4,14.6,16.2,18.4,21.6,25.6],
+  [9,12.8,13.7,15.0,16.7,19.1,22.8,27.4],[10,13.1,14.0,15.4,17.2,19.8,23.9,29.3],
+];
+const OMS07_IMC_F=[
+  [5,11.9,12.8,13.9,15.2,16.9,19.2,22.1],[6,12.0,12.9,14.1,15.5,17.5,20.2,23.7],
+  [7,12.2,13.2,14.4,15.9,18.1,21.2,25.2],[8,12.5,13.5,14.8,16.5,18.9,22.4,27.0],
+  [9,12.8,13.9,15.3,17.1,19.8,23.7,28.9],[10,13.2,14.4,15.8,17.8,20.7,25.1,30.9],
+];
+
+// OMS 2007 — IMC para Idade ESTENDIDO — Meninos 10-19 anos (eixo em anos)
+// Formato: [ano, -3DP, -2DP, -1DP, mediana, +1DP, +2DP, +3DP]
+const OMS07_IMC_M_EXT=[
+  [5,12.1,13.0,14.0,15.3,16.8,18.8,21.2],[6,12.1,13.1,14.1,15.5,17.3,19.7,22.6],
+  [7,12.3,13.2,14.3,15.8,17.8,20.6,24.0],[8,12.5,13.4,14.6,16.2,18.4,21.6,25.6],
+  [9,12.8,13.7,15.0,16.7,19.1,22.8,27.4],[10,13.1,14.0,15.4,17.2,19.8,23.9,29.3],
+  [11,13.4,14.4,15.8,17.7,20.5,25.1,31.1],[12,13.7,14.8,16.3,18.3,21.4,26.4,33.3],
+  [13,14.1,15.3,16.9,19.0,22.5,27.9,35.6],[14,14.5,15.8,17.5,19.8,23.5,29.4,37.6],
+  [15,15.0,16.4,18.2,20.6,24.5,30.7,39.3],[16,15.5,17.0,18.8,21.3,25.4,31.8,40.5],
+  [17,16.0,17.6,19.5,22.0,26.2,32.7,41.5],[18,16.4,18.2,20.2,22.8,27.1,33.7,42.8],
+  [19,17.0,18.9,21.0,23.7,28.1,34.9,44.3],
+];
+// OMS 2007 — IMC para Idade ESTENDIDO — Meninas 10-19 anos
+const OMS07_IMC_F_EXT=[
+  [5,11.9,12.8,13.9,15.2,16.9,19.2,22.1],[6,12.0,12.9,14.1,15.5,17.5,20.2,23.7],
+  [7,12.2,13.2,14.4,15.9,18.1,21.2,25.2],[8,12.5,13.5,14.8,16.5,18.9,22.4,27.0],
+  [9,12.8,13.9,15.3,17.1,19.8,23.7,28.9],[10,13.2,14.4,15.8,17.8,20.7,25.1,30.9],
+  [11,13.7,14.8,16.3,18.5,21.7,26.7,33.3],[12,14.2,15.4,17.1,19.4,22.9,28.5,36.0],
+  [13,14.8,16.1,17.9,20.5,24.2,30.3,38.6],[14,15.4,16.8,18.8,21.6,25.6,32.0,41.0],
+  [15,16.0,17.5,19.5,22.5,26.8,33.4,43.0],[16,16.5,18.0,20.1,23.3,27.8,34.4,44.2],
+  [17,17.0,18.5,20.7,23.9,28.4,35.1,45.1],[18,17.5,19.0,21.3,24.4,29.0,35.6,45.5],
+  [19,17.8,19.4,21.7,24.8,29.4,36.0,45.9],
+];
+// OMS 2007 — Estatura para Idade — Meninos 5-10 anos (em anos)
+const OMS07_EST_M=[
+  [5,99.9,103.2,106.5,109.9,113.3,116.6,120.0],[6,103.5,107.0,110.4,113.9,117.3,120.8,124.3],
+  [7,106.7,110.3,113.9,117.5,121.2,124.9,128.5],[8,109.7,113.4,117.1,120.9,124.7,128.4,132.1],
+  [9,112.7,116.5,120.3,124.2,128.1,131.9,135.7],[10,115.7,119.6,123.6,127.6,131.6,135.5,139.5],
+];
+const OMS07_EST_F=[
+  [5,98.7,102.0,105.3,108.7,112.1,115.4,118.7],[6,102.3,105.7,109.1,112.5,115.9,119.3,122.7],
+  [7,105.7,109.2,112.7,116.2,119.7,123.2,126.7],[8,109.0,112.5,116.1,119.7,123.3,126.9,130.5],
+  [9,112.0,115.7,119.4,123.1,126.9,130.6,134.3],[10,115.0,118.8,122.7,126.6,130.5,134.4,138.3],
+];
+// OMS 2007 — Peso para Idade — Meninos 5-10 anos (em anos)
+const OMS07_PESO_M=[
+  [5,14.1,15.7,17.4,19.2,21.3,23.8,26.8],[6,15.9,17.7,19.7,21.9,24.5,27.7,31.6],
+  [7,17.7,19.8,22.1,24.7,27.9,31.9,37.2],[8,19.5,21.9,24.6,27.8,31.7,36.7,43.6],
+  [9,21.3,24.1,27.3,31.1,35.9,42.1,50.8],[10,23.2,26.4,30.2,34.8,40.8,48.6,59.3],
+];
+const OMS07_PESO_F=[
+  [5,13.7,15.3,17.0,19.0,21.4,24.5,28.4],[6,15.3,17.2,19.2,21.7,24.8,28.8,34.0],
+  [7,16.9,19.1,21.5,24.4,28.2,33.2,39.9],[8,18.6,21.1,24.0,27.5,32.1,38.4,46.7],
+  [9,20.4,23.3,26.7,30.9,36.5,44.3,54.6],[10,22.3,25.6,29.7,34.7,41.5,51.1,63.7],
+];
+
+function interpOMS07(tabela, anos){
+  // Interpola linearmente para tabelas em anos inteiros
+  const tb = tabela;
+  if(!tb.length) return null;
+  if(anos <= tb[0][0]) return tb[0].slice(1);
+  if(anos >= tb[tb.length-1][0]) return tb[tb.length-1].slice(1);
+  for(let i=0; i<tb.length-1; i++){
+    if(anos >= tb[i][0] && anos < tb[i+1][0]){
+      const t = (anos - tb[i][0]) / (tb[i+1][0] - tb[i][0]);
+      return tb[i].slice(1).map((v, j) => v + (tb[i+1][j+1] - v) * t);
+    }
+  }
+  return null;
+}
+
+function renderGraficos(){
+  const cont=document.getElementById('graficos-container');
+  if(!cont) return;
+  if(profile!=='bebe'&&profile!=='crianca'){
+    cont.innerHTML='<div class="block-empty"><p>Selecione o perfil <strong>👶 Bebê</strong> ou <strong>🧒 Criança</strong> para ver as curvas.</p></div>';
+    return;
+  }
+  const sex=gs('sex');
+  const sexLabel=sex==='M'?'Meninos':'Meninas';
+  const peso=gv('peso'), meses=gv('idadeMeses'), comp=gv('comprimento');
+  const isBebe = profile==='bebe';
+  const anos = meses/12;
+
+  let imcVal=null;
+  if(!isNaN(peso)&&peso>0&&!isNaN(comp)&&comp>0) imcVal=peso/((comp/100)**2);
+
+  if(isBebe){
+    // Bebê: eixo em meses, dados OMS 2006
+    cont.innerHTML=`
+      <div style="padding:10px 14px;margin-bottom:14px;background:${sex==='M'?'#eff6ff':'#fdf2f8'};border:1.5px solid ${sex==='M'?'#bfdbfe':'#fbcfe8'};border-radius:12px;font-size:.8rem;color:${sex==='M'?'#1e40af':'#9d174d'};font-weight:600">
+        ${sex==='M'?'♂ Curvas para Meninos — OMS 2006 (0-60 meses)':'♀ Curvas para Meninas — OMS 2006 (0-60 meses)'}${isNaN(meses)||meses<=0?' — <span style="font-weight:400;color:#ea580c">Preencha a idade para plotar o ponto do paciente</span>':''}
+      </div>
+      <div class="chart-bloco"><canvas id="cv-peso"></canvas></div>
+      <div class="chart-bloco"><canvas id="cv-comp"></canvas></div>
+      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>`;
+    requestAnimationFrame(()=>{
+      desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2006, meses)`, sex==='M'?OMS_PESO_M:OMS_PESO_F, meses, peso, 'kg', [0,60], sex, false, false);
+      desenharCurva('cv-comp', `Comprimento/Estatura para Idade — ${sexLabel}`, sex==='M'?OMS_COMP_M:OMS_COMP_F, meses, comp, 'cm', [0,60], sex, true, false);
+      desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2006, meses)`, sex==='M'?OMS_IMC_M:OMS_IMC_F, meses, imcVal, 'kg/m²', [0,60], sex, false, false);
+    });
+  } else {
+    // Criança 2-10a: eixo em ANOS, dados OMS 2007
+    cont.innerHTML=`
+      <div style="padding:10px 14px;margin-bottom:14px;background:${sex==='M'?'#eff6ff':'#fdf2f8'};border:1.5px solid ${sex==='M'?'#bfdbfe':'#fbcfe8'};border-radius:12px;font-size:.8rem;color:${sex==='M'?'#1e40af':'#9d174d'};font-weight:600">
+        ${sex==='M'?'♂ Curvas para Meninos — OMS 2007 (5–10 anos)':'♀ Curvas para Meninas — OMS 2007 (5–10 anos)'} — <span style="font-weight:400">Eixo X em <strong>anos</strong></span>${isNaN(meses)||meses<=0?' — <span style="font-weight:400;color:#ea580c">Preencha a idade para plotar o ponto</span>':''}
+      </div>
+      <div class="chart-bloco"><canvas id="cv-peso"></canvas></div>
+      <div class="chart-bloco"><canvas id="cv-comp"></canvas></div>
+      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>`;
+    requestAnimationFrame(()=>{
+      desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_PESO_M:OMS07_PESO_F, anos, peso, 'kg', [5,10], sex, false, true);
+      desenharCurva('cv-comp', `Estatura para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_EST_M:OMS07_EST_F, anos, comp, 'cm', [5,10], sex, false, true);
+      desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_IMC_M:OMS07_IMC_F, anos, imcVal, 'kg/m²', [5,10], sex, false, true);
+    });
+  }
+}
+
+function desenharCurva(id, titulo, tabela, eixoAtual, valAtual, unidade, rangeX, sexo, showTransition, useAnos){
+  const canvas=document.getElementById(id);
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const cW=canvas.parentElement?.clientWidth||640;
+  const W=Math.max(cW,300);
+  const H=Math.round(W*0.52);
+  canvas.width=W; canvas.height=H;
+  canvas.style.width='100%'; canvas.style.height='auto';
+
+  const pad={top:44,right:58,bot:46,left:52};
+  const gW=W-pad.left-pad.right, gH=H-pad.top-pad.bot;
+  const fil=tabela.filter(r=>r[0]>=rangeX[0]&&r[0]<=rangeX[1]);
+  if(fil.length<2) return;
+
+  const vals=fil.flatMap(r=>r.slice(1));
+  const minV=Math.min(...vals)*0.96, maxV=Math.max(...vals)*1.04;
+  const tX=m=>pad.left+((m-rangeX[0])/(rangeX[1]-rangeX[0]))*gW;
+  const tY=v=>pad.top+gH-((v-minV)/(maxV-minV))*gH;
+  const isMale=sexo==='M';
+
+  // Fundo gradiente por gênero
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  if(isMale){bg.addColorStop(0,'#eff6ff');bg.addColorStop(1,'#dbeafe');}
+  else{bg.addColorStop(0,'#fdf2f8');bg.addColorStop(1,'#fce7f3');}
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // Borda colorida
+  ctx.strokeStyle=isMale?'#93c5fd':'#f9a8d4'; ctx.lineWidth=2;
+  ctx.strokeRect(1,1,W-2,H-2);
+
+  // Área do gráfico branca
+  ctx.fillStyle='rgba(255,255,255,0.6)';
+  ctx.fillRect(pad.left,pad.top,gW,gH);
+
+  // Zonas coloridas (preenchimento entre DPs)
+  const zona=(ia,ib,cor)=>{
+    ctx.beginPath();
+    fil.forEach((r,i)=>{const x=tX(r[0]),y=tY(r[ia]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    for(let i=fil.length-1;i>=0;i--) ctx.lineTo(tX(fil[i][0]),tY(fil[i][ib]));
+    ctx.closePath(); ctx.fillStyle=cor; ctx.fill();
+  };
+  zona(3,5,'rgba(134,239,172,0.20)'); // -1 a +1 verde
+  zona(2,3,'rgba(253,224,71,0.14)');  // -2 a -1 amarelo
+  zona(5,6,'rgba(253,224,71,0.14)');  // +1 a +2 amarelo
+  zona(1,2,'rgba(252,165,165,0.18)'); // -3 a -2 vermelho
+  zona(6,7,'rgba(252,165,165,0.18)'); // +2 a +3 vermelho
+
+  // Grid
+  const gc=isMale?'rgba(147,197,253,0.35)':'rgba(249,168,212,0.35)';
+  ctx.strokeStyle=gc; ctx.lineWidth=0.7;
+  for(let i=0;i<=5;i++){const yv=minV+(maxV-minV)*(i/5);ctx.beginPath();ctx.moveTo(pad.left,tY(yv));ctx.lineTo(pad.left+gW,tY(yv));ctx.stroke();}
+  // Ticks eixo X: meses ou anos
+  const ticks = useAnos
+    ? [5,6,7,8,9,10]
+    : (rangeX[1]<=24?[0,3,6,9,12,15,18,21,24]:[0,6,12,18,24,30,36,42,48,54,60]);
+  ticks.forEach(m=>{if(m>=rangeX[0]&&m<=rangeX[1]){ctx.beginPath();ctx.moveTo(tX(m),pad.top);ctx.lineTo(tX(m),pad.top+gH);ctx.stroke();}});
+
+  // Curvas SD
+  const sds=[
+    {i:1,c:'#dc2626',dash:[5,4],w:1.4,lbl:'-3DP'},
+    {i:2,c:'#ea580c',dash:[4,3],w:1.7,lbl:'-2DP'},
+    {i:3,c:'#ca8a04',dash:[2,2],w:1.4,lbl:'-1DP'},
+    {i:4,c:'#16a34a',dash:[],w:3.0,lbl:'Mediana'},
+    {i:5,c:'#ca8a04',dash:[2,2],w:1.4,lbl:'+1DP'},
+    {i:6,c:'#ea580c',dash:[4,3],w:1.7,lbl:'+2DP'},
+    {i:7,c:'#dc2626',dash:[5,4],w:1.4,lbl:'+3DP'},
+  ];
+  sds.forEach(({i,c,dash,w,lbl})=>{
+    ctx.beginPath(); ctx.strokeStyle=c; ctx.lineWidth=w; ctx.setLineDash(dash);
+    fil.forEach((r,ri)=>{const x=tX(r[0]),y=tY(r[i]);ri?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  // Labels SD à direita
+  ctx.textAlign='left'; ctx.font='bold 9px sans-serif';
+  sds.forEach(({i,c,lbl})=>{
+    const lr=fil[fil.length-1];
+    if(lr&&lr[i]!=null){ctx.fillStyle=c;ctx.fillText(lbl,pad.left+gW+4,tY(lr[i])+4);}
+  });
+
+  // Linha de transição 24 meses (apenas modo bebê)
+  if(showTransition&&!useAnos&&rangeX[0]<=24&&rangeX[1]>24){
+    const tx=tX(24);
+    ctx.save(); ctx.strokeStyle=isMale?'rgba(29,78,216,0.5)':'rgba(190,24,93,0.5)';
+    ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(tx,pad.top); ctx.lineTo(tx,pad.top+gH); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=isMale?'rgba(29,78,216,0.7)':'rgba(190,24,93,0.7)';
+    ctx.font='bold 8px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('◀ deitado | em pé ▶',tx,pad.top-5);
+    ctx.restore();
+  }
+
+  // Eixos
+  const axC=isMale?'#1d4ed8':'#be185d';
+  ctx.strokeStyle=axC; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(pad.left,pad.top); ctx.lineTo(pad.left,pad.top+gH); ctx.lineTo(pad.left+gW,pad.top+gH); ctx.stroke();
+
+  // Labels eixo Y
+  ctx.fillStyle='#374151'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+  for(let i=0;i<=5;i++){const yv=minV+(maxV-minV)*(i/5);ctx.fillText(yv.toFixed(1),pad.left-5,tY(yv)+4);}
+
+  // Labels eixo X
+  ctx.textAlign='center'; ctx.fillStyle='#374151';
+  ticks.forEach(m=>{if(m>=rangeX[0]&&m<=rangeX[1])ctx.fillText(m,tX(m),pad.top+gH+16);});
+
+  // Ponto do paciente
+  const temP=!isNaN(eixoAtual)&&eixoAtual>0&&!isNaN(valAtual)&&valAtual>0&&eixoAtual>=rangeX[0]&&eixoAtual<=rangeX[1];
+  if(temP){
+    const px=tX(eixoAtual), py=tY(valAtual);
+    const dotC=isMale?'#1d4ed8':'#db2777';
+    const glowC=isMale?'rgba(29,78,216,0.3)':'rgba(219,39,119,0.3)';
+    // Halo
+    const grad=ctx.createRadialGradient(px,py,2,px,py,18);
+    grad.addColorStop(0,glowC); grad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(px,py,18,0,Math.PI*2); ctx.fill();
+    // Sombra
+    ctx.shadowColor=glowC; ctx.shadowBlur=8;
+    // Anel branco
+    ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
+    // Círculo colorido
+    ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.fillStyle=dotC; ctx.fill();
+    // Ponto branco central
+    ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+    ctx.shadowBlur=0;
+    // Etiqueta
+    const lbl=`${Number(valAtual).toFixed(1)} ${unidade}`;
+    ctx.font='bold 11px sans-serif';
+    const tw=ctx.measureText(lbl).width;
+    const lbx=px, lby=py-20;
+    ctx.fillStyle=dotC;
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(lbx-tw/2-5,lby-12,tw+10,16,4);
+    else ctx.rect(lbx-tw/2-5,lby-12,tw+10,16);
+    ctx.fill();
+    ctx.fillStyle='white'; ctx.textAlign='center'; ctx.font='bold 11px sans-serif';
+    ctx.fillText(lbl,lbx,lby);
+  } else if(isNaN(eixoAtual)||eixoAtual<=0){
+    ctx.fillStyle='rgba(107,114,128,0.6)'; ctx.font='italic 11px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('Preencha os dados para plotar o ponto',pad.left+gW/2,pad.top+gH/2);
+  }
+
+  // Título
+  const tC=isMale?'#1e40af':'#9d174d';
+  ctx.fillStyle=tC; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
+  ctx.fillText(`${isMale?'♂':'♀'} ${titulo}`,pad.left+gW/2,28);
+
+  // Eixo labels
+  ctx.fillStyle='#6b7280'; ctx.font='10px sans-serif';
+  ctx.fillText(useAnos?'Anos':'Meses',pad.left+gW/2,pad.top+gH+38);
+  ctx.save(); ctx.translate(14,pad.top+gH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(unidade,0,0); ctx.restore();
+}
 function handleVideoFiles(files){
   Array.from(files).forEach(f=>{
     if(f.type.startsWith('video/')){
