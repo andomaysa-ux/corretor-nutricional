@@ -646,8 +646,51 @@ select.f-input{
 .calc-btn:active{transform:translateY(0);filter:brightness(.96)}
 
 /* ═══════════════════════════════════════════════════════
-   VIDEOS
+   PDF EXPORT BUTTON
 ═══════════════════════════════════════════════════════ */
+.pdf-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%);
+  color:#fff;font-size:.82rem;font-weight:700;font-family:'DM Sans',sans-serif;
+  box-shadow:0 2px 12px rgba(185,28,28,.30);
+  transition:all .18s;letter-spacing:.01em;
+}
+.pdf-btn:hover{filter:brightness(1.1);box-shadow:0 4px 18px rgba(185,28,28,.40);transform:translateY(-1px)}
+.pdf-btn:active{transform:translateY(0)}
+.pdf-btn-wrap{display:flex;justify-content:flex-end;margin-bottom:14px}
+
+/* ═══════════════════════════════════════════════════════
+   PRINT / PDF
+═══════════════════════════════════════════════════════ */
+@media print{
+  /* Esconde TUDO por padrão */
+  body>*{display:none!important}
+  .main{display:block!important}
+
+  /* Mostra apenas o painel marcado para impressão */
+  .main>.tabs,.main>.panel{display:none!important}
+  .panel.printing{display:block!important}
+
+  /* Esconde elementos de UI que não devem ir para o PDF */
+  .pdf-btn-wrap,.toggle-wrap,.tabs,
+  .tab-btn,.calc-btn,.profile-tabs,
+  #btn-modo-z,#btn-modo-p,
+  [id^="btn-modo"],
+  .header{display:none!important}
+
+  /* Layout limpo para impressão */
+  body{background:#fff!important;margin:0;padding:0}
+  .main{max-width:100%!important;padding:0!important;margin:0!important}
+  .panel.printing{padding:12px 16px!important}
+  .card{break-inside:avoid;box-shadow:none!important;border:1px solid #e2e8f0!important;margin-bottom:10px}
+  .step-card{break-inside:avoid;page-break-inside:avoid}
+  canvas{max-width:100%!important}
+
+  /* Cabeçalho de impressão customizado */
+  .print-header{display:block!important}
+}
+.print-header{display:none}
 .drop-zone{
   border:2px dashed var(--border2);
   border-radius:12px;padding:32px;
@@ -972,6 +1015,14 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
   <!-- ── RESULTADOS ── -->
   <div id="panel-resultados" class="panel">
     <div class="space-y">
+
+      <!-- BOTÃO PDF -->
+      <div class="pdf-btn-wrap">
+        <button class="pdf-btn" onclick="gerarPDF('resultados')">
+          📄 Baixar PDF — Resultados & Correção
+        </button>
+      </div>
+
       <!-- TOGGLE CORREÇÃO -->
       <div class="toggle-wrap">
         <div>
@@ -1045,6 +1096,14 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
     <div class="space-y">
       <div class="card">
         <div class="card-title">📈 Curvas de Crescimento OMS</div>
+
+        <!-- BOTÃO PDF -->
+        <div class="pdf-btn-wrap" style="margin-top:8px">
+          <button class="pdf-btn" onclick="gerarPDF('graficos')">
+            📄 Baixar PDF — Curvas OMS
+          </button>
+        </div>
+
         <p style="font-size:.8rem;color:var(--text2);margin-bottom:12px;line-height:1.6">
           Selecione perfil <strong>Bebê</strong> ou <strong>Criança</strong> e preencha os dados para visualizar as curvas com o ponto do paciente plotado automaticamente.
         </p>
@@ -2686,6 +2745,88 @@ function apenasRedesenharCurvas(){
       desenharCurva('cv-comp',`Estatura para Idade — ${sexLabel} (OMS 2007)`,sex==='M'?OMS07_EST_M:OMS07_EST_F,eixoX,comp,'cm',rangeX,sex,false,true,{isIMC:false});
       desenharCurva('cv-imc',`IMC para Idade — ${sexLabel} (OMS 2007)`,sex==='M'?OMS07_IMC_M:OMS07_IMC_F,eixoX,imcVal,'kg/m²',rangeX,sex,false,true,{isIMC:true});
     }
+  }
+}
+
+// ══════════════════════════════════════════════════
+// EXPORTAR PDF — usa window.print() com CSS isolado
+// ══════════════════════════════════════════════════
+function gerarPDF(painel){
+  // Monta cabeçalho com dados do paciente
+  const nome   = document.getElementById('nome')?.value?.trim() || '—';
+  const sex    = gs('sex');
+  const sexLbl = sex==='M'?'Masculino':sex==='F'?'Feminino':'—';
+
+  // Idade legível
+  let idadeLbl = '—';
+  if(profile==='bebe'){
+    const m = gv('idadeMeses'); if(!isNaN(m)&&m>0) idadeLbl=`${m} meses`;
+  } else if(profile==='crianca'){
+    const a=gv('idadeAnos'),me=gv('idadeMesesExtra');
+    if(!isNaN(a)&&a>0) idadeLbl=`${a} anos${(!isNaN(me)&&me>0)?' e '+me+' meses':''}`;
+  } else {
+    const a=gv('age'); if(!isNaN(a)&&a>0) idadeLbl=`${a} anos`;
+  }
+
+  const peso   = gv('peso');  const pesoLbl  = isNaN(peso) ?'—':`${peso} kg`;
+  const comp   = gv('comprimento')||gv('alt'); const compLbl = isNaN(comp)?'—':`${comp} cm`;
+  const profileLbls = {adulto:'Adulto',idoso:'Idoso',gestante:'Gestante',adolescente:'Adolescente',crianca:'Criança',bebe:'Bebê'};
+  const profileLbl  = profileLbls[profile]||profile;
+  const dataHoje = new Date().toLocaleDateString('pt-BR');
+  const modoGraf = graficoModo==='zscore'?'Escore-Z':'Percentil';
+
+  const isPed = painel==='graficos';
+
+  // Injeta cabeçalho de impressão temporário no painel
+  const panelEl = document.getElementById(`panel-${painel}`);
+  if(!panelEl) return;
+
+  const headId = `print-head-${painel}`;
+  let headEl = document.getElementById(headId);
+  if(!headEl){
+    headEl = document.createElement('div');
+    headEl.id = headId;
+    headEl.className = 'print-header';
+    panelEl.insertBefore(headEl, panelEl.firstChild);
+  }
+
+  headEl.innerHTML=`
+    <div style="border-bottom:2px solid #0891b2;padding-bottom:10px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:1.1rem;font-weight:800;color:#0c4a6e">⚖️ Avaliação Nutricional Antropométrica</div>
+          <div style="font-size:.72rem;color:#64748b;margin-top:2px">Apostila Clínica 2023 · DRI 2023 · Frisancho 1990 · OMS${isPed?' 2006/2007':''}</div>
+        </div>
+        <div style="font-size:.72rem;color:#64748b;text-align:right">Data: <strong>${dataHoje}</strong></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:.78rem">
+        <span><strong>Paciente:</strong> ${nome}</span>
+        <span><strong>Perfil:</strong> ${profileLbl}</span>
+        <span><strong>Sexo:</strong> ${sexLbl}</span>
+        <span><strong>Idade:</strong> ${idadeLbl}</span>
+        <span><strong>Peso:</strong> ${pesoLbl}</span>
+        <span><strong>Estatura:</strong> ${compLbl}</span>
+        ${isPed?`<span><strong>Curvas:</strong> ${modoGraf}</span>`:''}
+      </div>
+    </div>`;
+
+  // Adiciona classe 'printing' ao painel para CSS de impressão
+  panelEl.classList.add('printing');
+
+  // Para gráficos: garante que canvas esteja desenhado antes de imprimir
+  const doImprimir = ()=>{
+    window.print();
+    // Limpa após impressão
+    setTimeout(()=>{
+      panelEl.classList.remove('printing');
+    }, 1000);
+  };
+
+  if(isPed){
+    // Redesenha canvas com tamanho fixo para impressão e aguarda
+    requestAnimationFrame(()=>{ doImprimir(); });
+  } else {
+    doImprimir();
   }
 }
 
