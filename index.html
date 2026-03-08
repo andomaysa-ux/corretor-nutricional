@@ -400,8 +400,20 @@ body{
 .grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media(max-width:800px){.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
-.chart-bloco{width:100%;margin-bottom:20px;border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow)}
+.chart-bloco{width:100%;margin-bottom:8px;border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow)}
 .chart-bloco canvas{display:block;width:100%!important;height:auto!important}
+.interp-panel{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;margin-bottom:20px;
+  background:var(--card-bg);border:1.5px solid var(--border);border-radius:0 0 14px 14px;
+  border-top:none;box-shadow:var(--card-shadow)}
+.interp-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:72px;flex:1;padding:6px 10px;border-radius:8px;background:var(--bg);
+  border:1px solid var(--border);text-align:center}
+.interp-chip .ic-label{font-size:.62rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.interp-chip .ic-value{font-size:.88rem;font-weight:800;color:var(--text1);line-height:1.1}
+.interp-chip .ic-sub{font-size:.68rem;color:var(--text2);margin-top:1px}
+.interp-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;
+  font-size:.75rem;font-weight:800;letter-spacing:.02em;border:1.5px solid currentColor}
+@media(max-width:480px){.interp-chip{min-width:58px;padding:5px 7px}.interp-chip .ic-value{font-size:.78rem}}
 
 /* ═══════════════════════════════════════════════════════
    FORM INPUTS
@@ -800,7 +812,7 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
               <option value="M">Masculino</option>
             </select>
           </div>
-          <div>
+          <div id="age-wrap">
             <label class="f-label">Idade</label>
             <div class="f-row"><input id="age" type="number" class="f-input" placeholder="0" oninput="recalc()"><span class="f-unit">anos</span></div>
           </div>
@@ -852,10 +864,26 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
       <div class="card" id="crianca-card" style="display:none">
         <div class="card-title" id="crianca-card-title">👶 Dados do Bebê</div>
         <div class="grid-3">
-          <div>
+          <!-- BEBÊ: entrada em meses -->
+          <div id="idade-bebe-wrap">
             <label class="f-label">Idade</label>
-            <div class="f-row"><input id="idadeMeses" type="number" class="f-input" placeholder="0" min="0" max="228" oninput="recalc()"><span class="f-unit">meses</span></div>
-            <div class="f-note" id="crianca-idade-nota">Bebê: 0–24 meses</div>
+            <div class="f-row"><input id="idadeMeses" type="number" class="f-input" placeholder="0" min="0" max="24" oninput="recalc()"><span class="f-unit">meses</span></div>
+            <div class="f-note" id="crianca-idade-nota">Bebê: 0 a 24 meses</div>
+          </div>
+          <!-- CRIANÇA: entrada em anos + meses extras -->
+          <div id="idade-crianca-wrap" style="display:none">
+            <label class="f-label">Idade</label>
+            <div style="display:flex;gap:6px;align-items:flex-start">
+              <div class="f-row" style="flex:1">
+                <input id="idadeAnos" type="number" class="f-input" placeholder="0" min="2" max="10" oninput="recalc()">
+                <span class="f-unit">anos</span>
+              </div>
+              <div class="f-row" style="flex:1">
+                <input id="idadeMesesExtra" type="number" class="f-input" placeholder="0" min="0" max="11" oninput="recalc()">
+                <span class="f-unit">meses</span>
+              </div>
+            </div>
+            <div class="f-note">Ex: 7 anos e 3 meses → 87 meses internamente</div>
           </div>
           <div>
             <label class="f-label" id="lbl-comp">Comprimento (deitado)</label>
@@ -1017,18 +1045,48 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
     <div class="space-y">
       <div class="card">
         <div class="card-title">📈 Curvas de Crescimento OMS</div>
-        <p style="font-size:.8rem;color:var(--text2);margin-bottom:14px;line-height:1.6">
+        <p style="font-size:.8rem;color:var(--text2);margin-bottom:12px;line-height:1.6">
           Selecione perfil <strong>Bebê</strong> ou <strong>Criança</strong> e preencha os dados para visualizar as curvas com o ponto do paciente plotado automaticamente.
         </p>
-        <!-- Legenda -->
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;font-size:.72rem;color:var(--text3)">
-          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#16a34a;border-radius:2px"></span>Mediana (P50)</span>
+
+        <!-- Toggle Z-score / Percentil -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <span style="font-size:.75rem;font-weight:700;color:var(--text2)">Modo de exibição:</span>
+          <div style="display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card-bg)">
+            <button id="btn-modo-z" onclick="setGraficoModo('zscore')"
+              style="padding:5px 14px;font-size:.73rem;font-weight:700;border:none;cursor:pointer;transition:all .18s;background:#1d4ed8;color:#fff">
+              📏 Escore-Z
+            </button>
+            <button id="btn-modo-p" onclick="setGraficoModo('percentil')"
+              style="padding:5px 14px;font-size:.73rem;font-weight:700;border:none;cursor:pointer;transition:all .18s;background:transparent;color:var(--text2)">
+              % Percentil
+            </button>
+          </div>
+          <span id="graf-modo-info" style="font-size:.68rem;color:var(--muted);font-style:italic">
+            Mostrando ±3, ±2, ±1 DP e Mediana
+          </span>
+        </div>
+
+        <!-- Legenda dinâmica -->
+        <div id="graf-legenda" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;font-size:.72rem;color:var(--text3)">
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#16a34a;border-radius:2px"></span>Mediana</span>
           <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ca8a04;border-radius:2px"></span>±1 DP</span>
           <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ea580c;border-radius:2px"></span>±2 DP</span>
           <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#dc2626;border-radius:2px"></span>±3 DP</span>
           <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1d4ed8"></span>Ponto ♂</span>
           <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#db2777"></span>Ponto ♀</span>
         </div>
+
+        <!-- Legenda zonas IMC -->
+        <div id="graf-legenda-imc" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-size:.68rem;color:var(--text3)">
+          <span style="font-weight:700;color:var(--text2)">Zonas IMC/Idade:</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:10px;background:rgba(239,68,68,0.25);border:1px solid #dc2626;border-radius:2px"></span>&lt;−3DP Magreza acentuada</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:10px;background:rgba(234,88,12,0.22);border:1px solid #ea580c;border-radius:2px"></span>−3 a −2DP Magreza</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:10px;background:rgba(74,222,128,0.25);border:1px solid #16a34a;border-radius:2px"></span>−2 a +1DP Normal</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:10px;background:rgba(250,204,21,0.30);border:1px solid #ca8a04;border-radius:2px"></span>+1 a +2DP Risco sobrepeso</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:10px;background:rgba(239,68,68,0.25);border:1px solid #dc2626;border-radius:2px"></span>&gt;+2DP Obesidade</span>
+        </div>
+
         <div id="graficos-container">
           <div class="block-empty"><p>Selecione o perfil <strong>👶 Bebê</strong> ou <strong>🧒 Criança</strong> e preencha os dados para visualizar.</p></div>
         </div>
@@ -1092,6 +1150,72 @@ function classAMBPercentil(a){
   if(a<=127)return{label:"Acima da média (P85–P95)",color:"cyan"};
   return{label:"Alta muscularidade (> P95)",color:"purple"};
 }
+// ══════════════════════════════════════════════════════════════
+// CIRCUNFERÊNCIA DA CINTURA PEDIÁTRICA — Freedman et al., 1999
+// Fonte: Apostila Clínica Anhanguera 2023, Tabela Freedman 1999
+// Formato: [idade_anos, P50_cm, P90_cm]
+// Valores = média entre raça branca e raça negra (ambos os sexos)
+// Critério: ≥P90 = risco aumentado · ≥P95 (estimado) = risco elevado
+// ══════════════════════════════════════════════════════════════
+const CC_PED_M = [
+  // [idade, P50,  P90]
+  [5,   52.0,  57.5],
+  [6,   54.0,  60.5],
+  [7,   55.5,  61.0],
+  [8,   58.5,  71.0],
+  [9,   61.0,  75.5],
+  [10,  64.0,  83.5],
+  [11,  66.0,  84.5],
+  [12,  69.0,  88.0],
+  [13,  72.5,  91.0],
+  [14,  72.5,  92.0],
+  [15,  72.5,  90.0],
+  [16,  76.0,  94.0],
+  [17,  78.5,  95.5],
+];
+const CC_PED_F = [
+  // [idade, P50,  P90]
+  [5,   51.5,  56.5],
+  [6,   53.0,  59.5],
+  [7,   55.0,  65.5],
+  [8,   58.0,  69.0],
+  [9,   60.5,  75.5],
+  [10,  62.5,  77.0],
+  [11,  66.5,  85.0],
+  [12,  67.0,  83.5],
+  [13,  68.0,  87.5],
+  [14,  68.5,  94.0],
+  [15,  70.5,  86.5],
+  [16,  71.5,  91.5],
+  [17,  68.5,  95.5],
+];
+
+// Retorna {p50, p90, p95} interpolados para idade em anos (pode ser fracionário)
+function interpCCPed(sex, anos){
+  const tab = sex==='M' ? CC_PED_M : CC_PED_F;
+  const clamp = v => Math.max(tab[0][0], Math.min(tab[tab.length-1][0], v));
+  const a = clamp(anos);
+  let r0=tab[0], r1=tab[tab.length-1];
+  for(let i=0;i<tab.length-1;i++){
+    if(a>=tab[i][0]&&a<tab[i+1][0]){r0=tab[i];r1=tab[i+1];break;}
+    if(a>=tab[tab.length-1][0]){r0=r1=tab[tab.length-1];break;}
+  }
+  const t=(r0[0]===r1[0])?0:(a-r0[0])/(r1[0]-r0[0]);
+  const p50=r0[1]+(r1[1]-r0[1])*t;
+  const p90=r0[2]+(r1[2]-r0[2])*t;
+  // P95 estimado por extrapolação linear: P95 ≈ P90 + 0.5*(P90-P50)
+  const p95=p90+0.5*(p90-p50);
+  return {p50:Math.round(p50*10)/10, p90:Math.round(p90*10)/10, p95:Math.round(p95*10)/10};
+}
+
+// Classificação da CC para crianças e adolescentes (Freedman 1999)
+function classCCPed(cc, sex, anos){
+  const {p50, p90, p95} = interpCCPed(sex, anos);
+  if(cc >= p95) return {label:`Risco elevado (≥ P95 estimado: ${p95} cm)`, color:'red',   p50, p90, p95};
+  if(cc >= p90) return {label:`Risco cardiometabólico (≥ P90: ${p90} cm)`,  color:'orange', p50, p90, p95};
+  return           {label:`Normal (< P90: ${p90} cm)`,                     color:'green',  p50, p90, p95};
+}
+
 function classCC(cc,sex){
   if(sex==='M'){
     if(cc<94)return{label:"Sem risco aumentado",color:"green"};
@@ -1134,6 +1258,20 @@ function fmt(v,d=1){return(v==null||isNaN(v))?"—":Number(v).toFixed(d)}
 function gv(id){return parseFloat(document.getElementById(id)?.value)||NaN}
 function gs(id){return document.getElementById(id)?.value||""}
 
+// Retorna a idade em MESES para os perfis pediátricos.
+// Bebê  → campo idadeMeses (entrada direta em meses, 0-24)
+// Criança → idadeAnos × 12 + idadeMesesExtra
+function getMesesPed(){
+  if(profile==='bebe'){
+    return gv('idadeMeses');
+  } else {
+    const anos = gv('idadeAnos');
+    const mExt = isNaN(gv('idadeMesesExtra')) ? 0 : gv('idadeMesesExtra');
+    if(isNaN(anos)) return NaN;
+    return anos * 12 + mExt;
+  }
+}
+
 function setProfile(p){
   profile=p;
   const profiles=['adulto','idoso','gestante','adolescente','crianca','bebe'];
@@ -1146,6 +1284,7 @@ function setProfile(p){
   document.getElementById('crianca-card').style.display=isCrianca?'block':'none';
 
   // Para bebê/criança: esconder campos do grid principal que duplicam os da ficha pediátrica
+  document.getElementById('age-wrap').style.display=isCrianca?'none':'block';
   document.getElementById('alt-wrap').style.display=isCrianca?'none':'block';
   document.getElementById('cb-wrap').style.display=isCrianca?'none':'block';
   document.getElementById('cc-wrap').style.display=isCrianca?'none':'block';
@@ -1160,13 +1299,15 @@ function setProfile(p){
     document.getElementById('lbl-comp').textContent='Comprimento (deitado)';
     document.getElementById('pc-wrap').style.display='block';
     document.getElementById('cc-c-wrap').style.display='none';
+    document.getElementById('idade-bebe-wrap').style.display='block';
+    document.getElementById('idade-crianca-wrap').style.display='none';
   } else if(p==='crianca'){
     document.getElementById('crianca-card-title').textContent='🧒 Dados da Criança (2–10 anos)';
-    document.getElementById('crianca-idade-nota').textContent='Criança: 24 a 120 meses';
     document.getElementById('lbl-comp').textContent='Estatura (em pé)';
     document.getElementById('pc-wrap').style.display='none';
-    // CC visível para crianças (a partir de 5 anos — será verificado no cálculo)
     document.getElementById('cc-c-wrap').style.display='block';
+    document.getElementById('idade-bebe-wrap').style.display='none';
+    document.getElementById('idade-crianca-wrap').style.display='block';
   }
   setTab('dados'); recalc();
 }
@@ -1182,7 +1323,7 @@ function setTab(t){
     if(b.onclick?.toString().includes("'"+t+"'")||b.getAttribute('onclick')?.includes("'"+t+"'")) b.classList.add('active');
   });
   if(t==='resultados') renderResultados();
-  if(t==='graficos') renderGraficos();
+  if(t==='graficos'){ renderGraficos(); setupGrafResizeObserver(); }
 }
 
 function toggleCorr(){
@@ -1305,12 +1446,24 @@ function renderResultados(){
   let ccHTML='';
   if(isNaN(ccN)){
     ccHTML=emptyBlock('Preencha a Circunferência da Cintura (CC).');
+  } else if(profile==='adolescente' && age>=10 && age<18){
+    // ── Adolescente: Freedman 1999 (percentis por sexo e idade)
+    const clsCCAdol = classCCPed(ccN, sex, age);
+    const {p50, p90, p95} = clsCCAdol;
+    ccHTML+=stepCard('cc_val',{stepLabel:'CC',
+      title:'Circunferência da Cintura — Risco Cardiometabólico (Freedman, 1999)',
+      formula:'Comparação com percentis de CC para sexo e idade em adolescentes',
+      substitution:`CC medida = ${ccN} cm\n\nReferência para ${sex==='M'?'Meninos':'Meninas'} (${age} anos) — Freedman 1999:\n  P50 = ${p50} cm\n  P90 = ${p90} cm (risco cardiometabólico)\n  P95 = ${p95} cm (risco elevado — estimado)\n\nCC = ${ccN} cm → ${clsCCAdol.label}`,
+      result:`${ccN} cm`,
+      classification:clsCCAdol,
+      note:`Critério Freedman (1999): < P90 = Normal · ≥ P90 = Risco cardiometabólico · ≥ P95 = Risco elevado\nApostila Clínica Anhanguera 2023 · ⚠️ Pontos de corte de adultos não se aplicam a adolescentes`});
   } else {
+    // ── Adulto/Idoso/Gestante: OMS 2000
     const clsCC=classCC(ccN,sex);
     const refStr=sex==='M'
       ? 'Homens — Sem risco: <94 cm | Risco aumentado: 94–101 cm | Risco muito aumentado: ≥102 cm'
       : 'Mulheres — Sem risco: <80 cm | Risco aumentado: 80–87 cm | Risco muito aumentado: ≥88 cm';
-    ccHTML+=stepCard('cc_val',{stepLabel:'CC',title:'Circunferência da Cintura — Risco Cardiovascular (OMS)',
+    ccHTML+=stepCard('cc_val',{stepLabel:'CC',title:'Circunferência da Cintura — Risco Cardiovascular (OMS, 2000)',
       formula:'Ponto de corte por sexo (OMS / IDF)',
       substitution:`CC = ${ccN} cm → ${clsCC.label}`,
       result:`${ccN} cm`,
@@ -1508,11 +1661,6 @@ function renderResultados(){
           substitution:`%G = ${fmt(sMinus,4)} × 100\n= ${fmt(pctG)} %`,
           result:`${fmt(pctG)} %`})}
         ${(()=>{let mgSubst='Informe o peso para calcular.',mgResult='—';if(!isNaN(peso)){const mg=(pctG/100)*peso;const mm=peso-mg;mgSubst=`MG = ${peso} × (${fmt(pctG)} ÷ 100)\n= ${peso} × ${fmt(pctG/100,4)}\n= ${fmt(mg)} kg\n\nMM = ${peso} − ${fmt(mg)}\n= ${fmt(mm)} kg`;mgResult=`MG = ${fmt(mg)} kg  |  MM = ${fmt(mm)} kg`;}return stepCard('mg',{stepLabel:'P7',title:'Passo 7 — Massa Gorda (MG) e Massa Magra (MM)',formula:'MG = Peso × (%G ÷ 100)   |   MM = Peso − MG',substitution:mgSubst,result:mgResult})})()}
-        ${stepCard('atb',{stepLabel:'2f',title:'Área Total do Braço (ATB)',
-          formula:'ATB = CB² ÷ (4 × π)',
-          substitution:(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);return`Passo 1: CB² = (${cbN})² = ${cb2}\nPasso 2: ATB = ${cb2} ÷ (4 × 3,1416) = ${cb2} ÷ 12,5664 = ${fmt(atb)} cm²`})(),
-          result:(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);return`${fmt(atb)} cm²`})()})}
-        ${(()=>{const cb2=cbN*cbN;const atb=cb2/(4*Math.PI);const agb=atb-(cbN?(cbN-(dctN*0.314))*(cbN-(dctN*0.314))/(4*Math.PI)-(sex==='M'?10.0:6.5):0);const igb=(agb/atb)*100;return stepCard('agb',{stepLabel:'2g',title:'Área de Gordura do Braço (AGB)',formula:'AGB = ATB − AMB',substitution:`AGB = ${fmt(atb)} − — cm²`,result:`${fmt(atb)} cm² (ver AMB acima)`})+stepCard('igb',{stepLabel:'2h',title:'Índice de Gordura do Braço (IGB)',formula:'IGB = (AGB ÷ ATB) × 100',substitution:`Ver valores de AGB e ATB acima`,result:`—`})})()}
       </div>
     </div>`;
   }
@@ -1805,7 +1953,7 @@ function classFrisanchoMusculo(percentil) {
   if(percentil <= 95) return {label:'Categoria IV — Acima da média (P85–P95)', color:'cyan'};
   return {label:'Categoria V — Alta muscularidade (> P95)', color:'purple'};
 }
-// Frisancho 1990 — DCT, AGB, IGB (estado de gordura)
+// Frisancho 1990 — DCT (estado de gordura subcutânea)
 function classFrisanchoGordura(percentil) {
   if(percentil < 5)   return {label:'Categoria I — Magro (< P5)', color:'blue'};
   if(percentil <= 15) return {label:'Categoria II — Abaixo da média (P5–P15)', color:'cyan'};
@@ -1941,85 +2089,112 @@ function renderGanhoPesoGestacional(){
 // ═══════════════════════════════════════════════════════
 function renderCrianca(){
   const sex=gs('sex');
-  const peso=gv('peso'), meses=gv('idadeMeses'), comp=gv('comprimento');
+  const peso=gv('peso'), meses=getMesesPed(), comp=gv('comprimento');
   const cb=gv('cb_c'), dct=gv('dct_c'), dcse=gv('dcse_c'), pc=gv('pc_bebe');
   const ccC=gv('cc_c');
   const isBebe=profile==='bebe';
-  const anosF = meses/12;
-  const idadeFracAnos = meses / 12;
-  const idadeIntAnos = Math.floor(idadeFracAnos);
+  const anos = meses/12;              // idade em anos decimais (ex: 7,25)
+  const idadeFracAnos = anos;
+  const idadeIntAnos = Math.floor(anos);
   let html='<div class="space-y">';
 
   // ─ P1. IMC PARA IDADE ─
   html+='<div><div class="block-title"><span class="block-num">P1</span> IMC para Idade — OMS 2006/2007</div>';
   if(isNaN(peso)||isNaN(comp)||comp<=0||isNaN(meses)||meses<=0){
-    html+=emptyBlock('Preencha: peso, comprimento/estatura e idade em meses.');
+    html+=emptyBlock('Preencha: peso, comprimento/estatura e idade.');
   } else {
     const hm=comp/100, imc=peso/(hm*hm);
-    const row=interpOMS(sex==='M'?OMS_IMC_M:OMS_IMC_F,meses);
+    // OMS 2006 até 60 meses (5 anos); OMS 2007 de 5 a 10 anos (eixo em anos)
+    let row, refNote;
+    if(meses <= 60){
+      row=interpOMS(sex==='M'?OMS_IMC_M:OMS_IMC_F, meses);
+      refNote='OMS 2006 (0–5 anos, eixo em meses)';
+    } else {
+      row=interpOMS07(sex==='M'?OMS07_IMC_M_EXT:OMS07_IMC_F_EXT, anos);
+      refNote='OMS 2007 (5–10 anos, eixo em anos)';
+    }
     const z=calcZ(imc,row), cl=classZ(z,'imc');
     html+=stepCard('p_imc',{stepLabel:'IMC/I',
       title:'IMC para Idade',
-      formula:'IMC = Peso (kg) ÷ Comprimento² (m)',
-      substitution:`IMC = ${fmt(peso,1)} ÷ (${fmt(comp/100,2)})²\n= ${fmt(peso,1)} ÷ ${fmt((comp/100)**2,4)}\n= ${fmt(imc)} kg/m²\nEscore-Z = ${fmt(z,2)} DP`,
+      formula:'IMC = Peso (kg) ÷ Estatura² (m)',
+      substitution:`IMC = ${fmt(peso,1)} ÷ (${fmt(hm,2)})²\n= ${fmt(peso,1)} ÷ ${fmt(hm*hm,4)}\n= ${fmt(imc)} kg/m²\n\nEscore-Z = ${fmt(z,2)} DP`,
       result:`${fmt(imc)} kg/m² · Z = ${fmt(z,2)}`,
       classification:cl,
-      note:'OMS 2006 (0–5a) / OMS 2007 (5–10a) · Classificação por Escore-Z · Apostila Clínica Anhanguera 2023'});
+      note:`${refNote} · Apostila Clínica Anhanguera 2023`});
   }
   html+='</div>';
 
   // ─ P2. PESO PARA IDADE ─
-  html+='<div><div class="block-title"><span class="block-num">P2</span> Peso para Idade — OMS 2006</div>';
+  html+='<div><div class="block-title"><span class="block-num">P2</span> Peso para Idade — OMS 2006/2007</div>';
   if(isNaN(peso)||isNaN(meses)||meses<=0){
-    html+=emptyBlock('Preencha: peso e idade em meses.');
+    html+=emptyBlock('Preencha: peso e idade.');
   } else {
-    const row=interpOMS(sex==='M'?OMS_PESO_M:OMS_PESO_F,meses);
-    const z=calcZ(peso,row), cl=classZ(z,'peso');
+    let rowP, refNoteP, medLabel;
+    if(meses <= 60){
+      rowP=interpOMS(sex==='M'?OMS_PESO_M:OMS_PESO_F, meses);
+      refNoteP='OMS 2006 (0–5 anos, meses)';
+      medLabel=`${Math.round(meses)}m`;
+    } else {
+      rowP=interpOMS07(sex==='M'?OMS07_PESO_M:OMS07_PESO_F, anos);
+      refNoteP='OMS 2007 (5–10 anos, anos)';
+      medLabel=`${fmt(anos,1)}a`;
+    }
+    const z=calcZ(peso,rowP), cl=classZ(z,'peso');
     html+=stepCard('p_peso',{stepLabel:'P/I',
       title:'Peso para Idade',
-      formula:'Comparação do peso com a curva de referência OMS para sexo e idade',
-      substitution:`Peso = ${fmt(peso,1)} kg · Mediana OMS para ${Math.round(meses)}m = ${row?fmt(row[3],1):'—'} kg\nEscore-Z = ${fmt(z,2)} DP`,
+      formula:'Comparação do peso com curva de referência OMS para sexo e idade',
+      substitution:`Peso = ${fmt(peso,1)} kg\nMediana OMS para ${medLabel} = ${rowP?fmt(rowP[3],1):'—'} kg\nEscore-Z = ${fmt(z,2)} DP`,
       result:`${fmt(peso,1)} kg · Z = ${fmt(z,2)}`,
       classification:cl,
-      note:'OMS 2006 · Usado principalmente até 10 anos · Apostila Clínica 2023'});
+      note:`${refNoteP} · Usado até 10 anos · Apostila Clínica 2023`});
   }
   html+='</div>';
 
   // ─ P3. COMPRIMENTO/ESTATURA PARA IDADE ─
-  const lblComp=meses<24?'Comprimento para Idade (0-24m)':'Estatura para Idade (2-10a)';
+  const lblComp=meses<24?'Comprimento para Idade (deitado, 0–24m)':'Estatura para Idade (em pé)';
   html+=`<div><div class="block-title"><span class="block-num">P3</span> ${lblComp} — OMS 2006/2007</div>`;
   if(isNaN(comp)||comp<=0||isNaN(meses)||meses<=0){
-    html+=emptyBlock('Preencha: comprimento/estatura e idade em meses.');
+    html+=emptyBlock('Preencha: comprimento/estatura e idade.');
   } else {
-    const row=interpOMS(sex==='M'?OMS_COMP_M:OMS_COMP_F,meses);
-    const z=calcZ(comp,row), cl=classZ(z,'comprimento');
+    let rowC, refNoteC, medLabelC, medVal;
+    if(meses <= 60){
+      rowC=interpOMS(sex==='M'?OMS_COMP_M:OMS_COMP_F, meses);
+      refNoteC='OMS 2006 (0–5 anos, meses)';
+      medLabelC=`${Math.round(meses)}m`;
+    } else {
+      rowC=interpOMS07(sex==='M'?OMS07_EST_M:OMS07_EST_F, anos);
+      refNoteC='OMS 2007 (5–10 anos, anos)';
+      medLabelC=`${fmt(anos,1)}a`;
+    }
+    const z=calcZ(comp,rowC), cl=classZ(z,'comprimento');
+    const compTipo=meses<24?'Comprimento':'Estatura';
     html+=stepCard('p_comp',{stepLabel:'C/I',
       title:lblComp,
-      formula:`${meses<24?'Comprimento deitado':'Estatura em pé'} comparado à curva OMS para sexo e idade`,
-      substitution:`${meses<24?'Comprimento':'Estatura'} = ${fmt(comp,1)} cm · Mediana OMS para ${Math.round(meses)}m = ${row?fmt(row[3],1):'—'} cm\nEscore-Z = ${fmt(z,2)} DP`,
+      formula:`${compTipo} comparada à curva OMS para sexo e idade`,
+      substitution:`${compTipo} = ${fmt(comp,1)} cm\nMediana OMS para ${medLabelC} = ${rowC?fmt(rowC[3],1):'—'} cm\nEscore-Z = ${fmt(z,2)} DP`,
       result:`${fmt(comp,1)} cm · Z = ${fmt(z,2)}`,
       classification:cl,
-      note:'OMS 2006 (0-24m deitado) · OMS 2007 (2-10a em pé) · Apostila Clínica Anhanguera 2023'});
+      note:`${refNoteC} · Apostila Clínica Anhanguera 2023`});
   }
   html+='</div>';
 
   // ─ P4. CIRCUNFERÊNCIA DA CINTURA (a partir de 5 anos) ─
   if(!isBebe && idadeIntAnos >= 5){
-    html+='<div><div class="block-title"><span class="block-num">P4</span> Circunferência da Cintura (CC) — Risco Cardiovascular (OMS, 2000)</div>';
+    html+='<div><div class="block-title"><span class="block-num">P4</span> Circunferência da Cintura (CC) — Risco Cardiometabólico (Freedman et al., 1999)</div>';
     if(isNaN(ccC)||ccC<=0){
       html+=emptyBlock('Preencha a Circunferência da Cintura (CC) para classificar.');
     } else {
-      const clsCC_c=classCC(ccC,sex);
-      const refStr=sex==='M'
-        ? 'Meninos — Sem risco: <94 cm | Risco aumentado: 94–101 cm | Risco muito aumentado: ≥102 cm'
-        : 'Meninas — Sem risco: <80 cm | Risco aumentado: 80–87 cm | Risco muito aumentado: ≥88 cm';
-      html+=stepCard('p_cc',{stepLabel:'CC',
-        title:'Circunferência da Cintura — Risco Cardiovascular (OMS, 2000)',
-        formula:'Ponto de corte por sexo (OMS, 2000)',
-        substitution:`CC = ${fmt(ccC,1)} cm → ${clsCC_c.label}`,
+      const clsCC_c = classCCPed(ccC, sex, anos);
+      const {p50, p90, p95} = clsCC_c;
+      const idadeRef = `${idadeIntAnos} anos`;
+      html+=stepCard('p_cc',{
+        stepLabel:'CC',
+        title:'Circunferência da Cintura — Risco Cardiometabólico (Freedman, 1999)',
+        formula:'Comparação com percentis de CC para sexo e idade (Freedman et al., 1999)',
+        substitution:`CC medida = ${fmt(ccC,1)} cm\n\nReferência para ${sex==='M'?'Meninos':'Meninas'} (${idadeRef}) — Freedman 1999:\n  P50 = ${p50} cm (mediana)\n  P90 = ${p90} cm (ponto de corte: risco aumentado)\n  P95 = ${p95} cm (estimado: risco elevado)\n\nCC = ${fmt(ccC,1)} cm → ${clsCC_c.label}`,
         result:`${fmt(ccC,1)} cm`,
         classification:clsCC_c,
-        note:refStr+' · Apostila Clínica Anhanguera 2023'});
+        note:`Critério: < P90 = Normal · ≥ P90 = Risco cardiometabólico · ≥ P95 = Risco elevado\nFonte: Freedman et al. (1999) · Apostila Clínica Anhanguera 2023\n⚠️ Não usar pontos de corte de adultos para crianças`});
     }
     html+='</div>';
   }
@@ -2081,12 +2256,6 @@ function renderCrianca(){
       const ambSemCorr = cmb2 / (4 * Math.PI);
       const corr = sex === 'M' ? 10.0 : 6.5;
       const amb = ambSemCorr - corr;
-      // ATB
-      const cb2 = cb * cb;
-      const atb = cb2 / (4 * Math.PI);
-      // AGB e IGB
-      const agb = atb - (amb > 0 ? amb : 0);
-      const igb = atb > 0 ? (agb / atb) * 100 : 0;
 
       // Percentis e classificações CMB
       const pCMB = getPercentilCrianca(cmb, tabCMB);
@@ -2128,22 +2297,6 @@ function renderCrianca(){
         note: `P50 AMB (${idadeIntAnos}a, ${sex==='M'?'M':'F'}): ${fmt(tabAMB.p50,1)} cm² · Percentil ≈ P${fmt(pAMB,0)} | Cat. I (<P5): Baixa · II (P5–P15): Abaixo · III (P15–P85): Média · IV (P85–P95): Acima · V (>P95): Alta`
       });
 
-      // ATB, AGB, IGB
-      html += stepCard('p_atb', {
-        stepLabel: '6d',
-        title: 'Área Total do Braço (ATB)',
-        formula: 'ATB = CB² ÷ (4 × π)',
-        substitution: `CB² = (${fmt(cb,1)})² = ${fmt(cb2,2)} cm²\nATB = ${fmt(cb2,2)} ÷ 12,566 = ${fmt(atb,2)} cm²`,
-        result: `${fmt(atb,2)} cm²`
-      });
-
-      html += stepCard('p_agb', {
-        stepLabel: '6e',
-        title: 'Área de Gordura do Braço (AGB) e Índice de Gordura do Braço (IGB)',
-        formula: 'AGB = ATB − AMB    |    IGB = (AGB ÷ ATB) × 100',
-        substitution: `AGB = ${fmt(atb,2)} − ${fmt(amb>0?amb:0,2)} = ${fmt(agb,2)} cm²\nIGB = (${fmt(agb,2)} ÷ ${fmt(atb,2)}) × 100 = ${fmt(igb,1)} %`,
-        result: `AGB = ${fmt(agb,2)} cm²  |  IGB = ${fmt(igb,1)} %`
-      });
     }
     html+='</div>';
   }
@@ -2330,6 +2483,212 @@ function interpOMS07(tabela, anos){
   return null;
 }
 
+// ══════════════════════════════════════════════════
+// GRÁFICOS — MODO Z-SCORE / PERCENTIL
+// ══════════════════════════════════════════════════
+let graficoModo = 'zscore'; // 'zscore' | 'percentil'
+
+function setGraficoModo(m){
+  graficoModo = m;
+  // Botões
+  document.getElementById('btn-modo-z').style.background = m==='zscore'?'#1d4ed8':'transparent';
+  document.getElementById('btn-modo-z').style.color      = m==='zscore'?'#fff':'var(--text2)';
+  document.getElementById('btn-modo-p').style.background = m==='percentil'?'#0891b2':'transparent';
+  document.getElementById('btn-modo-p').style.color      = m==='percentil'?'#fff':'var(--text2)';
+  // Info
+  const info = document.getElementById('graf-modo-info');
+  if(info) info.textContent = m==='zscore'
+    ? 'Mostrando ±3, ±2, ±1 DP e Mediana'
+    : 'Mostrando P0.1, P3, P15, P50, P85, P97, P99.9';
+  // Legenda
+  const leg = document.getElementById('graf-legenda');
+  if(leg){
+    if(m==='zscore'){
+      leg.innerHTML=`
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#16a34a;border-radius:2px"></span>Mediana</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ca8a04;border-radius:2px"></span>±1 DP</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ea580c;border-radius:2px"></span>±2 DP</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#dc2626;border-radius:2px"></span>±3 DP</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1d4ed8"></span>Ponto ♂</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#db2777"></span>Ponto ♀</span>`;
+    } else {
+      leg.innerHTML=`
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#16a34a;border-radius:2px"></span>P50 (Mediana)</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ca8a04;border-radius:2px"></span>P15 / P85</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#ea580c;border-radius:2px"></span>P3 / P97</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:24px;height:3px;background:#dc2626;border-radius:2px"></span>P0.1 / P99.9</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#1d4ed8"></span>Ponto ♂</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#db2777"></span>Ponto ♀</span>`;
+    }
+  }
+  renderGraficos();
+}
+
+// Distribuição normal cumulativa — aproximação (erro < 1.5×10⁻⁷)
+function zToPerc(z){
+  const a=[0.254829592,-0.284496736,1.421413741,-1.453152027,1.061405429],p=0.3275911;
+  const s=z<0?-1:1,x=Math.abs(z)/Math.SQRT2;
+  const t=1/(1+p*x);
+  const erf=1-t*(a[0]+t*(a[1]+t*(a[2]+t*(a[3]+t*a[4]))))*Math.exp(-x*x);
+  return Math.min(99.9,Math.max(0.1, 0.5*(1+s*erf)*100));
+}
+
+// Inversa aproximada da normal (Beasley-Springer-Moro)
+function percToZ(p){
+  const a=[2.50662823884,-18.61500062529,41.39119773534,-25.44106049637];
+  const b=[-8.47351093090,23.08336743743,-21.06224101826,3.13082909833];
+  const c=[0.3374754822726147,0.9761690190917186,0.1607979714918209,
+           0.0276438810333863,0.0038405729373609,0.0003951896511349,
+           0.0000321767881768,0.0000002888167364,0.0000003960315187];
+  const u=p/100-0.5;
+  if(Math.abs(u)<0.42){
+    const r=u*u;
+    return u*(((a[3]*r+a[2])*r+a[1])*r+a[0])/((((b[3]*r+b[2])*r+b[1])*r+b[0])*r+1);
+  }
+  const r=u>0?Math.log(-Math.log(1-p/100)):Math.log(-Math.log(p/100));
+  let s=c[0];for(let i=1;i<9;i++) s+=c[i]*Math.pow(r,i);
+  return u<0?-s:s;
+}
+
+// Dado um row OMS [m3,m2,m1,med,p1,p2,p3] e um Z-score, devolve o valor interpolado
+function interpValAtZ(row,z){
+  if(!row) return null;
+  const zs=[-3,-2,-1,0,1,2,3];
+  if(z<=-3){const d=row[1]-row[0];return row[0]+d*(z-(-3));}
+  if(z>=3){ const d=row[6]-row[5];return row[6]+d*(z-3);}
+  for(let i=0;i<6;i++){
+    if(z>=zs[i]&&z<=zs[i+1]){
+      const t=(z-zs[i])/(zs[i+1]-zs[i]);
+      return row[i]+(row[i+1]-row[i])*t;
+    }
+  }
+  return row[3];
+}
+
+// ─── Classificação OMS por Z-score para painéis do gráfico ───────────────
+function classZGraf(z, tipo){
+  // tipo: 'imc' | 'peso' | 'comp'
+  if(z==null||isNaN(z)) return null;
+  if(tipo==='imc'){
+    if(z< -3) return {label:'Magreza acentuada', short:'Magreza acentuada', color:'#dc2626', bg:'#fee2e2', icon:'🔴'};
+    if(z< -2) return {label:'Magreza',            short:'Magreza',            color:'#ea580c', bg:'#ffedd5', icon:'🟠'};
+    if(z<= 1) return {label:'Eutrofia',           short:'Eutrofia',           color:'#16a34a', bg:'#dcfce7', icon:'🟢'};
+    if(z<= 2) return {label:'Risco de sobrepeso', short:'Risco sobrepeso',    color:'#ca8a04', bg:'#fef9c3', icon:'🟡'};
+    if(z<= 3) return {label:'Sobrepeso',          short:'Sobrepeso',          color:'#f97316', bg:'#ffedd5', icon:'🟠'};
+    return            {label:'Obesidade',          short:'Obesidade',          color:'#dc2626', bg:'#fee2e2', icon:'🔴'};
+  }
+  if(tipo==='peso'){
+    if(z< -3) return {label:'Muito baixo peso',   short:'Muito baixo',        color:'#dc2626', bg:'#fee2e2', icon:'🔴'};
+    if(z< -2) return {label:'Baixo peso',         short:'Baixo peso',         color:'#ea580c', bg:'#ffedd5', icon:'🟠'};
+    if(z<= 1) return {label:'Peso adequado',      short:'Adequado',           color:'#16a34a', bg:'#dcfce7', icon:'🟢'};
+    if(z<= 2) return {label:'Peso elevado',       short:'Elevado',            color:'#ca8a04', bg:'#fef9c3', icon:'🟡'};
+    return            {label:'Peso muito elevado', short:'Muito elevado',      color:'#dc2626', bg:'#fee2e2', icon:'🔴'};
+  }
+  // comp / estatura
+  if(z< -3) return {label:'Muito baixa estatura', short:'Muito baixa',       color:'#dc2626', bg:'#fee2e2', icon:'🔴'};
+  if(z< -2) return {label:'Baixa estatura',       short:'Baixa estatura',    color:'#ea580c', bg:'#ffedd5', icon:'🟠'};
+  if(z<= 3) return {label:'Estatura adequada',    short:'Adequada',          color:'#16a34a', bg:'#dcfce7', icon:'🟢'};
+  return            {label:'Estatura elevada',     short:'Elevada',           color:'#ca8a04', bg:'#fef9c3', icon:'🟡'};
+}
+
+// Constrói o painel HTML de interpretação abaixo do canvas
+function buildInterpPanel(id, indicador, valor, unidade, z, perc, tipo){
+  const el=document.getElementById(id);
+  if(!el) return;
+  if(valor==null||isNaN(valor)||valor<=0||z==null||isNaN(z)){
+    el.innerHTML='';
+    return;
+  }
+  const cls = classZGraf(z, tipo);
+  if(!cls){el.innerHTML='';return;}
+  const percFmt = perc!=null ? (perc<1?perc.toFixed(1):perc<10?perc.toFixed(1):Math.round(perc))+'º' : '—';
+  const zFmt = z.toFixed(2);
+  const valFmt = Number(valor).toFixed(tipo==='imc'?1:1);
+
+  el.innerHTML=`
+    <div class="interp-panel">
+      <div class="interp-chip">
+        <div class="ic-label">${indicador}</div>
+        <div class="ic-value">${valFmt}</div>
+        <div class="ic-sub">${unidade}</div>
+      </div>
+      <div class="interp-chip">
+        <div class="ic-label">Escore-Z</div>
+        <div class="ic-value">${zFmt}</div>
+        <div class="ic-sub">DP</div>
+      </div>
+      <div class="interp-chip">
+        <div class="ic-label">Percentil</div>
+        <div class="ic-value">P${percFmt}</div>
+        <div class="ic-sub">aprox.</div>
+      </div>
+      <div style="flex:2;display:flex;align-items:center;justify-content:center;padding:4px 8px">
+        <span class="interp-badge" style="color:${cls.color};background:${cls.bg};border-color:${cls.color}40">
+          ${cls.icon} ${cls.label}
+        </span>
+      </div>
+    </div>`;
+}
+
+// Calcula Z + percentil e chama buildInterpPanel
+function renderInterpPanel(panelId, indicador, tabela, eixoAtual, valAtual, unidade, tipo, useAnos){
+  if(!valAtual||isNaN(valAtual)||!eixoAtual||isNaN(eixoAtual)){
+    const el=document.getElementById(panelId); if(el) el.innerHTML=''; return;
+  }
+  const refRow = useAnos ? interpOMS07(tabela, eixoAtual) : interpOMS(tabela, eixoAtual);
+  const z = refRow ? calcZ(valAtual, refRow) : null;
+  const perc = (z!=null&&!isNaN(z)) ? zToPerc(z) : null;
+  buildInterpPanel(panelId, indicador, valAtual, unidade, z, perc, tipo);
+}
+
+// ResizeObserver para redesenhar quando o contêiner muda de tamanho
+let _grafResizeObs = null;
+let _grafResizeTimer = null;
+function setupGrafResizeObserver(){
+  const cont = document.getElementById('graficos-container');
+  if(!cont||!window.ResizeObserver) return;
+  if(_grafResizeObs) _grafResizeObs.disconnect();
+  _grafResizeObs = new ResizeObserver(()=>{
+    // Debounce: só redesenha depois de 120ms sem mudança
+    clearTimeout(_grafResizeTimer);
+    _grafResizeTimer = setTimeout(()=>{ apenasRedesenharCurvas(); }, 120);
+  });
+  _grafResizeObs.observe(cont);
+}
+
+// Redesenha os canvas existentes SEM reconstruir o innerHTML
+function apenasRedesenharCurvas(){
+  if(profile!=='bebe'&&profile!=='crianca') return;
+  const sex=gs('sex');
+  const sexLabel=sex==='M'?'Meninos':'Meninas';
+  const peso=gv('peso'), meses=getMesesPed(), comp=gv('comprimento');
+  const isBebe=profile==='bebe';
+  const anos=meses/12;
+  let imcVal=null;
+  if(!isNaN(peso)&&peso>0&&!isNaN(comp)&&comp>0) imcVal=peso/((comp/100)**2);
+
+  if(isBebe){
+    if(!document.getElementById('cv-peso')) return;
+    desenharCurva('cv-peso',`Peso para Idade — ${sexLabel} (OMS 2006)`,sex==='M'?OMS_PESO_M:OMS_PESO_F,meses,peso,'kg',[0,60],sex,false,false,{isIMC:false});
+    desenharCurva('cv-comp',`Comprimento/Estatura para Idade — ${sexLabel}`,sex==='M'?OMS_COMP_M:OMS_COMP_F,meses,comp,'cm',[0,60],sex,true,false,{isIMC:false});
+    desenharCurva('cv-imc',`IMC para Idade — ${sexLabel} (OMS 2006)`,sex==='M'?OMS_IMC_M:OMS_IMC_F,meses,imcVal,'kg/m²',[0,60],sex,false,false,{isIMC:true});
+  } else {
+    const usaOMS2006Crianca=meses<=60;
+    const rangeX=usaOMS2006Crianca?[24,60]:[5,10];
+    const eixoX=usaOMS2006Crianca?meses:anos;
+    if(!document.getElementById('cv-peso')) return;
+    if(usaOMS2006Crianca){
+      desenharCurva('cv-peso',`Peso para Idade — ${sexLabel} (OMS 2006)`,sex==='M'?OMS_PESO_M:OMS_PESO_F,eixoX,peso,'kg',rangeX,sex,false,false,{isIMC:false});
+      desenharCurva('cv-comp',`Estatura para Idade — ${sexLabel} (OMS 2006)`,sex==='M'?OMS_COMP_M:OMS_COMP_F,eixoX,comp,'cm',rangeX,sex,false,false,{isIMC:false});
+      desenharCurva('cv-imc',`IMC para Idade — ${sexLabel} (OMS 2006)`,sex==='M'?OMS_IMC_M:OMS_IMC_F,eixoX,imcVal,'kg/m²',rangeX,sex,false,false,{isIMC:true});
+    } else {
+      desenharCurva('cv-peso',`Peso para Idade — ${sexLabel} (OMS 2007)`,sex==='M'?OMS07_PESO_M:OMS07_PESO_F,eixoX,peso,'kg',rangeX,sex,false,true,{isIMC:false});
+      desenharCurva('cv-comp',`Estatura para Idade — ${sexLabel} (OMS 2007)`,sex==='M'?OMS07_EST_M:OMS07_EST_F,eixoX,comp,'cm',rangeX,sex,false,true,{isIMC:false});
+      desenharCurva('cv-imc',`IMC para Idade — ${sexLabel} (OMS 2007)`,sex==='M'?OMS07_IMC_M:OMS07_IMC_F,eixoX,imcVal,'kg/m²',rangeX,sex,false,true,{isIMC:true});
+    }
+  }
+}
+
 function renderGraficos(){
   const cont=document.getElementById('graficos-container');
   if(!cont) return;
@@ -2339,7 +2698,7 @@ function renderGraficos(){
   }
   const sex=gs('sex');
   const sexLabel=sex==='M'?'Meninos':'Meninas';
-  const peso=gv('peso'), meses=gv('idadeMeses'), comp=gv('comprimento');
+  const peso=gv('peso'), meses=getMesesPed(), comp=gv('comprimento');
   const isBebe = profile==='bebe';
   const anos = meses/12;
 
@@ -2353,183 +2712,314 @@ function renderGraficos(){
         ${sex==='M'?'♂ Curvas para Meninos — OMS 2006 (0-60 meses)':'♀ Curvas para Meninas — OMS 2006 (0-60 meses)'}${isNaN(meses)||meses<=0?' — <span style="font-weight:400;color:#ea580c">Preencha a idade para plotar o ponto do paciente</span>':''}
       </div>
       <div class="chart-bloco"><canvas id="cv-peso"></canvas></div>
+      <div id="ip-peso"></div>
       <div class="chart-bloco"><canvas id="cv-comp"></canvas></div>
-      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>`;
+      <div id="ip-comp"></div>
+      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>
+      <div id="ip-imc"></div>`;
     requestAnimationFrame(()=>{
-      desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2006, meses)`, sex==='M'?OMS_PESO_M:OMS_PESO_F, meses, peso, 'kg', [0,60], sex, false, false);
-      desenharCurva('cv-comp', `Comprimento/Estatura para Idade — ${sexLabel}`, sex==='M'?OMS_COMP_M:OMS_COMP_F, meses, comp, 'cm', [0,60], sex, true, false);
-      desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2006, meses)`, sex==='M'?OMS_IMC_M:OMS_IMC_F, meses, imcVal, 'kg/m²', [0,60], sex, false, false);
+      desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2006)`, sex==='M'?OMS_PESO_M:OMS_PESO_F, meses, peso, 'kg', [0,60], sex, false, false, {isIMC:false});
+      desenharCurva('cv-comp', `Comprimento/Estatura para Idade — ${sexLabel}`, sex==='M'?OMS_COMP_M:OMS_COMP_F, meses, comp, 'cm', [0,60], sex, true, false, {isIMC:false});
+      desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2006)`, sex==='M'?OMS_IMC_M:OMS_IMC_F, meses, imcVal, 'kg/m²', [0,60], sex, false, false, {isIMC:true});
+      renderInterpPanel('ip-peso','P/Idade',sex==='M'?OMS_PESO_M:OMS_PESO_F, meses, peso,  'kg',   'peso', false);
+      renderInterpPanel('ip-comp','C/Idade',sex==='M'?OMS_COMP_M:OMS_COMP_F, meses, comp,  'cm',   'comp', false);
+      renderInterpPanel('ip-imc', 'IMC/I',  sex==='M'?OMS_IMC_M:OMS_IMC_F,  meses, imcVal,'kg/m²','imc',  false);
     });
   } else {
-    // Criança 2-10a: eixo em ANOS, dados OMS 2007
+    // CRIANÇA 2–10 anos
+    // < 60 meses (2–5a): OMS 2006 com eixo em meses, rangeX [24,60]
+    // ≥ 60 meses (5–10a): OMS 2007 com eixo em anos, rangeX [5,10]
+    const usaOMS2006Crianca = meses <= 60;
+    const rangeX = usaOMS2006Crianca ? [24, 60] : [5, 10];
+    const eixoX  = usaOMS2006Crianca ? meses : anos;
+    const eixoLabel = usaOMS2006Crianca ? 'OMS 2006 (meses, 2–5 anos)' : 'OMS 2007 (anos, 5–10 anos)';
+    const semDados = isNaN(meses)||meses<=0;
+
     cont.innerHTML=`
       <div style="padding:10px 14px;margin-bottom:14px;background:${sex==='M'?'#eff6ff':'#fdf2f8'};border:1.5px solid ${sex==='M'?'#bfdbfe':'#fbcfe8'};border-radius:12px;font-size:.8rem;color:${sex==='M'?'#1e40af':'#9d174d'};font-weight:600">
-        ${sex==='M'?'♂ Curvas para Meninos — OMS 2007 (5–10 anos)':'♀ Curvas para Meninas — OMS 2007 (5–10 anos)'} — <span style="font-weight:400">Eixo X em <strong>anos</strong></span>${isNaN(meses)||meses<=0?' — <span style="font-weight:400;color:#ea580c">Preencha a idade para plotar o ponto</span>':''}
+        ${sex==='M'?'♂ Meninos':'♀ Meninas'} — ${eixoLabel}${semDados?' — <span style="font-weight:400;color:#ea580c">Preencha a idade para plotar o ponto</span>':''}
       </div>
       <div class="chart-bloco"><canvas id="cv-peso"></canvas></div>
+      <div id="ip-peso"></div>
       <div class="chart-bloco"><canvas id="cv-comp"></canvas></div>
-      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>`;
+      <div id="ip-comp"></div>
+      <div class="chart-bloco"><canvas id="cv-imc"></canvas></div>
+      <div id="ip-imc"></div>`;
+
     requestAnimationFrame(()=>{
-      desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_PESO_M:OMS07_PESO_F, anos, peso, 'kg', [5,10], sex, false, true);
-      desenharCurva('cv-comp', `Estatura para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_EST_M:OMS07_EST_F, anos, comp, 'cm', [5,10], sex, false, true);
-      desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2007, anos)`, sex==='M'?OMS07_IMC_M:OMS07_IMC_F, anos, imcVal, 'kg/m²', [5,10], sex, false, true);
+      if(usaOMS2006Crianca){
+        // 2–5 anos: OMS 2006, eixo meses
+        desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2006)`, sex==='M'?OMS_PESO_M:OMS_PESO_F, eixoX, peso, 'kg', rangeX, sex, false, false, {isIMC:false});
+        desenharCurva('cv-comp', `Estatura para Idade — ${sexLabel} (OMS 2006)`, sex==='M'?OMS_COMP_M:OMS_COMP_F, eixoX, comp, 'cm', rangeX, sex, false, false, {isIMC:false});
+        desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2006)`, sex==='M'?OMS_IMC_M:OMS_IMC_F, eixoX, imcVal, 'kg/m²', rangeX, sex, false, false, {isIMC:true});
+        renderInterpPanel('ip-peso','P/Idade',sex==='M'?OMS_PESO_M:OMS_PESO_F, eixoX, peso,  'kg',   'peso', false);
+        renderInterpPanel('ip-comp','E/Idade',sex==='M'?OMS_COMP_M:OMS_COMP_F, eixoX, comp,  'cm',   'comp', false);
+        renderInterpPanel('ip-imc', 'IMC/I',  sex==='M'?OMS_IMC_M:OMS_IMC_F,  eixoX, imcVal,'kg/m²','imc',  false);
+      } else {
+        // 5–10 anos: OMS 2007, eixo anos
+        desenharCurva('cv-peso', `Peso para Idade — ${sexLabel} (OMS 2007)`, sex==='M'?OMS07_PESO_M:OMS07_PESO_F, eixoX, peso, 'kg', rangeX, sex, false, true, {isIMC:false});
+        desenharCurva('cv-comp', `Estatura para Idade — ${sexLabel} (OMS 2007)`, sex==='M'?OMS07_EST_M:OMS07_EST_F, eixoX, comp, 'cm', rangeX, sex, false, true, {isIMC:false});
+        desenharCurva('cv-imc', `IMC para Idade — ${sexLabel} (OMS 2007)`, sex==='M'?OMS07_IMC_M:OMS07_IMC_F, eixoX, imcVal, 'kg/m²', rangeX, sex, false, true, {isIMC:true});
+        renderInterpPanel('ip-peso','P/Idade',sex==='M'?OMS07_PESO_M:OMS07_PESO_F, eixoX, peso,  'kg',   'peso', true);
+        renderInterpPanel('ip-comp','E/Idade',sex==='M'?OMS07_EST_M:OMS07_EST_F,   eixoX, comp,  'cm',   'comp', true);
+        renderInterpPanel('ip-imc', 'IMC/I',  sex==='M'?OMS07_IMC_M:OMS07_IMC_F,  eixoX, imcVal,'kg/m²','imc',  true);
+      }
     });
   }
 }
 
-function desenharCurva(id, titulo, tabela, eixoAtual, valAtual, unidade, rangeX, sexo, showTransition, useAnos){
+function desenharCurva(id, titulo, tabela, eixoAtual, valAtual, unidade, rangeX, sexo, showTransition, useAnos, opts={}){
   const canvas=document.getElementById(id);
   if(!canvas) return;
   const ctx=canvas.getContext('2d');
-  const cW=canvas.parentElement?.clientWidth||640;
-  const W=Math.max(cW,300);
-  const H=Math.round(W*0.52);
+  const cW=canvas.parentElement?.clientWidth||360;
+  const W=Math.max(cW,280);
+  const H=Math.round(W*0.56);
   canvas.width=W; canvas.height=H;
   canvas.style.width='100%'; canvas.style.height='auto';
 
-  const pad={top:44,right:58,bot:46,left:52};
+  // ── Escala responsiva ──
+  const sc = Math.min(1, W/520);         // fator de escala (1 = desktop, <1 = mobile)
+  const fSm  = Math.max(7,  Math.round(8.5*sc));
+  const fMed = Math.max(8,  Math.round(10*sc));
+  const fLg  = Math.max(9,  Math.round(12.5*sc));
+  const pad  = {
+    top: Math.round(42*sc)+2,
+    right: Math.round(52*sc)+4,
+    bot: Math.round(46*sc),
+    left: Math.round(50*sc)+4
+  };
+  const isIMC = opts.isIMC||false;
+  const modo  = graficoModo;
   const gW=W-pad.left-pad.right, gH=H-pad.top-pad.bot;
   const fil=tabela.filter(r=>r[0]>=rangeX[0]&&r[0]<=rangeX[1]);
   if(fil.length<2) return;
 
-  const vals=fil.flatMap(r=>r.slice(1));
+  // ── Curvas a desenhar por modo ──
+  // Z-score: -3,-2,-1,0,+1,+2,+3  (índices 0-6 do row OMS)
+  // Percentil: P0.1(z=-3.09), P3(z=-1.88), P15(z=-1.04), P50(z=0), P85(z=+1.04), P97(z=+1.88), P99.9(z=+3.09)
+  const PERC_ZS = [-3.09, -1.88, -1.04, 0, 1.04, 1.88, 3.09];
+  const PERC_LBLS=['P0.1','P3','P15','P50','P85','P97','P99.9'];
+  const Z_LBLS=['-3DP','-2DP','-1DP','Med','+1DP','+2DP','+3DP'];
+  const LINHA_COLORS=['#dc2626','#ea580c','#ca8a04','#16a34a','#ca8a04','#ea580c','#dc2626'];
+  const LINHA_DASH=[[5,4],[4,3],[2,2],[],[2,2],[4,3],[5,4]];
+  const LINHA_W=[1.4,1.7,1.4,3.0,1.4,1.7,1.4];
+
+  // Gera as 7 linhas numéricas para o modo atual
+  // Cada linha é um array de {x, y_value} por ponto da tabela filtrada
+  function buildLinhas(){
+    return fil.map(row=>{
+      if(modo==='zscore'){
+        return row.slice(1); // [m3,m2,m1,med,p1,p2,p3]
+      } else {
+        return PERC_ZS.map(z=>interpValAtZ(row.slice(1),z));
+      }
+    });
+  }
+  const linhas = buildLinhas(); // linhas[ageIdx][lineIdx]
+
+  // minV/maxV a partir dos 7 valores por ponto
+  const vals=linhas.flatMap(r=>r);
   const minV=Math.min(...vals)*0.96, maxV=Math.max(...vals)*1.04;
-  const tX=m=>pad.left+((m-rangeX[0])/(rangeX[1]-rangeX[0]))*gW;
+
+  const tX=v=>pad.left+((v-rangeX[0])/(rangeX[1]-rangeX[0]))*gW;
   const tY=v=>pad.top+gH-((v-minV)/(maxV-minV))*gH;
   const isMale=sexo==='M';
 
-  // Fundo gradiente por gênero
+  // ── Fundo gradiente ──
   const bg=ctx.createLinearGradient(0,0,0,H);
   if(isMale){bg.addColorStop(0,'#eff6ff');bg.addColorStop(1,'#dbeafe');}
   else{bg.addColorStop(0,'#fdf2f8');bg.addColorStop(1,'#fce7f3');}
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // Borda colorida
   ctx.strokeStyle=isMale?'#93c5fd':'#f9a8d4'; ctx.lineWidth=2;
   ctx.strokeRect(1,1,W-2,H-2);
 
-  // Área do gráfico branca
   ctx.fillStyle='rgba(255,255,255,0.6)';
   ctx.fillRect(pad.left,pad.top,gW,gH);
 
-  // Zonas coloridas (preenchimento entre DPs)
-  const zona=(ia,ib,cor)=>{
+  // ── Zonas coloridas ──
+  // Para IMC: zonas nutricionais OMS específicas (baseadas nos índices z-score da tabela)
+  // Mapeia índices de zona para os valores de Y corretos no modo atual
+  const zona=(linhasData, ia, ib, cor)=>{
+    if(ia<0||ib<0||ia>=7||ib>=7) return;
     ctx.beginPath();
-    fil.forEach((r,i)=>{const x=tX(r[0]),y=tY(r[ia]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-    for(let i=fil.length-1;i>=0;i--) ctx.lineTo(tX(fil[i][0]),tY(fil[i][ib]));
+    fil.forEach((r,i)=>{const x=tX(r[0]),y=tY(linhasData[i][ia]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    for(let i=fil.length-1;i>=0;i--) ctx.lineTo(tX(fil[i][0]),tY(linhasData[i][ib]));
     ctx.closePath(); ctx.fillStyle=cor; ctx.fill();
   };
-  zona(3,5,'rgba(134,239,172,0.20)'); // -1 a +1 verde
-  zona(2,3,'rgba(253,224,71,0.14)');  // -2 a -1 amarelo
-  zona(5,6,'rgba(253,224,71,0.14)');  // +1 a +2 amarelo
-  zona(1,2,'rgba(252,165,165,0.18)'); // -3 a -2 vermelho
-  zona(6,7,'rgba(252,165,165,0.18)'); // +2 a +3 vermelho
 
-  // Grid
+  if(isIMC){
+    // Zonas nutricionais OMS para IMC/Idade
+    // índices: 0=-3DP, 1=-2DP, 2=-1DP, 3=med, 4=+1DP, 5=+2DP, 6=+3DP
+    // Zona abaixo de -3DP: preenche até minV
+    ctx.beginPath();
+    fil.forEach((r,i)=>{const x=tX(r[0]),y=tY(linhas[i][0]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.lineTo(tX(fil[fil.length-1][0]),tY(minV));
+    ctx.lineTo(tX(fil[0][0]),tY(minV));
+    ctx.closePath(); ctx.fillStyle='rgba(239,68,68,0.22)'; ctx.fill();
+    // -3 a -2 DP: laranja magreza
+    zona(linhas,0,1,'rgba(234,88,12,0.20)');
+    // -2 a +1 DP: verde normal
+    zona(linhas,1,4,'rgba(74,222,128,0.18)');
+    // +1 a +2 DP: amarelo risco sobrepeso
+    zona(linhas,4,5,'rgba(250,204,21,0.26)');
+    // acima +2 DP: vermelho obesidade
+    ctx.beginPath();
+    fil.forEach((r,i)=>{const x=tX(r[0]),y=tY(linhas[i][5]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.lineTo(tX(fil[fil.length-1][0]),tY(maxV));
+    ctx.lineTo(tX(fil[0][0]),tY(maxV));
+    ctx.closePath(); ctx.fillStyle='rgba(239,68,68,0.22)'; ctx.fill();
+  } else {
+    // Zonas neutras para peso/estatura
+    zona(linhas,2,4,'rgba(134,239,172,0.18)'); // -1 a +1
+    zona(linhas,1,2,'rgba(253,224,71,0.12)');
+    zona(linhas,4,5,'rgba(253,224,71,0.12)');
+    zona(linhas,0,1,'rgba(252,165,165,0.14)');
+    zona(linhas,5,6,'rgba(252,165,165,0.14)');
+  }
+
+  // ── Grid ──
   const gc=isMale?'rgba(147,197,253,0.35)':'rgba(249,168,212,0.35)';
   ctx.strokeStyle=gc; ctx.lineWidth=0.7;
-  for(let i=0;i<=5;i++){const yv=minV+(maxV-minV)*(i/5);ctx.beginPath();ctx.moveTo(pad.left,tY(yv));ctx.lineTo(pad.left+gW,tY(yv));ctx.stroke();}
-  // Ticks eixo X: meses ou anos
+  for(let i=0;i<=5;i++){
+    const yv=minV+(maxV-minV)*(i/5);
+    ctx.beginPath();ctx.moveTo(pad.left,tY(yv));ctx.lineTo(pad.left+gW,tY(yv));ctx.stroke();
+  }
+
+  // Ticks eixo X: meses ou anos inteiros (mas o ponto vai em decimal)
   const ticks = useAnos
     ? [5,6,7,8,9,10]
     : (rangeX[1]<=24?[0,3,6,9,12,15,18,21,24]:[0,6,12,18,24,30,36,42,48,54,60]);
-  ticks.forEach(m=>{if(m>=rangeX[0]&&m<=rangeX[1]){ctx.beginPath();ctx.moveTo(tX(m),pad.top);ctx.lineTo(tX(m),pad.top+gH);ctx.stroke();}});
+  ctx.strokeStyle=gc;
+  ticks.forEach(m=>{
+    if(m>=rangeX[0]&&m<=rangeX[1]){
+      ctx.lineWidth=0.7; ctx.beginPath();ctx.moveTo(tX(m),pad.top);ctx.lineTo(tX(m),pad.top+gH);ctx.stroke();
+    }
+  });
 
-  // Curvas SD
-  const sds=[
-    {i:1,c:'#dc2626',dash:[5,4],w:1.4,lbl:'-3DP'},
-    {i:2,c:'#ea580c',dash:[4,3],w:1.7,lbl:'-2DP'},
-    {i:3,c:'#ca8a04',dash:[2,2],w:1.4,lbl:'-1DP'},
-    {i:4,c:'#16a34a',dash:[],w:3.0,lbl:'Mediana'},
-    {i:5,c:'#ca8a04',dash:[2,2],w:1.4,lbl:'+1DP'},
-    {i:6,c:'#ea580c',dash:[4,3],w:1.7,lbl:'+2DP'},
-    {i:7,c:'#dc2626',dash:[5,4],w:1.4,lbl:'+3DP'},
-  ];
-  sds.forEach(({i,c,dash,w,lbl})=>{
-    ctx.beginPath(); ctx.strokeStyle=c; ctx.lineWidth=w; ctx.setLineDash(dash);
-    fil.forEach((r,ri)=>{const x=tX(r[0]),y=tY(r[i]);ri?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  // ── Curvas ──
+  for(let li=0;li<7;li++){
+    ctx.beginPath();
+    ctx.strokeStyle=LINHA_COLORS[li];
+    ctx.lineWidth=LINHA_W[li];
+    ctx.setLineDash(LINHA_DASH[li]);
+    fil.forEach((r,ri)=>{
+      const x=tX(r[0]);
+      const y=tY(linhas[ri][li]);
+      ri?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    });
     ctx.stroke(); ctx.setLineDash([]);
-  });
+  }
 
-  // Labels SD à direita
-  ctx.textAlign='left'; ctx.font='bold 9px sans-serif';
-  sds.forEach(({i,c,lbl})=>{
-    const lr=fil[fil.length-1];
-    if(lr&&lr[i]!=null){ctx.fillStyle=c;ctx.fillText(lbl,pad.left+gW+4,tY(lr[i])+4);}
-  });
+  // ── Labels das curvas à direita ──
+  const lbls = modo==='zscore' ? Z_LBLS : PERC_LBLS;
+  ctx.textAlign='left'; ctx.font=`bold ${fSm}px sans-serif`;
+  for(let li=0;li<7;li++){
+    const lastRow=linhas[linhas.length-1];
+    if(lastRow&&lastRow[li]!=null){
+      ctx.fillStyle=LINHA_COLORS[li];
+      ctx.fillText(lbls[li],pad.left+gW+3,tY(lastRow[li])+3.5);
+    }
+  }
 
-  // Linha de transição 24 meses (apenas modo bebê)
+  // ── Linha de transição 24 meses ──
   if(showTransition&&!useAnos&&rangeX[0]<=24&&rangeX[1]>24){
     const tx=tX(24);
     ctx.save(); ctx.strokeStyle=isMale?'rgba(29,78,216,0.5)':'rgba(190,24,93,0.5)';
     ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
-    ctx.beginPath(); ctx.moveTo(tx,pad.top); ctx.lineTo(tx,pad.top+gH); ctx.stroke();
+    ctx.beginPath();ctx.moveTo(tx,pad.top);ctx.lineTo(tx,pad.top+gH);ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle=isMale?'rgba(29,78,216,0.7)':'rgba(190,24,93,0.7)';
-    ctx.font='bold 8px sans-serif'; ctx.textAlign='center';
-    ctx.fillText('◀ deitado | em pé ▶',tx,pad.top-5);
+    ctx.font=`bold ${fSm}px sans-serif`; ctx.textAlign='center';
+    ctx.fillText('◀ deitado | em pé ▶',tx,pad.top-4);
     ctx.restore();
   }
 
-  // Eixos
+  // ── Eixos ──
   const axC=isMale?'#1d4ed8':'#be185d';
   ctx.strokeStyle=axC; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(pad.left,pad.top); ctx.lineTo(pad.left,pad.top+gH); ctx.lineTo(pad.left+gW,pad.top+gH); ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+gH);ctx.lineTo(pad.left+gW,pad.top+gH);ctx.stroke();
 
-  // Labels eixo Y
-  ctx.fillStyle='#374151'; ctx.font='10px sans-serif'; ctx.textAlign='right';
-  for(let i=0;i<=5;i++){const yv=minV+(maxV-minV)*(i/5);ctx.fillText(yv.toFixed(1),pad.left-5,tY(yv)+4);}
+  // ── Labels eixo Y ──
+  ctx.fillStyle='#374151'; ctx.font=`${fMed}px sans-serif`; ctx.textAlign='right';
+  for(let i=0;i<=5;i++){
+    const yv=minV+(maxV-minV)*(i/5);
+    ctx.fillText(yv.toFixed(1),pad.left-4,tY(yv)+3);
+  }
 
-  // Labels eixo X
-  ctx.textAlign='center'; ctx.fillStyle='#374151';
-  ticks.forEach(m=>{if(m>=rangeX[0]&&m<=rangeX[1])ctx.fillText(m,tX(m),pad.top+gH+16);});
+  // ── Labels eixo X ──
+  ctx.textAlign='center'; ctx.fillStyle='#374151'; ctx.font=`${fMed}px sans-serif`;
+  ticks.forEach(m=>{if(m>=rangeX[0]&&m<=rangeX[1])ctx.fillText(m,tX(m),pad.top+gH+14);});
 
-  // Ponto do paciente
-  const temP=!isNaN(eixoAtual)&&eixoAtual>0&&!isNaN(valAtual)&&valAtual>0&&eixoAtual>=rangeX[0]&&eixoAtual<=rangeX[1];
+  // ── Ponto do paciente ──
+  const temP=!isNaN(eixoAtual)&&eixoAtual>0&&!isNaN(valAtual)&&valAtual>0
+              &&eixoAtual>=rangeX[0]&&eixoAtual<=rangeX[1];
   if(temP){
+    // Calcular Z do paciente interpolando a tabela na idade exata
+    const refRow = useAnos ? interpOMS07(tabela, eixoAtual) : interpOMS(tabela, eixoAtual);
+    const zPac = refRow ? calcZ(valAtual, refRow) : null;
+    const percPac = (zPac!=null&&!isNaN(zPac)) ? zToPerc(zPac) : null;
+
     const px=tX(eixoAtual), py=tY(valAtual);
     const dotC=isMale?'#1d4ed8':'#db2777';
-    const glowC=isMale?'rgba(29,78,216,0.3)':'rgba(219,39,119,0.3)';
+    const glowC=isMale?'rgba(29,78,216,0.30)':'rgba(219,39,119,0.30)';
+    const r = Math.max(6, Math.round(9*sc));
+
     // Halo
-    const grad=ctx.createRadialGradient(px,py,2,px,py,18);
-    grad.addColorStop(0,glowC); grad.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(px,py,18,0,Math.PI*2); ctx.fill();
-    // Sombra
-    ctx.shadowColor=glowC; ctx.shadowBlur=8;
-    // Anel branco
-    ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2); ctx.fillStyle='white'; ctx.fill();
-    // Círculo colorido
-    ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.fillStyle=dotC; ctx.fill();
-    // Ponto branco central
-    ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+    const grad=ctx.createRadialGradient(px,py,2,px,py,r*2.2);
+    grad.addColorStop(0,glowC);grad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=grad;ctx.beginPath();ctx.arc(px,py,r*2.2,0,Math.PI*2);ctx.fill();
+
+    // Sombra + círculo
+    ctx.shadowColor=glowC; ctx.shadowBlur=8*sc;
+    ctx.beginPath();ctx.arc(px,py,r+2,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fillStyle=dotC;ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,r*0.38,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fill();
     ctx.shadowBlur=0;
-    // Etiqueta
-    const lbl=`${Number(valAtual).toFixed(1)} ${unidade}`;
-    ctx.font='bold 11px sans-serif';
-    const tw=ctx.measureText(lbl).width;
-    const lbx=px, lby=py-20;
-    ctx.fillStyle=dotC;
-    ctx.beginPath();
-    if(ctx.roundRect) ctx.roundRect(lbx-tw/2-5,lby-12,tw+10,16,4);
-    else ctx.rect(lbx-tw/2-5,lby-12,tw+10,16);
-    ctx.fill();
-    ctx.fillStyle='white'; ctx.textAlign='center'; ctx.font='bold 11px sans-serif';
-    ctx.fillText(lbl,lbx,lby);
+
+    // ── Tooltip compacto no canvas (apenas valor + Z) ──
+    // A classificação completa vai no painel HTML abaixo do gráfico
+    const tFont=`bold ${fMed}px sans-serif`;
+    const tFont2=`${fSm+1}px sans-serif`;
+    ctx.font=tFont;
+    const linha1=`${Number(valAtual).toFixed(1)} ${unidade}`;
+    const linha2=zPac!=null?`Z=${zPac.toFixed(2)}  P${percPac!=null?(percPac<1?percPac.toFixed(1):Math.round(percPac)):'—'}`:null;
+    const tw1=ctx.measureText(linha1).width;
+    ctx.font=tFont2;
+    const tw2=linha2?ctx.measureText(linha2).width:0;
+    const boxW=Math.max(tw1,tw2)+14;
+    const boxH=linha2?30:16;
+
+    let lbx=px-boxW/2, lby=py-boxH-r-8;
+    if(lbx<pad.left) lbx=pad.left+1;
+    if(lbx+boxW>pad.left+gW) lbx=pad.left+gW-boxW-1;
+    if(lby<pad.top+2) lby=py+r+8;
+
+    ctx.fillStyle=dotC; ctx.globalAlpha=0.93;
+    if(ctx.roundRect) ctx.roundRect(lbx,lby,boxW,boxH,4);
+    else ctx.rect(lbx,lby,boxW,boxH);
+    ctx.fill(); ctx.globalAlpha=1;
+
+    ctx.fillStyle='white'; ctx.textAlign='center';
+    ctx.font=tFont; ctx.fillText(linha1, lbx+boxW/2, lby+12);
+    if(linha2){ctx.font=tFont2; ctx.fillText(linha2, lbx+boxW/2, lby+26);}
+
   } else if(isNaN(eixoAtual)||eixoAtual<=0){
-    ctx.fillStyle='rgba(107,114,128,0.6)'; ctx.font='italic 11px sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(107,114,128,0.6)'; ctx.font=`italic ${fMed}px sans-serif`; ctx.textAlign='center';
     ctx.fillText('Preencha os dados para plotar o ponto',pad.left+gW/2,pad.top+gH/2);
   }
 
-  // Título
+  // ── Título ──
   const tC=isMale?'#1e40af':'#9d174d';
-  ctx.fillStyle=tC; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
-  ctx.fillText(`${isMale?'♂':'♀'} ${titulo}`,pad.left+gW/2,28);
+  ctx.fillStyle=tC; ctx.font=`bold ${fLg}px sans-serif`; ctx.textAlign='center';
+  ctx.fillText(`${isMale?'♂':'♀'} ${titulo}`,pad.left+gW/2,Math.round(pad.top*0.72));
 
-  // Eixo labels
-  ctx.fillStyle='#6b7280'; ctx.font='10px sans-serif';
-  ctx.fillText(useAnos?'Anos':'Meses',pad.left+gW/2,pad.top+gH+38);
-  ctx.save(); ctx.translate(14,pad.top+gH/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText(unidade,0,0); ctx.restore();
+  // ── Label eixos ──
+  ctx.fillStyle='#6b7280'; ctx.font=`${fSm+1}px sans-serif`;
+  ctx.fillText(useAnos?'Idade (anos)':'Idade (meses)',pad.left+gW/2,pad.top+gH+Math.round(pad.bot*0.8));
+  ctx.save();ctx.translate(12,pad.top+gH/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText(unidade,0,0);ctx.restore();
 }
 function handleVideoFiles(files){
   Array.from(files).forEach(f=>{
