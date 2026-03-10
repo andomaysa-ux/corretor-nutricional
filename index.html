@@ -1074,6 +1074,12 @@ video{width:100%;border-radius:8px;max-height:320px;background:#000}
       <div id="block-gpg-wrap" style="display:none">
         <div class="block-title"><span class="block-num">6</span> Ganho de Peso Gestacional — IOM 2009</div>
         <div id="block-gpg"></div>
+        <!-- Curva de Ganho de Peso -->
+        <div id="block-gpg-chart-wrap" style="display:none;margin-top:4px">
+          <div class="block-title" style="margin-top:0"><span class="block-num">6g</span> Curva de Ganho de Peso Gestacional — IOM 2009</div>
+          <div class="chart-bloco"><canvas id="cv-gpg"></canvas></div>
+          <div id="ip-gpg"></div>
+        </div>
       </div>
 
       <!-- BLOCO PEDIÁTRICO (aparece só para bebê/criança) -->
@@ -1305,6 +1311,39 @@ function classGordura(g,age,sex){const mM=[[20,29,[11,13,20,23]],[30,39,[12,14,2
 function durninDC(sum4,age,sex){const l=Math.log10(sum4);if(sex==="M"){if(age<=19)return 1.162-0.0630*l;if(age<=29)return 1.1631-0.0632*l;if(age<=39)return 1.1422-0.0544*l;if(age<=49)return 1.162-0.0700*l;return 1.1715-0.0779*l}else{if(age<=19)return 1.1549-0.0678*l;if(age<=29)return 1.1599-0.0717*l;if(age<=39)return 1.1423-0.0632*l;if(age<=49)return 1.1333-0.0612*l;return 1.1339-0.0645*l}}
 function getDurninCoefs(age,sex){if(sex==="M"){if(age<=19)return["1,1620","0,0630","Homens 16-19 anos"];if(age<=29)return["1,1631","0,0632","Homens 20-29 anos"];if(age<=39)return["1,1422","0,0544","Homens 30-39 anos"];if(age<=49)return["1,1620","0,0700","Homens 40-49 anos"];return["1,1715","0,0779","Homens 50-72 anos"]}else{if(age<=19)return["1,1549","0,0678","Mulheres 16-19 anos"];if(age<=29)return["1,1599","0,0717","Mulheres 20-29 anos"];if(age<=39)return["1,1423","0,0632","Mulheres 30-39 anos"];if(age<=49)return["1,1333","0,0612","Mulheres 40-49 anos"];return["1,1339","0,0645","Mulheres 50-72 anos"]}}
 function calcEER(p,h,age,sex,naf){if(sex==="M"){if(naf==="sedentario")return 753.07-10.83*age+6.50*h+14.10*p;if(naf==="pouco_ativo")return 581.47-10.83*age+8.30*h+14.94*p;if(naf==="ativo")return 1004.82-10.83*age+6.52*h+15.91*p;return-517.88-10.83*age+15.61*h+19.11*p}else{if(naf==="sedentario")return 584.90-7.01*age+5.72*h+11.71*p;if(naf==="pouco_ativo")return 575.77-7.01*age+6.60*h+12.14*p;if(naf==="ativo")return 710.25-7.01*age+6.54*h+12.34*p;return 511.83-7.01*age+9.07*h+12.56*p}}
+
+// EER específica para GESTANTES — DRI 2023 / Apostila Clínica 2023
+// Fórmulas: 2° e 3° trimestre. No 1° trimestre, usa EER normal (sem acréscimo)
+// Peso em kg, altura em cm, idade em anos, gestacao em SEMANAS
+function calcEERGestante(p, h, age, naf, gestacaoSem, imcPPG){
+  // Deposição de energia por IMC pré-gestacional
+  let deposicao = 200; // normal
+  if(imcPPG < 18.5)       deposicao = 300;
+  else if(imcPPG < 25.0)  deposicao = 200;
+  else if(imcPPG < 30.0)  deposicao = 150;
+  else                     deposicao = -50;
+
+  const g = gestacaoSem; // semanas
+  const trim = g <= 13 ? 1 : (g <= 26 ? 2 : 3);
+
+  // 1° trimestre: EER normal feminina (sem acréscimo gestacional)
+  if(trim === 1){
+    if(naf==='sedentario')   return 584.90-7.01*age+5.72*h+11.71*p;
+    if(naf==='pouco_ativo')  return 575.77-7.01*age+6.60*h+12.14*p;
+    if(naf==='ativo')        return 710.25-7.01*age+6.54*h+12.34*p;
+    return 511.83-7.01*age+9.07*h+12.56*p;
+  }
+
+  // 2° e 3° trimestre: fórmula gestante DRI 2023
+  let base;
+  if(naf==='sedentario')   base = 1131.20 - (2.04*age) + (0.34*h) + (12.15*p) + (9.16*g);
+  else if(naf==='pouco_ativo') base = 693.35 - (2.04*age) + (5.73*h) + (10.20*p) + (9.16*g);
+  else if(naf==='ativo')   base = -223.84 - (2.04*age) + (13.23*h) + (8.15*p) + (9.16*g);
+  else                     base = -779.72 - (2.04*age) + (18.45*h) + (8.73*p) + (9.16*g);
+
+  return base + deposicao;
+}
+
 function getEERFormula(sex,naf){const m={M:{sedentario:"EER = 753,07 − (10,83 × Idade) + (6,50 × Altura) + (14,10 × Peso)",pouco_ativo:"EER = 581,47 − (10,83 × Idade) + (8,30 × Altura) + (14,94 × Peso)",ativo:"EER = 1.004,82 − (10,83 × Idade) + (6,52 × Altura) + (15,91 × Peso)",muito_ativo:"EER = −517,88 − (10,83 × Idade) + (15,61 × Altura) + (19,11 × Peso)"},F:{sedentario:"EER = 584,90 − (7,01 × Idade) + (5,72 × Altura) + (11,71 × Peso)",pouco_ativo:"EER = 575,77 − (7,01 × Idade) + (6,60 × Altura) + (12,14 × Peso)",ativo:"EER = 710,25 − (7,01 × Idade) + (6,54 × Altura) + (12,34 × Peso)",muito_ativo:"EER = 511,83 − (7,01 × Idade) + (9,07 × Altura) + (12,56 × Peso)"}};return m[sex][naf]||"—"}
 function getEERSubst(p,h,age,sex,naf,eer){const parts={M:{sedentario:`753,07 − (10,83 × ${age}) + (6,50 × ${h}) + (14,10 × ${p})`,pouco_ativo:`581,47 − (10,83 × ${age}) + (8,30 × ${h}) + (14,94 × ${p})`,ativo:`1.004,82 − (10,83 × ${age}) + (6,52 × ${h}) + (15,91 × ${p})`,muito_ativo:`−517,88 − (10,83 × ${age}) + (15,61 × ${h}) + (19,11 × ${p})`},F:{sedentario:`584,90 − (7,01 × ${age}) + (5,72 × ${h}) + (11,71 × ${p})`,pouco_ativo:`575,77 − (7,01 × ${age}) + (6,60 × ${h}) + (12,14 × ${p})`,ativo:`710,25 − (7,01 × ${age}) + (6,54 × ${h}) + (12,34 × ${p})`,muito_ativo:`511,83 − (7,01 × ${age}) + (9,07 × ${h}) + (12,56 × ${p})`}};return`EER = ${parts[sex][naf]}\n= ${Number(eer).toFixed(1)} kcal/dia`}
 
@@ -1730,8 +1769,8 @@ function renderResultados(){
   if(isNaN(peso)||isNaN(alt)||isNaN(age)){
     eerHTML=emptyBlock('Preencha peso, altura e idade.');
   } else {
-    const eer=calcEER(peso,alt,age,sex,naf);
     const nafLabel={sedentario:'Sedentário',pouco_ativo:'Pouco ativo',ativo:'Ativo',muito_ativo:'Muito ativo'}[naf];
+
     eerHTML+=`<div class="info-teal">
       <span style="font-size:1.5rem">📌</span>
       <div>
@@ -1739,12 +1778,79 @@ function renderResultados(){
         <div class="info-teal-body">A partir de 2023, a Clínica adota <strong>exclusivamente</strong> a equação EER (Estimated Energy Requirement) do DRI 2023. Fórmulas anteriores como <strong>Harris-Benedict, Mifflin-St Jeor, FAO/OMS (TMB × NAF)</strong> etc. <strong>não são aceitas</strong> neste protocolo e devem ser sinalizadas como <span style="color:#dc2626;font-weight:700">ERRO</span> na correção.</div>
       </div>
     </div>`;
-    eerHTML+=stepCard('eer',{stepLabel:'EER',title:`EER DRI 2023 — ${sex==='M'?'Homem':'Mulher'} · NAF: ${nafLabel}`,
-      formula:getEERFormula(sex,naf),
-      disclaimer:'Atenção: a Altura deve ser inserida em centímetros (cm) — NÃO convertida para metros. O Peso em kg e a Idade em anos. Alunos que converterem altura para metros cometerão erro de unidade.',
-      substitution:getEERSubst(peso,alt,age,sex,naf,eer),
-      result:`${fmt(eer,1)} kcal/dia`,
-      note:'Referência: DRI 2023 — Dietary Reference Intakes for Energy · National Academies of Sciences'});
+
+    if(profile==='gestante'){
+      // ── EER GESTANTE — DRI 2023 ──
+      const ppg=gv('ppg'), igSemV=gv('igSem'), igDiasV=gv('igDias');
+      const altM=alt/100;
+      const imcPPG=(!isNaN(ppg)&&ppg>0)?ppg/(altM*altM):NaN;
+      const igCorr=(!isNaN(igSemV)&&!isNaN(igDiasV)&&igDiasV>=4)?igSemV+1:igSemV;
+
+      if(isNaN(igSemV)||igSemV<=0){
+        eerHTML+=emptyBlock('Preencha a idade gestacional (semanas) para calcular o EER gestacional.');
+      } else {
+        const trim = igCorr<=13?1:(igCorr<=26?2:3);
+        const trimLabel = trim===1?'1° Trimestre':trim===2?'2° Trimestre':'3° Trimestre';
+
+        // IMC pré-gestacional para deposição
+        let enPG='—', deposicao=200, deposicaoLabel='';
+        if(!isNaN(imcPPG)){
+          if(imcPPG<18.5){enPG='Baixo peso';deposicao=300;deposicaoLabel='+300 kcal/d (baixo peso)';}
+          else if(imcPPG<25){enPG='Eutrofia';deposicao=200;deposicaoLabel='+200 kcal/d (eutrofia)';}
+          else if(imcPPG<30){enPG='Sobrepeso';deposicao=150;deposicaoLabel='+150 kcal/d (sobrepeso)';}
+          else{enPG='Obesidade';deposicao=-50;deposicaoLabel='−50 kcal/d (obesidade)';}
+        }
+
+        const eer=calcEERGestante(peso,alt,age,naf,igCorr,isNaN(imcPPG)?22:imcPPG);
+
+        // Fórmulas e substituição por trimestre
+        let formula, subst;
+        if(trim===1){
+          formula = {sedentario:'EER = 584,90 − (7,01 × Idade) + (5,72 × Altura) + (11,71 × Peso)',
+                     pouco_ativo:'EER = 575,77 − (7,01 × Idade) + (6,60 × Altura) + (12,14 × Peso)',
+                     ativo:'EER = 710,25 − (7,01 × Idade) + (6,54 × Altura) + (12,34 × Peso)',
+                     muito_ativo:'EER = 511,83 − (7,01 × Idade) + (9,07 × Altura) + (12,56 × Peso)'}[naf];
+          subst = `Trimestre: ${trimLabel} → usa EER feminina normal (sem acréscimo gestacional)\n`;
+          subst += {sedentario:`584,90 − (7,01 × ${age}) + (5,72 × ${alt}) + (11,71 × ${peso})`,
+                    pouco_ativo:`575,77 − (7,01 × ${age}) + (6,60 × ${alt}) + (12,14 × ${peso})`,
+                    ativo:`710,25 − (7,01 × ${age}) + (6,54 × ${alt}) + (12,34 × ${peso})`,
+                    muito_ativo:`511,83 − (7,01 × ${age}) + (9,07 × ${alt}) + (12,56 × ${peso})`}[naf];
+          subst += `\n= ${fmt(eer,1)} kcal/dia`;
+        } else {
+          formula = {sedentario:'EER = 1.131,20 − (2,04 × Idade) + (0,34 × Altura) + (12,15 × Peso) + (9,16 × Gestação) + Deposição',
+                     pouco_ativo:'EER = 693,35 − (2,04 × Idade) + (5,73 × Altura) + (10,20 × Peso) + (9,16 × Gestação) + Deposição',
+                     ativo:'EER = −223,84 − (2,04 × Idade) + (13,23 × Altura) + (8,15 × Peso) + (9,16 × Gestação) + Deposição',
+                     muito_ativo:'EER = −779,72 − (2,04 × Idade) + (18,45 × Altura) + (8,73 × Peso) + (9,16 × Gestação) + Deposição'}[naf];
+          const baseVal = eer - deposicao;
+          const prefix = {sedentario:`1.131,20 − (2,04 × ${age}) + (0,34 × ${alt}) + (12,15 × ${peso}) + (9,16 × ${igCorr})`,
+                          pouco_ativo:`693,35 − (2,04 × ${age}) + (5,73 × ${alt}) + (10,20 × ${peso}) + (9,16 × ${igCorr})`,
+                          ativo:`−223,84 − (2,04 × ${age}) + (13,23 × ${alt}) + (8,15 × ${peso}) + (9,16 × ${igCorr})`,
+                          muito_ativo:`−779,72 − (2,04 × ${age}) + (18,45 × ${alt}) + (8,73 × ${peso}) + (9,16 × ${igCorr})`}[naf];
+          subst = `Trimestre: ${trimLabel} | IG corrigida: ${igCorr} semanas | IMC pré-gestacional: ${!isNaN(imcPPG)?fmt(imcPPG,1):'—'} (${enPG})\n`;
+          subst += `Passo 1 — Base EER:\n${prefix}\n= ${fmt(baseVal,1)} kcal/dia\n\n`;
+          subst += `Passo 2 — Deposição de energia (${enPG}): ${deposicaoLabel}\n`;
+          subst += `EER total = ${fmt(baseVal,1)} + (${deposicao}) = ${fmt(eer,1)} kcal/dia`;
+        }
+
+        eerHTML+=stepCard('eer',{
+          stepLabel:'EER',
+          title:`EER DRI 2023 — Gestante · ${trimLabel} · NAF: ${nafLabel}`,
+          formula,
+          disclaimer:'Atenção: Peso = kg · Altura = cm · Idade = anos · Gestação = semanas. NO 1° trimestre usa-se a EER feminina normal. No 2° e 3° usa-se a fórmula gestante com deposição de energia.',
+          substitution:subst,
+          result:`${fmt(eer,1)} kcal/dia`,
+          note:`Referência: DRI 2023 — Dietary Reference Intakes for Energy · Apostila Clínica Anhanguera 2023${trim>1?` · Deposição de energia: ${deposicaoLabel}`:''}`
+        });
+      }
+    } else {
+      const eer=calcEER(peso,alt,age,sex,naf);
+      eerHTML+=stepCard('eer',{stepLabel:'EER',title:`EER DRI 2023 — ${sex==='M'?'Homem':'Mulher'} · NAF: ${nafLabel}`,
+        formula:getEERFormula(sex,naf),
+        disclaimer:'Atenção: a Altura deve ser inserida em centímetros (cm) — NÃO convertida para metros. O Peso em kg e a Idade em anos. Alunos que converterem altura para metros cometerão erro de unidade.',
+        substitution:getEERSubst(peso,alt,age,sex,naf,eer),
+        result:`${fmt(eer,1)} kcal/dia`,
+        note:'Referência: DRI 2023 — Dietary Reference Intakes for Energy · National Academies of Sciences'});
+    }
   }
   document.getElementById('block-eer').innerHTML=eerHTML;
 
@@ -2080,68 +2186,232 @@ function classZ(z, tipo){
   return{label:'Elevado (> +2 DP)',color:'red'};
 }
 
+
 // ═══════════════════════════════════════════════════════
-// GANHO DE PESO GESTACIONAL — IOM 2009
+// GANHO DE PESO GESTACIONAL — IOM 2009 + Curva
 // ═══════════════════════════════════════════════════════
+function gpgExpected(sem, gSemMin, gSemMax, gTotalMin, gTotalMax){
+  const t1Min = Math.min(gTotalMin * 0.08, 1.5);
+  const t1Max = Math.min(gTotalMax * 0.15, 2.5);
+  if(sem <= 0) return {min:0, max:0};
+  if(sem <= 13){ const f=sem/13; return {min:t1Min*f, max:t1Max*f}; }
+  return {min:t1Min+(sem-13)*gSemMin, max:t1Max+(sem-13)*gSemMax};
+}
+
+function desenharCurvaGPG(ganhoAtual, igCorr, imcPPG){
+  const canvas=document.getElementById('cv-gpg');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const cW=canvas.parentElement?.clientWidth||360;
+  const W=Math.max(cW,280), H=Math.round(W*0.56);   // um pouco mais alto
+  canvas.width=W; canvas.height=H;
+  canvas.style.width='100%'; canvas.style.height='auto';
+
+  const sc=Math.min(1,W/520);
+  const fSm=Math.max(7,Math.round(8*sc)), fMed=Math.max(8,Math.round(10*sc)), fLg=Math.max(9,Math.round(12.5*sc));
+  // pad.top maior para o título respirar; pad.right maior para os labels de kg
+  const pad={top:Math.round(52*sc)+6, right:Math.round(62*sc)+4, bot:Math.round(48*sc), left:Math.round(52*sc)+4};
+  const gW=W-pad.left-pad.right, gH=H-pad.top-pad.bot;
+
+  let cat,gSemMin,gSemMax,gTotalMin,gTotalMax,col,bgCol;
+  if(imcPPG<18.5){cat='Baixo peso';gSemMin=0.44;gSemMax=0.58;gTotalMin=12.7;gTotalMax=18.1;col='#2563eb';bgCol='rgba(37,99,235,0.13)';}
+  else if(imcPPG<25){cat='Eutrofia';gSemMin=0.35;gSemMax=0.50;gTotalMin=11.3;gTotalMax=15.9;col='#16a34a';bgCol='rgba(22,163,74,0.13)';}
+  else if(imcPPG<30){cat='Sobrepeso';gSemMin=0.23;gSemMax=0.33;gTotalMin=6.8;gTotalMax=11.3;col='#ca8a04';bgCol='rgba(202,138,4,0.13)';}
+  else{cat='Obesidade';gSemMin=0.17;gSemMax=0.27;gTotalMin=5.0;gTotalMax=9.0;col='#dc2626';bgCol='rgba(220,38,38,0.13)';}
+
+  const weeks=Array.from({length:41},(_,i)=>i);
+  const baixo=weeks.map(w=>gpgExpected(w,gSemMin,gSemMax,gTotalMin,gTotalMax).min);
+  const alto =weeks.map(w=>gpgExpected(w,gSemMin,gSemMax,gTotalMin,gTotalMax).max);
+  const maxVal=Math.max(...alto,isNaN(ganhoAtual)?0:ganhoAtual)*1.15;
+  const minVal=Math.min(0,...baixo,isNaN(ganhoAtual)?0:ganhoAtual)-0.5;
+
+  const tX=w=>pad.left+(w/40)*gW;
+  const tY=v=>pad.top+gH-((v-minVal)/(maxVal-minVal))*gH;
+
+  // Fundo
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#fff7ed'); bg.addColorStop(1,'#ffedd5');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#fed7aa'; ctx.lineWidth=2; ctx.strokeRect(1,1,W-2,H-2);
+  ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.fillRect(pad.left,pad.top,gW,gH);
+
+  // Grid H
+  ctx.strokeStyle='rgba(251,146,60,0.20)'; ctx.lineWidth=0.7;
+  for(let i=0;i<=5;i++){const yv=minVal+(maxVal-minVal)*(i/5);ctx.beginPath();ctx.moveTo(pad.left,tY(yv));ctx.lineTo(pad.left+gW,tY(yv));ctx.stroke();}
+
+  // Linhas verticais dos trimestres + labels DENTRO do gráfico (no topo interno)
+  [13,26,40].forEach((tw,ti)=>{
+    const x=tX(tw);
+    ctx.strokeStyle='rgba(180,83,9,0.35)'; ctx.lineWidth=0.9; ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+gH);ctx.stroke();ctx.setLineDash([]);
+    // Label dentro do gráfico, encostado no topo da área interna
+    const lbl=['1° Tri','2° Tri','3° Tri'][ti];
+    ctx.font=`bold ${fSm}px sans-serif`;
+    const lw=ctx.measureText(lbl).width+8;
+    const lx=Math.min(x-lw/2, pad.left+gW-lw-2);
+    const ly=pad.top+6;
+    ctx.fillStyle='rgba(180,83,9,0.13)';
+    if(ctx.roundRect) ctx.roundRect(lx,ly,lw,fSm+6,3); else ctx.rect(lx,ly,lw,fSm+6);
+    ctx.fill();
+    ctx.fillStyle='rgba(120,53,15,0.80)';
+    ctx.textAlign='center';
+    ctx.fillText(lbl, lx+lw/2, ly+fSm+1);
+  });
+
+  // Zona de ganho adequado
+  ctx.beginPath();
+  weeks.forEach((w,i)=>{i?ctx.lineTo(tX(w),tY(alto[i])):ctx.moveTo(tX(w),tY(alto[i]));});
+  for(let i=40;i>=0;i--) ctx.lineTo(tX(weeks[i]),tY(baixo[i]));
+  ctx.closePath(); ctx.fillStyle=bgCol; ctx.fill();
+
+  // Curvas min/max
+  [baixo,alto].forEach(arr=>{
+    ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=1.6*sc+0.9; ctx.setLineDash([5,4]);
+    weeks.forEach((w,i)=>{i?ctx.lineTo(tX(w),tY(arr[i])):ctx.moveTo(tX(w),tY(arr[i]));});
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+  // Mediana
+  ctx.beginPath(); ctx.strokeStyle=col; ctx.lineWidth=2.2*sc+0.8; ctx.globalAlpha=0.45;
+  weeks.forEach((w,i)=>{const m=(baixo[i]+alto[i])/2;i?ctx.lineTo(tX(w),tY(m)):ctx.moveTo(tX(w),tY(m));});
+  ctx.stroke(); ctx.globalAlpha=1;
+
+  // Labels à direita
+  ctx.textAlign='left'; ctx.font=`bold ${fSm}px sans-serif`;
+  ctx.fillStyle=col;
+  ctx.fillText(`${gTotalMax}kg`,tX(40)+3,tY(alto[40])+3);
+  ctx.fillText(`${gTotalMin}kg`,tX(40)+3,tY(baixo[40])+3);
+
+  // Eixos
+  ctx.strokeStyle='#92400e'; ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+gH);ctx.lineTo(pad.left+gW,pad.top+gH);ctx.stroke();
+
+  // Labels Y
+  ctx.fillStyle='#374151'; ctx.font=`${fMed}px sans-serif`; ctx.textAlign='right';
+  for(let i=0;i<=5;i++){const yv=minVal+(maxVal-minVal)*(i/5);ctx.fillText(yv.toFixed(1),pad.left-4,tY(yv)+3);}
+
+  // Labels X
+  ctx.textAlign='center'; ctx.fillStyle='#374151'; ctx.font=`${fMed}px sans-serif`;
+  [0,4,8,13,17,21,26,30,34,40].forEach(w=>ctx.fillText(w,tX(w),pad.top+gH+14));
+
+  // Ponto da paciente
+  const temP=!isNaN(igCorr)&&igCorr>=0&&!isNaN(ganhoAtual);
+  if(temP){
+    const px=tX(igCorr), py=tY(ganhoAtual);
+    const exp=gpgExpected(igCorr,gSemMin,gSemMax,gTotalMin,gTotalMax);
+    let dotC,statusLabel,statusIcon;
+    if(ganhoAtual<exp.min-0.2){dotC='#2563eb';statusLabel='Insuficiente';statusIcon='⬇';}
+    else if(ganhoAtual>exp.max+0.2){dotC='#dc2626';statusLabel='Excessivo';statusIcon='⬆';}
+    else{dotC='#16a34a';statusLabel='Adequado';statusIcon='✓';}
+
+    const r=Math.max(7,Math.round(9*sc));
+    const gr=ctx.createRadialGradient(px,py,2,px,py,r*2.2);
+    gr.addColorStop(0,dotC+'33'); gr.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(px,py,r*2.2,0,Math.PI*2); ctx.fill();
+    ctx.shadowColor=dotC+'44'; ctx.shadowBlur=8*sc;
+    ctx.beginPath();ctx.arc(px,py,r+2,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fillStyle=dotC;ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,r*0.38,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fill();
+    ctx.shadowBlur=0;
+
+    // Tooltip
+    const l1=`${fmt(ganhoAtual,1)} kg  |  ${igCorr} sem`;
+    const l2=`Esperado: ${exp.min.toFixed(1)}–${exp.max.toFixed(1)} kg`;
+    ctx.font=`bold ${fMed}px sans-serif`;
+    const tw=Math.max(ctx.measureText(l1).width,ctx.measureText(l2).width)+14;
+    const bh=30; let lbx=px-tw/2, lby=py-bh-r-8;
+    if(lbx<pad.left) lbx=pad.left+1;
+    if(lbx+tw>pad.left+gW) lbx=pad.left+gW-tw-1;
+    if(lby<pad.top+2) lby=py+r+8;
+    ctx.fillStyle=dotC; ctx.globalAlpha=0.92;
+    if(ctx.roundRect) ctx.roundRect(lbx,lby,tw,bh,4); else ctx.rect(lbx,lby,tw,bh);
+    ctx.fill(); ctx.globalAlpha=1;
+    ctx.fillStyle='white'; ctx.textAlign='center';
+    ctx.font=`bold ${fMed}px sans-serif`; ctx.fillText(l1,lbx+tw/2,lby+12);
+    ctx.font=`${fSm+1}px sans-serif`; ctx.fillText(l2,lbx+tw/2,lby+26);
+
+    // Painel interpretação
+    const ipEl=document.getElementById('ip-gpg');
+    if(ipEl) ipEl.innerHTML=`<div class="interp-panel">
+      <div class="interp-chip"><div class="ic-label">Ganho atual</div><div class="ic-value">${fmt(ganhoAtual,1)}</div><div class="ic-sub">kg</div></div>
+      <div class="interp-chip"><div class="ic-label">IG corrigida</div><div class="ic-value">${igCorr}</div><div class="ic-sub">semanas</div></div>
+      <div class="interp-chip"><div class="ic-label">Esperado IOM</div><div class="ic-value">${exp.min.toFixed(1)}–${exp.max.toFixed(1)}</div><div class="ic-sub">kg</div></div>
+      <div style="flex:2;display:flex;align-items:center;justify-content:center;padding:4px 8px">
+        <span class="interp-badge" style="color:${dotC};background:${dotC}18;border-color:${dotC}40">${statusIcon} ${statusLabel}</span>
+      </div>
+    </div>`;
+  } else {
+    ctx.fillStyle='rgba(107,114,128,0.6)'; ctx.font=`italic ${fMed}px sans-serif`; ctx.textAlign='center';
+    ctx.fillText('Preencha peso atual e IG para plotar o ponto',pad.left+gW/2,pad.top+gH/2);
+    const ipEl=document.getElementById('ip-gpg'); if(ipEl) ipEl.innerHTML='';
+  }
+
+  // Título
+  ctx.fillStyle='#92400e'; ctx.font=`bold ${fLg}px sans-serif`; ctx.textAlign='center';
+  ctx.fillText(`🤰 Curva de Ganho de Peso — ${cat} (IOM 2009)`,pad.left+gW/2,Math.round(pad.top*0.72));
+  ctx.fillStyle='#6b7280'; ctx.font=`${fSm+1}px sans-serif`;
+  ctx.fillText('Idade Gestacional (semanas)',pad.left+gW/2,pad.top+gH+Math.round(pad.bot*0.82));
+  ctx.save(); ctx.translate(12,pad.top+gH/2); ctx.rotate(-Math.PI/2); ctx.fillText('Ganho de peso (kg)',0,0); ctx.restore();
+}
+
 function renderGanhoPesoGestacional(){
   const el=document.getElementById('block-gpg');
   if(!el) return;
   const ppg=gv('ppg'), peso=gv('peso'), igSemV=gv('igSem'), igDiasV=gv('igDias');
   const alt=gv('alt');
+  const chartWrap=document.getElementById('block-gpg-chart-wrap');
   if(isNaN(ppg)||ppg<=0||isNaN(alt)||alt<=0){
     el.innerHTML=emptyBlock('Preencha: peso pré-gestacional e altura para calcular o ganho de peso.');
+    if(chartWrap) chartWrap.style.display='none';
     return;
   }
-  const hm=alt/100;
-  const imcPPG=ppg/(hm*hm);
-  let enPG,gBaixo,gAlto,gSem,imcClass;
-  if(imcPPG<18.5){enPG='Baixo peso';gBaixo=12.7;gAlto=18.1;gSem=0.5;imcClass='blue';}
-  else if(imcPPG<=24.9){enPG='Eutrofia (normal)';gBaixo=11.3;gAlto=15.9;gSem=0.5;imcClass='green';}
-  else if(imcPPG<=29.9){enPG='Sobrepeso';gBaixo=6.8;gAlto=11.3;gSem=0.3;imcClass='yellow';}
-  else{enPG='Obesidade';gBaixo=5.0;gAlto=9.0;gSem=0.2;imcClass='red';}
+  const hm=alt/100, imcPPG=ppg/(hm*hm);
+  let enPG,gBaixo,gAlto,gSem,imcClass,gSemMin,gSemMax;
+  if(imcPPG<18.5){enPG='Baixo peso';gBaixo=12.7;gAlto=18.1;gSem=0.5;gSemMin=0.44;gSemMax=0.58;imcClass='blue';}
+  else if(imcPPG<=24.9){enPG='Eutrofia (normal)';gBaixo=11.3;gAlto=15.9;gSem=0.5;gSemMin=0.35;gSemMax=0.50;imcClass='green';}
+  else if(imcPPG<=29.9){enPG='Sobrepeso';gBaixo=6.8;gAlto=11.3;gSem=0.3;gSemMin=0.23;gSemMax=0.33;imcClass='yellow';}
+  else{enPG='Obesidade';gBaixo=5.0;gAlto=9.0;gSem=0.2;gSemMin=0.17;gSemMax=0.27;imcClass='red';}
 
   let html='';
-  // Bloco G1 — IMC pré-gestacional
-  html+=stepCard('gpg1',{stepLabel:'G1',
-    title:'IMC Pré-Gestacional — Classificação',
+  html+=stepCard('gpg1',{stepLabel:'G1',title:'IMC Pré-Gestacional — Classificação',
     formula:'IMC = Peso pré-gestacional ÷ Altura²',
     substitution:`IMC = ${ppg} kg ÷ (${fmt(hm,2)} m)² = ${fmt(imcPPG)} kg/m²`,
     result:`${fmt(imcPPG)} kg/m²`,
     classification:{label:enPG,color:imcClass},
-    note:'Referência: WHO (OMS) 2004 para classificação do IMC pré-gestacional · Apostila Clínica Anhanguera 2023'});
+    note:'Referência: WHO (OMS) 2004 · Apostila Clínica Anhanguera 2023'});
 
-  // Bloco G2 — Recomendação de ganho total
-  html+=stepCard('gpg2',{stepLabel:'G2',
-    title:'Recomendação de Ganho de Peso Total — IOM 2009',
+  html+=stepCard('gpg2',{stepLabel:'G2',title:'Recomendação de Ganho de Peso Total — IOM 2009',
     formula:'Ganho de peso total recomendado segundo estado nutricional pré-gestacional',
     substitution:`Estado nutricional: ${enPG}\nGanho total recomendado: ${gBaixo} a ${gAlto} kg\nGanho semanal recomendado (2° e 3° trimestres): ${gSem} kg/semana`,
     result:`${gBaixo} a ${gAlto} kg`,
     note:'Fonte: Institute of Medicine (IOM), 2009 · Apostila Clínica de Nutrição — Anhanguera Osasco 2023'});
 
-  // Bloco G3 — Ganho atual (se tiver peso atual e IG)
-  if(!isNaN(peso)&&peso>0&&!isNaN(igSemV)){
-    // Cálculo da IG corrigida (apostila: 1-3 dias = semana atual; 4-6 = próxima)
-    const igCorr=!isNaN(igDiasV)&&igDiasV>=4?igSemV+1:igSemV;
-    const ganhoAtual=peso-ppg;
-    // Estimativa simplificada: 1° trimestre ~1–2 kg, depois gSem/semana
-    const esperadoBaixo=igCorr<=13?Math.min(gBaixo*0.15,2):Math.min(gBaixo*0.15,2)+(igCorr-13)*gSem;
-    const esperadoAlto=igCorr<=13?Math.min(gAlto*0.15,3):Math.min(gAlto*0.15,3)+(igCorr-13)*gSem*1.1;
+  const temIG=!isNaN(igSemV)&&igSemV>0;
+  const igCorr=temIG?(!isNaN(igDiasV)&&igDiasV>=4?igSemV+1:igSemV):null;
+  const ganhoAtual=(!isNaN(peso)&&peso>0&&!isNaN(ppg))?peso-ppg:null;
+
+  if(temIG&&ganhoAtual!=null){
+    const exp=gpgExpected(igCorr,gSemMin,gSemMax,gBaixo,gAlto);
     let statusLabel,statusColor;
-    if(ganhoAtual<esperadoBaixo-0.3){statusLabel='Ganho insuficiente';statusColor='blue';}
-    else if(ganhoAtual>esperadoAlto+0.3){statusLabel='Ganho excessivo';statusColor='red';}
+    if(ganhoAtual<exp.min-0.2){statusLabel='Ganho insuficiente';statusColor='blue';}
+    else if(ganhoAtual>exp.max+0.2){statusLabel='Ganho excessivo';statusColor='red';}
     else{statusLabel='Ganho adequado';statusColor='green';}
-    html+=stepCard('gpg3',{stepLabel:'G3',
-      title:'Avaliação do Ganho de Peso Atual',
+    html+=stepCard('gpg3',{stepLabel:'G3',title:'Avaliação do Ganho de Peso Atual',
       formula:'Ganho atual = Peso atual − Peso pré-gestacional',
-      substitution:`Ganho atual = ${fmt(peso,1)} − ${fmt(ppg,1)} = ${fmt(ganhoAtual,1)} kg\nIG corrigida: ${igCorr} semanas (${!isNaN(igDiasV)?igDiasV:0} dias adicionais → ${!isNaN(igDiasV)&&igDiasV>=4?'próxima semana':'mesma semana'})\nEsperado para ${igCorr} semanas: ${fmt(esperadoBaixo,1)} a ${fmt(esperadoAlto,1)} kg`,
+      substitution:`Ganho atual = ${fmt(peso,1)} − ${fmt(ppg,1)} = ${fmt(ganhoAtual,1)} kg\nIG corrigida: ${igCorr} semanas (${!isNaN(igDiasV)?igDiasV:0} dias → ${!isNaN(igDiasV)&&igDiasV>=4?'próxima semana':'mesma semana'})\nEsperado para ${igCorr} sem: ${exp.min.toFixed(1)} a ${exp.max.toFixed(1)} kg`,
       result:`${fmt(ganhoAtual,1)} kg`,
       classification:{label:statusLabel,color:statusColor},
-      note:`Cálculo da IG: 1-3 dias = considera semana atual · 4-6 dias = considera semana seguinte (Apostila Clínica 2023)`});
+      note:`Apostila Clínica 2023: 1-3 dias = semana atual · 4-6 dias = semana seguinte`});
+    if(chartWrap){
+      chartWrap.style.display='block';
+      requestAnimationFrame(()=>desenharCurvaGPG(ganhoAtual,igCorr,imcPPG));
+    }
   } else {
-    html+=emptyBlock('Preencha peso atual e idade gestacional para avaliar o ganho de peso.');
+    html+=emptyBlock('Preencha peso atual e idade gestacional (semanas) para avaliar o ganho de peso.');
+    if(chartWrap) chartWrap.style.display='none';
   }
   el.innerHTML=html;
 }
+
 
 // ═══════════════════════════════════════════════════════
 // BLOCO PEDIÁTRICO
